@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "accessWidener": "ninjaphenix-container-lib.accessWidener",
+  "depends": {
+    "fabric": ">=0.39.0",
+    "fabricloader": ">=0.7.4",
+    "minecraft": "~1.17.1"
+  },
+  "entrypoints": {
+    "main": [
+      "ninjaphenix.container_library.Main"
+    ],
+    "rei": [
+      "ninjaphenix.container_library.client.ReiCompat"
+    ],
+    "modmenu": [
+      "ninjaphenix.container_library.client.ModMenuCompat"
+    ]
+  },
+  "environment": "*",
+  "mixins": [
+    "ninjaphenix-container-lib.mixins.json"
+  ],
+  "authors": [
+    "NinjaPhenix"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/expanded-storage-fabric/",
+    "sources": "https://github.com/NinjaPhenix/container-library/",
+    "issues": "https://github.com/NinjaPhenix/container-library/issues/"
+  },
+  "icon": "icon.png",
+  "id": "ninjaphenix-container-lib",
+  "license": "0BSD",
+  "name": "NinjaPhenix's Container Library",
+  "version": "${version}"
+}

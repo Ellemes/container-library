@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "ninjaphenix.container_library.mixin",
+  "plugin": "ninjaphenix.container_library.MixinPlugin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "AmecsCompatMixin",
+    "LastAfterInitCallbackMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
