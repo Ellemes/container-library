@@ -33,7 +33,7 @@ public final class PickScreen extends Screen {
     private int topPadding;
 
     public PickScreen(Set<ResourceLocation> options, Screen returnToScreen, Consumer<ResourceLocation> onOptionPicked) {
-        super(new TranslatableComponent("screen.ninjaphenix-container-lib.screen_picker_title"));
+        super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
         this.options = options;
         this.optionWidgets = new ArrayList<>(options.size());
         this.onOptionPicked = onOptionPicked;
@@ -73,8 +73,8 @@ public final class PickScreen extends Screen {
             Button.OnTooltip tooltip;
             if (warn) {
                 tooltip = new Button.OnTooltip() {
-                    final MutableComponent warnText1 = Utils.translation("screen.ninjaphenix-container-lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY);
-                    final Component warnText2 = Utils.translation("screen.ninjaphenix-container-lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY);
+                    final MutableComponent warnText1 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY);
+                    final Component warnText2 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY);
                     @Override
                     public void onTooltip(Button button, PoseStack stack, int x, int y) {
                         PickScreen.this.renderTooltip(stack, List.of(button.getMessage(), warnText1, warnText2), Optional.empty(), x, y);

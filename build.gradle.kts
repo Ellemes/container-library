@@ -23,12 +23,12 @@ subprojects {
 
     }
 
+    // todo: make api source set
     sourceSets {
         main {
             java {
                 setSrcDirs(listOf(
                         "src/main/java",
-                        "src/api/java",
                         rootDir.resolve("common/${project.name}Src/main/java"),
                         rootDir.resolve("common/${project.name}Src/api/java")
                 ))

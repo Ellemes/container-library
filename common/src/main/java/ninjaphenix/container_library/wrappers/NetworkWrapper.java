@@ -59,7 +59,7 @@ public abstract class NetworkWrapper {
         }
         return switch (inventories.size()) {
             case 1 -> inventories.get(0).getInventoryName();
-            case 2 -> Utils.translation("container.ninjaphenix-container-lib.generic_double", inventories.get(0).getInventory());
+            case 2 -> Utils.translation("container.ninjaphenix_container_lib.generic_double", inventories.get(0).getInventory());
             default -> throw new IllegalStateException("Inventory size too large, must be either 1 or 2.");
         };
     }

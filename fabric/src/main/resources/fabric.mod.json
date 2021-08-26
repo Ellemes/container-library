@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "accessWidener": "ninjaphenix-container-lib.accessWidener",
+  "accessWidener": "ninjaphenix_container_lib.accessWidener",
   "depends": {
     "fabric": ">=0.39.0",
     "fabricloader": ">=0.7.4",
@@ -19,7 +19,7 @@
   },
   "environment": "*",
   "mixins": [
-    "ninjaphenix-container-lib.mixins.json"
+    "ninjaphenix_container_lib.mixins.json"
   ],
   "authors": [
     "NinjaPhenix"
@@ -30,7 +30,7 @@
     "issues": "https://github.com/NinjaPhenix/container-library/issues/"
   },
   "icon": "icon.png",
-  "id": "ninjaphenix-container-lib",
+  "id": "ninjaphenix_container_lib",
   "license": "0BSD",
   "name": "NinjaPhenix's Container Library",
   "version": "${version}"

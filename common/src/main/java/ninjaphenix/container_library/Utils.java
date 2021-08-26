@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 public class Utils {
-    public static final String MOD_ID = "ninjaphenix-container-lib";
+    public static final String MOD_ID = "ninjaphenix_container_lib";
     private static final String LEGACY_MOD_ID = "expandedstorage";
     // Expanded Storage Inventory Sizes
     public static final int WOOD_STACK_COUNT = 27;
