@@ -1,0 +1,14 @@
+{
+  "screen.ninjaphenix-container-lib.change_screen_button": "Change Screen Type",
+  "screen.ninjaphenix-container-lib.screen_picker_title": "Select Screen Type",
+  "screen.ninjaphenix-container-lib.paged_screen": "Paginated Screen",
+  "screen.ninjaphenix-container-lib.scrollable_screen": "Scrollable Screen",
+  "screen.ninjaphenix-container-lib.single_screen": "Single Page Screen",
+  "screen.ninjaphenix-container-lib.next_page": "Next Page",
+  "screen.ninjaphenix-container-lib.prev_page": "Previous Page",
+  "screen.ninjaphenix-container-lib.page_x_y": "%d/%d",
+  "screen.ninjaphenix-container-lib.off_screen_warning_1": "Part of the screen may not be visible",
+  "screen.ninjaphenix-container-lib.off_screen_warning_2": " if you pick this option.",
+  "container.ninjaphenix-container-lib.generic_double": "Large %s",
+  "key.expandedstorage.config": "[NCL] Open Screen Select"
+}

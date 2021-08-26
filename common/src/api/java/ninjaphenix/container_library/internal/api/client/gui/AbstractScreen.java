@@ -11,6 +11,8 @@ import net.minecraft.world.entity.player.Inventory;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.screen.ScreenMeta;
+import ninjaphenix.container_library.wrappers.NetworkWrapper;
+import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.glfw.GLFW;
 

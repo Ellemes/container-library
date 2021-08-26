@@ -12,8 +12,9 @@ import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.internal.api.client.gui.TexturedRect;
 import ninjaphenix.container_library.internal.api.client.gui.widget.PageButton;
-import ninjaphenix.container_library.inventory.PagedMenu;
+import ninjaphenix.container_library.inventory.PageMenu;
 import ninjaphenix.container_library.inventory.screen.PagedScreenMeta;
+import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class PagedScreen extends AbstractScreen<PagedMenu, PagedScreenMeta> {
+public final class PageScreen extends AbstractScreen<PageMenu, PagedScreenMeta> {
     private final Set<TexturedRect> blankArea = new LinkedHashSet<>();
     private PageButton leftPageButton;
     private PageButton rightPageButton;
@@ -31,7 +32,7 @@ public final class PagedScreen extends AbstractScreen<PagedMenu, PagedScreenMeta
     private TranslatableComponent currentPageText;
     private float pageTextX;
 
-    public PagedScreen(PagedMenu screenHandler, Inventory playerInventory, Component title) {
+    public PageScreen(PageMenu screenHandler, Inventory playerInventory, Component title) {
         super(screenHandler, playerInventory, title, (screenMeta) -> (screenMeta.width * 18 + 14) / 2 - 80);
         imageWidth = 14 + 18 * screenMeta.width;
         imageHeight = 17 + 97 + 18 * screenMeta.height;
@@ -169,7 +170,7 @@ public final class PagedScreen extends AbstractScreen<PagedMenu, PagedScreenMeta
             }
             renderableChildren.sort(Comparator.comparingInt(a -> -a.x));
             for (var widget : renderableChildren) {
-                if (PagedScreen.regionIntersects(widget, x, y, width, 12)) {
+                if (PageScreen.regionIntersects(widget, x, y, width, 12)) {
                     x = widget.x - width - 2;
                 }
             }

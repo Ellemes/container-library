@@ -9,6 +9,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
@@ -16,7 +17,7 @@ import ninjaphenix.container_library.inventory.screen.ScrollableScreenMeta;
 
 import java.util.function.IntUnaryOperator;
 
-public final class ScrollableMenu extends AbstractMenu<ScrollableScreenMeta> {
+public final class ScrollMenu extends AbstractMenu<ScrollableScreenMeta> {
     // @formatter:off
     private static final ImmutableMap<Integer, ScrollableScreenMeta> SIZES = ImmutableMap.<Integer, ScrollableScreenMeta>builder()
             .put(Utils.WOOD_STACK_COUNT, new ScrollableScreenMeta(9, 3, Utils.WOOD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 3), 208, 192))
@@ -30,9 +31,9 @@ public final class ScrollableMenu extends AbstractMenu<ScrollableScreenMeta> {
             .build();
     // @formatter:on
 
-    public ScrollableMenu(int windowId, BlockPos pos, Container container, Inventory inventory, Component title) {
-        super(BaseCommon.SCROLL_MENU_TYPE.get(), windowId, pos, container, inventory, title,
-                AbstractMenu.getNearestScreenMeta(container.getContainerSize(), ScrollableMenu.SIZES));
+    public ScrollMenu(int windowId, BlockPos pos, Container container, Inventory inventory, Component title) {
+        super(CommonMain.getScrollMenuType(), windowId, pos, container, inventory, title,
+                AbstractMenu.getNearestScreenMeta(container.getContainerSize(), ScrollMenu.SIZES));
         for (int i = 0; i < container.getContainerSize(); i++) {
             int slotXPos = i % screenMeta.width;
             int slotYPos = Mth.ceil((((double) (i - slotXPos)) / screenMeta.width));
@@ -63,13 +64,13 @@ public final class ScrollableMenu extends AbstractMenu<ScrollableScreenMeta> {
         }
     }
 
-    public static final class Factory implements ClientMenuFactory<ScrollableMenu> {
+    public static final class Factory implements ClientMenuFactory<ScrollMenu> {
         @Override
-        public ScrollableMenu create(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
+        public ScrollMenu create(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
             if (buffer == null) {
                 return null;
             }
-            return new ScrollableMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory, null);
+            return new ScrollMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory, null);
         }
     }
 }

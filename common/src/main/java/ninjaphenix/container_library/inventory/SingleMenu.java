@@ -8,6 +8,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
@@ -28,7 +29,7 @@ public final class SingleMenu extends AbstractMenu<SingleScreenMeta> {
     // @formatter:on
 
     public SingleMenu(int windowId, BlockPos pos, Container container, Inventory playerInventory, Component title) {
-        super(BaseCommon.SINGLE_MENU_TYPE.get(), windowId, pos, container, playerInventory, title,
+        super(CommonMain.getSingleMenuType(), windowId, pos, container, playerInventory, title,
                 AbstractMenu.getNearestScreenMeta(container.getContainerSize(), SingleMenu.SIZES));
         for (int i = 0; i < container.getContainerSize(); i++) {
             int x = i % screenMeta.width;

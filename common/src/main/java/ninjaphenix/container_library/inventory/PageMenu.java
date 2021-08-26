@@ -9,12 +9,13 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.screen.PagedScreenMeta;
 
-public final class PagedMenu extends AbstractMenu<PagedScreenMeta> {
+public final class PageMenu extends AbstractMenu<PagedScreenMeta> {
     // @formatter:off
     private static final ImmutableMap<Integer, PagedScreenMeta> SIZES = ImmutableMap.<Integer, PagedScreenMeta>builder()
             .put(Utils.WOOD_STACK_COUNT, new PagedScreenMeta(9, 3, 1, Utils.WOOD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 3), 208, 192))
@@ -28,9 +29,9 @@ public final class PagedMenu extends AbstractMenu<PagedScreenMeta> {
             .build();
     // @formatter:on
 
-    public PagedMenu(int windowId, BlockPos pos, Container container, Inventory playerInventory, Component title) {
-        super(BaseCommon.PAGE_MENU_TYPE.get(), windowId, pos, container, playerInventory, title,
-                AbstractMenu.getNearestScreenMeta(container.getContainerSize(), PagedMenu.SIZES));
+    public PageMenu(int windowId, BlockPos pos, Container container, Inventory playerInventory, Component title) {
+        super(CommonMain.getPageMenuType(), windowId, pos, container, playerInventory, title,
+                AbstractMenu.getNearestScreenMeta(container.getContainerSize(), PageMenu.SIZES));
         this.resetSlotPositions(true);
         int left = (screenMeta.width * Utils.SLOT_SIZE + 14) / 2 - 80;
         int top = Utils.SLOT_SIZE + 14 + (screenMeta.height * Utils.SLOT_SIZE);
@@ -63,13 +64,13 @@ public final class PagedMenu extends AbstractMenu<PagedScreenMeta> {
         }
     }
 
-    public static final class Factory implements ClientMenuFactory<PagedMenu> {
+    public static final class Factory implements ClientMenuFactory<PageMenu> {
         @Override
-        public PagedMenu create(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
+        public PageMenu create(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
             if (buffer == null) {
                 return null;
             }
-            return new PagedMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory, null);
+            return new PageMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory, null);
         }
     }
 }

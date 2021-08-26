@@ -17,7 +17,7 @@ loom {
         }
     }
 
-    accessWidenerPath.set(file("src/main/resources/ninjaphenix-container-library.accessWidener"))
+    accessWidenerPath.set(file("src/main/resources/ninjaphenix-container-lib.accessWidener"))
 }
 
 repositories {
