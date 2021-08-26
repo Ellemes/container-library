@@ -8,14 +8,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.inventory.ScrollMenu;
-import ninjaphenix.container_library.inventory.screen.ScrollableScreenMeta;
+import ninjaphenix.container_library.inventory.screen.ScrollScreenMeta;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Collections;
 import java.util.List;
 
-public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollableScreenMeta> {
+public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenMeta> {
     private final boolean hasScrollbar;
     private final boolean scrollingUnrestricted;
     private boolean isDragging;

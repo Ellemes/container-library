@@ -13,7 +13,7 @@ import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.internal.api.client.gui.TexturedRect;
 import ninjaphenix.container_library.internal.api.client.gui.widget.PageButton;
 import ninjaphenix.container_library.inventory.PageMenu;
-import ninjaphenix.container_library.inventory.screen.PagedScreenMeta;
+import ninjaphenix.container_library.inventory.screen.PageScreenMeta;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.lwjgl.glfw.GLFW;
 
@@ -24,7 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class PageScreen extends AbstractScreen<PageMenu, PagedScreenMeta> {
+public final class PageScreen extends AbstractScreen<PageMenu, PageScreenMeta> {
     private final Set<TexturedRect> blankArea = new LinkedHashSet<>();
     private PageButton leftPageButton;
     private PageButton rightPageButton;

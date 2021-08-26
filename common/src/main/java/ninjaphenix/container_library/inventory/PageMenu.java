@@ -13,19 +13,19 @@ import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
-import ninjaphenix.container_library.inventory.screen.PagedScreenMeta;
+import ninjaphenix.container_library.inventory.screen.PageScreenMeta;
 
-public final class PageMenu extends AbstractMenu<PagedScreenMeta> {
+public final class PageMenu extends AbstractMenu<PageScreenMeta> {
     // @formatter:off
-    private static final ImmutableMap<Integer, PagedScreenMeta> SIZES = ImmutableMap.<Integer, PagedScreenMeta>builder()
-            .put(Utils.WOOD_STACK_COUNT, new PagedScreenMeta(9, 3, 1, Utils.WOOD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 3), 208, 192))
-            .put(Utils.IRON_STACK_COUNT, new PagedScreenMeta(9, 6, 1, Utils.IRON_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(Utils.GOLD_STACK_COUNT, new PagedScreenMeta(9, 6, 2, Utils.GOLD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(Utils.DIAMOND_STACK_COUNT, new PagedScreenMeta(9, 6, 2, Utils.DIAMOND_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(Utils.NETHERITE_STACK_COUNT, new PagedScreenMeta(9, 6, 3, Utils.NETHERITE_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(2 * Utils.GOLD_STACK_COUNT, new PagedScreenMeta(9, 6, 3, 2 * Utils.GOLD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(2 * Utils.DIAMOND_STACK_COUNT, new PagedScreenMeta(9, 6, 4, 2 * Utils.DIAMOND_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(2 * Utils.NETHERITE_STACK_COUNT, new PagedScreenMeta(9, 6, 5, 2 * Utils.NETHERITE_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+    private static final ImmutableMap<Integer, PageScreenMeta> SIZES = ImmutableMap.<Integer, PageScreenMeta>builder()
+            .put(Utils.WOOD_STACK_COUNT, new PageScreenMeta(9, 3, 1, Utils.WOOD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 3), 208, 192))
+            .put(Utils.IRON_STACK_COUNT, new PageScreenMeta(9, 6, 1, Utils.IRON_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(Utils.GOLD_STACK_COUNT, new PageScreenMeta(9, 6, 2, Utils.GOLD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(Utils.DIAMOND_STACK_COUNT, new PageScreenMeta(9, 6, 2, Utils.DIAMOND_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(Utils.NETHERITE_STACK_COUNT, new PageScreenMeta(9, 6, 3, Utils.NETHERITE_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(2 * Utils.GOLD_STACK_COUNT, new PageScreenMeta(9, 6, 3, 2 * Utils.GOLD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(2 * Utils.DIAMOND_STACK_COUNT, new PageScreenMeta(9, 6, 4, 2 * Utils.DIAMOND_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(2 * Utils.NETHERITE_STACK_COUNT, new PageScreenMeta(9, 6, 5, 2 * Utils.NETHERITE_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
             .build();
     // @formatter:on
 

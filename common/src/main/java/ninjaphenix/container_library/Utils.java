@@ -25,7 +25,7 @@ public class Utils {
     public static final int SLOT_SIZE = 18;
     public static final int CONTAINER_HEADER_HEIGHT = 17;
     public static final int CONTAINER_PADDING_WIDTH = 7;
-    // Inbuilt Screen Types
+    // Inbuilt Screen Types todo: might be nice to be able to split internal and public ids e.g. for config & mod code
     public static final ResourceLocation UNSET_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "auto");
     public static final ResourceLocation SCROLL_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "scroll");
     public static final ResourceLocation SINGLE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "single");

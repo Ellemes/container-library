@@ -13,21 +13,21 @@ import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
-import ninjaphenix.container_library.inventory.screen.ScrollableScreenMeta;
+import ninjaphenix.container_library.inventory.screen.ScrollScreenMeta;
 
 import java.util.function.IntUnaryOperator;
 
-public final class ScrollMenu extends AbstractMenu<ScrollableScreenMeta> {
+public final class ScrollMenu extends AbstractMenu<ScrollScreenMeta> {
     // @formatter:off
-    private static final ImmutableMap<Integer, ScrollableScreenMeta> SIZES = ImmutableMap.<Integer, ScrollableScreenMeta>builder()
-            .put(Utils.WOOD_STACK_COUNT, new ScrollableScreenMeta(9, 3, Utils.WOOD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 3), 208, 192))
-            .put(Utils.IRON_STACK_COUNT, new ScrollableScreenMeta(9, 6, Utils.IRON_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(Utils.GOLD_STACK_COUNT, new ScrollableScreenMeta(9, 6, Utils.GOLD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(Utils.DIAMOND_STACK_COUNT, new ScrollableScreenMeta(9, 6, Utils.DIAMOND_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(Utils.NETHERITE_STACK_COUNT, new ScrollableScreenMeta(9, 6, Utils.NETHERITE_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(2 * Utils.GOLD_STACK_COUNT, new ScrollableScreenMeta(9, 6, 2 * Utils.GOLD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(2 * Utils.DIAMOND_STACK_COUNT, new ScrollableScreenMeta(9, 6, 2 * Utils.DIAMOND_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
-            .put(2 * Utils.NETHERITE_STACK_COUNT, new ScrollableScreenMeta(9, 6, 2 * Utils.NETHERITE_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+    private static final ImmutableMap<Integer, ScrollScreenMeta> SIZES = ImmutableMap.<Integer, ScrollScreenMeta>builder()
+            .put(Utils.WOOD_STACK_COUNT, new ScrollScreenMeta(9, 3, Utils.WOOD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 3), 208, 192))
+            .put(Utils.IRON_STACK_COUNT, new ScrollScreenMeta(9, 6, Utils.IRON_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(Utils.GOLD_STACK_COUNT, new ScrollScreenMeta(9, 6, Utils.GOLD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(Utils.DIAMOND_STACK_COUNT, new ScrollScreenMeta(9, 6, Utils.DIAMOND_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(Utils.NETHERITE_STACK_COUNT, new ScrollScreenMeta(9, 6, Utils.NETHERITE_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(2 * Utils.GOLD_STACK_COUNT, new ScrollScreenMeta(9, 6, 2 * Utils.GOLD_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(2 * Utils.DIAMOND_STACK_COUNT, new ScrollScreenMeta(9, 6, 2 * Utils.DIAMOND_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
+            .put(2 * Utils.NETHERITE_STACK_COUNT, new ScrollScreenMeta(9, 6, 2 * Utils.NETHERITE_STACK_COUNT, AbstractMenu.getTexture("shared", 9, 6), 208, 240))
             .build();
     // @formatter:on
 
