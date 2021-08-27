@@ -16,7 +16,7 @@ public final class ObjIntSupplier<T> {
         consumer.accept(object, number);
     }
 
-    public <U> U apply(ObjIntFunction<T, U> consumer) {
-        return consumer.get(object, number);
+    public <U> U apply(ObjIntFunction<T, U> function) {
+        return function.apply(object, number);
     }
 }
