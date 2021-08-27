@@ -22,10 +22,6 @@ public interface OpenableBlockEntity {
         return (Container) this;
     }
 
-    default boolean hasCustomInventoryName() {
-        return ((Nameable) this).hasCustomName();
-    }
-
     default Component getInventoryName() {
         return ((Nameable) this).getDisplayName();
     }

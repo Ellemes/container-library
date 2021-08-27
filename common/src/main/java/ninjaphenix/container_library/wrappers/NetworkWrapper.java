@@ -7,10 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.Container;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.OpenableBlockEntity;
 import ninjaphenix.container_library.api.OpenableBlockEntityProvider;
 import ninjaphenix.container_library.internal.api.inventory.ServerMenuFactory;
 import ninjaphenix.container_library.inventory.PageMenu;
@@ -18,7 +16,6 @@ import ninjaphenix.container_library.inventory.ScrollMenu;
 import ninjaphenix.container_library.inventory.SingleMenu;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -51,19 +48,6 @@ public abstract class NetworkWrapper {
 
     public abstract void c_openInventoryAt(BlockPos pos, ResourceLocation selection);
 
-    private static Component getDisplayName(List<? extends OpenableBlockEntity> inventories) {
-        for (OpenableBlockEntity inventory : inventories) {
-            if (inventory.hasCustomInventoryName()) {
-                return inventory.getInventoryName();
-            }
-        }
-        return switch (inventories.size()) {
-            case 1 -> inventories.get(0).getInventoryName();
-            case 2 -> Utils.translation("container.ninjaphenix_container_lib.generic_double", inventories.get(0).getInventory());
-            default -> throw new IllegalStateException("Inventory size too large, must be either 1 or 2.");
-        };
-    }
-
     protected final void openMenuIfAllowed(BlockPos pos, ServerPlayer player) {
         UUID uuid = player.getUUID();
         ResourceLocation playerPreference;
@@ -71,30 +55,21 @@ public abstract class NetworkWrapper {
             var level = player.getLevel();
             var state = level.getBlockState(pos);
             if (state.getBlock() instanceof OpenableBlockEntityProvider block) {
-                var inventories = block.getParts(level, state, pos);
-                if (inventories.size() == 1 || inventories.size() == 2) {
-                    var displayName = NetworkWrapper.getDisplayName(inventories);
-                    if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
-                        if (inventories.stream().allMatch(entity -> entity.canBeUsedBy(player))) {
-                            block.onInitialOpen(player);
-                        } else {
-                            player.displayClientMessage(new TranslatableComponent("container.isLocked", displayName), true);
-                            player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
-                            return;
-                        }
+                var inventory = block.getOpenableBlockEntity(level, state, pos);
+                var displayName = inventory.getInventoryName();
+                if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
+                    if (inventory.canBeUsedBy(player)) {
+                        block.onInitialOpen(player);
+                    } else {
+                        player.displayClientMessage(new TranslatableComponent("container.isLocked", displayName), true);
+                        player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        return;
                     }
-                    for (OpenableBlockEntity entity : inventories) {
-                        if (!entity.canContinueUse(player)) {
-                            return;
-                        }
-                    }
-                    Container container = switch (inventories.size()) {
-                        case 1 -> inventories.get(0).getInventory();
-                        case 2 -> new CompoundContainer(inventories.get(0).getInventory(), inventories.get(1).getInventory());
-                        default -> throw new IllegalStateException("Inventory size too large, must be either 1 or 2.");
-                    };
-                    this.openMenu(player, pos, container, menuFactories.get(playerPreference), displayName);
                 }
+                if (!inventory.canContinueUse(player)) {
+                    return;
+                }
+                this.openMenu(player, pos, inventory.getInventory(), menuFactories.get(playerPreference), displayName);
             }
         }
     }

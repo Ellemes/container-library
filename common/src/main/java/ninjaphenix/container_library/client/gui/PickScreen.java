@@ -11,7 +11,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.internal.api.IntBiPredicate;
+import ninjaphenix.container_library.api.function.IntBiPredicate;
 import ninjaphenix.container_library.internal.api.client.gui.widget.ScreenPickButton;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.apache.commons.lang3.tuple.Triple;
@@ -75,6 +75,7 @@ public final class PickScreen extends Screen {
                 tooltip = new Button.OnTooltip() {
                     final MutableComponent warnText1 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY);
                     final Component warnText2 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY);
+
                     @Override
                     public void onTooltip(Button button, PoseStack stack, int x, int y) {
                         PickScreen.this.renderTooltip(stack, List.of(button.getMessage(), warnText1, warnText2), Optional.empty(), x, y);

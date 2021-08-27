@@ -1,10 +1,9 @@
 package ninjaphenix.container_library;
 
-import com.google.gson.JsonParseException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.internal.api.IntBiPredicate;
+import ninjaphenix.container_library.api.function.IntBiPredicate;
 import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.PageMenu;

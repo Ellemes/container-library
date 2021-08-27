@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.internal.api;
+package ninjaphenix.container_library.api.function;
 
 import org.jetbrains.annotations.ApiStatus;
 
