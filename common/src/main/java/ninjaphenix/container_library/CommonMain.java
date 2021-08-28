@@ -3,7 +3,7 @@ package ninjaphenix.container_library;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.api.function.IntBiPredicate;
+import ninjaphenix.container_library.internal.api.function.ScreenSizePredicate;
 import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.PageMenu;
@@ -47,11 +47,11 @@ public final class CommonMain {
             PickScreen.declareButtonSettings(Utils.PAGE_SCREEN_TYPE,
                     Utils.resloc("textures/gui/paged_button.png"),
                     Utils.translation("screen.ninjaphenix_container_lib.paged_screen"),
-                    IntBiPredicate::never);
+                    ScreenSizePredicate::noTest);
             PickScreen.declareButtonSettings(Utils.SCROLL_SCREEN_TYPE,
                     Utils.resloc("textures/gui/scrollable_button.png"),
                     Utils.translation("screen.ninjaphenix_container_lib.scrollable_screen"),
-                    IntBiPredicate::never);
+                    ScreenSizePredicate::noTest);
             PickScreen.declareButtonSettings(Utils.SINGLE_SCREEN_TYPE,
                     Utils.resloc("textures/gui/single_button.png"),
                     Utils.translation("screen.ninjaphenix_container_lib.single_screen"),

@@ -7,14 +7,17 @@ import ninjaphenix.container_library.api.OpenableBlockEntity;
 
 import java.util.Arrays;
 
+/**
+ * Helper to wrap blocks which consist of multiple inventories into one e.g. chests.
+ */
 public final class OpenableBlockEntities implements OpenableBlockEntity {
     private final OpenableBlockEntity[] parts;
-    private final VariableInventory inventory;
+    private final Container inventory;
     private final Component inventoryName;
 
     public OpenableBlockEntities(Component inventoryName, OpenableBlockEntity... parts) {
         this.parts = parts;
-        this.inventory = new VariableInventory(Arrays.stream(parts).map(OpenableBlockEntity::getInventory).toArray(Container[]::new));
+        this.inventory = VariableInventory.of(Arrays.stream(parts).map(OpenableBlockEntity::getInventory).toArray(Container[]::new));
         this.inventoryName = inventoryName;
     }
 

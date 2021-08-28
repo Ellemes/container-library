@@ -1,13 +1,13 @@
-package ninjaphenix.container_library.api.function;
+package ninjaphenix.container_library.internal.api.function;
 
 import java.util.function.ObjIntConsumer;
 
 @SuppressWarnings("ClassCanBeRecord")
-public final class ObjIntSupplier<T> {
+public final class InventorySlotAccessor<T> {
     private final T object;
     private final int number;
 
-    public ObjIntSupplier(T object, int number) {
+    public InventorySlotAccessor(T object, int number) {
         this.object = object;
         this.number = number;
     }
@@ -16,7 +16,7 @@ public final class ObjIntSupplier<T> {
         consumer.accept(object, number);
     }
 
-    public <U> U apply(ObjIntFunction<T, U> function) {
+    public <U> U apply(InventorySlotFunction<T, U> function) {
         return function.apply(object, number);
     }
 }

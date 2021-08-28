@@ -11,7 +11,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.function.IntBiPredicate;
+import ninjaphenix.container_library.internal.api.function.ScreenSizePredicate;
 import ninjaphenix.container_library.internal.api.client.gui.widget.ScreenPickButton;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.apache.commons.lang3.tuple.Triple;
@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public final class PickScreen extends Screen {
-    private static final Map<ResourceLocation, Triple<ResourceLocation, Component, IntBiPredicate>> BUTTON_SETTINGS = new HashMap<>();
+    private static final Map<ResourceLocation, Triple<ResourceLocation, Component, ScreenSizePredicate>> BUTTON_SETTINGS = new HashMap<>();
     private final Set<ResourceLocation> options;
     private final Screen returnToScreen;
     private final List<ScreenPickButton> optionWidgets;
@@ -40,7 +40,7 @@ public final class PickScreen extends Screen {
         this.returnToScreen = returnToScreen;
     }
 
-    public static void declareButtonSettings(ResourceLocation screenType, ResourceLocation texture, Component text, IntBiPredicate warnTest) {
+    public static void declareButtonSettings(ResourceLocation screenType, ResourceLocation texture, Component text, ScreenSizePredicate warnTest) {
         PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, Triple.of(texture, text, warnTest));
     }
 
@@ -68,7 +68,7 @@ public final class PickScreen extends Screen {
         this.topPadding = topPadding;
         optionWidgets.clear();
         for (ResourceLocation option : options) {
-            Triple<ResourceLocation, Component, IntBiPredicate> settings = PickScreen.BUTTON_SETTINGS.get(option);
+            Triple<ResourceLocation, Component, ScreenSizePredicate> settings = PickScreen.BUTTON_SETTINGS.get(option);
             boolean warn = settings.getRight().test(width, height);
             Button.OnTooltip tooltip;
             if (warn) {

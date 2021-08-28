@@ -7,7 +7,7 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import ninjaphenix.container_library.api.function.ObjIntSupplier;
+import ninjaphenix.container_library.internal.api.function.InventorySlotAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -21,8 +21,8 @@ public final class VariableSidedInventory implements WorldlyContainer {
     private final int maxStackSize;
     private final Map<Direction, int[]> slotsAccessibleThroughFace = new HashMap<>();
 
-    public VariableSidedInventory(WorldlyContainer... parts) {
-        assert parts.length > 1 : "parts must contain at least 2 items";
+    private VariableSidedInventory(WorldlyContainer... parts) {
+        assert parts.length > 0 : "parts must contain at least 1 item";
         for (int i = 0; i < parts.length; i++) {
             assert parts[i] != null : "part at index " + i + " must not be null";
         }
@@ -31,6 +31,15 @@ public final class VariableSidedInventory implements WorldlyContainer {
         this.maxStackSize = parts[0].getMaxStackSize();
         for (Container part : parts) {
             assert part.getMaxStackSize() == maxStackSize : "all parts must have equal max stack sizes.";
+        }
+    }
+
+    public static WorldlyContainer of(WorldlyContainer... parts) {
+        assert parts.length > 0 : "parts must contain at least 1 item";
+        if (parts.length == 1) {
+            return parts[0];
+        } else {
+            return new VariableSidedInventory(parts);
         }
     }
 
@@ -141,13 +150,13 @@ public final class VariableSidedInventory implements WorldlyContainer {
         }
     }
 
-    private ObjIntSupplier<WorldlyContainer> getPartAccessor(int slot) {
+    private InventorySlotAccessor<WorldlyContainer> getPartAccessor(int slot) {
         for (WorldlyContainer part : parts) {
             int inventorySize = part.getContainerSize();
             if (slot > inventorySize) {
                 slot -= inventorySize;
             } else {
-                return new ObjIntSupplier<>(part, slot);
+                return new InventorySlotAccessor<>(part, slot);
             }
         }
         throw new IllegalStateException("getPartAccessor called without validating slot bounds.");

@@ -7,7 +7,7 @@ public interface NCL_ClientApi {
     /**
      * Call on client side to attempt to open an inventory.
      */
-    default void openInventoryAt(BlockPos pos) {
+    static void openInventoryAt(BlockPos pos) {
         NetworkWrapper.getInstance().c_openInventoryAt(pos);
     }
 }
