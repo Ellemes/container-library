@@ -3,6 +3,7 @@ package ninjaphenix.container_library.api.helpers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import ninjaphenix.container_library.api.OpenableBlockEntity;
 
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public final class OpenableBlockEntities implements OpenableBlockEntity {
     }
 
     @Override
-    public boolean canContinueUse(ServerPlayer player) {
+    public boolean canContinueUse(Player player) {
         for (OpenableBlockEntity part : parts) {
             if (!part.canContinueUse(player)) {
                 return false;

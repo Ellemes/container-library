@@ -5,6 +5,7 @@ import org.gradle.jvm.tasks.Jar
 plugins {
     alias(libs.plugins.gradleUtils)
     alias(libs.plugins.forgeGradle)
+    `maven-publish`
 }
 
 minecraft {

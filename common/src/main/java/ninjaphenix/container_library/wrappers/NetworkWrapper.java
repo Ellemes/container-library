@@ -56,20 +56,22 @@ public abstract class NetworkWrapper {
             var state = level.getBlockState(pos);
             if (state.getBlock() instanceof OpenableBlockEntityProvider block) {
                 var inventory = block.getOpenableBlockEntity(level, state, pos);
-                var displayName = inventory.getInventoryName();
-                if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
-                    if (inventory.canBeUsedBy(player)) {
-                        block.onInitialOpen(player);
-                    } else {
-                        player.displayClientMessage(new TranslatableComponent("container.isLocked", displayName), true);
-                        player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                if (inventory != null) {
+                    var displayName = inventory.getInventoryName();
+                    if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
+                        if (inventory.canBeUsedBy(player)) {
+                            block.onInitialOpen(player);
+                        } else {
+                            player.displayClientMessage(new TranslatableComponent("container.isLocked", displayName), true);
+                            player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                            return;
+                        }
+                    }
+                    if (!inventory.canContinueUse(player)) {
                         return;
                     }
+                    this.openMenu(player, pos, inventory.getInventory(), menuFactories.get(playerPreference), displayName);
                 }
-                if (!inventory.canContinueUse(player)) {
-                    return;
-                }
-                this.openMenu(player, pos, inventory.getInventory(), menuFactories.get(playerPreference), displayName);
             }
         }
     }

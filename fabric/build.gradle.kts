@@ -5,6 +5,7 @@ import net.fabricmc.loom.task.RemapJarTask
 plugins {
     alias(libs.plugins.gradleUtils)
     alias(libs.plugins.fabricLoom)
+    `maven-publish`
 }
 
 loom {
@@ -94,4 +95,24 @@ val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
 
 tasks.getByName("build") {
     dependsOn(releaseJarTask)
+}
+
+// https://docs.gradle.org/current/userguide/publishing_maven.html
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "ninjaphenix.container_library"
+            artifactId = "fabric"
+            artifact(remapJarTask) {
+                builtBy(remapJarTask)
+            }
+            //artifact(sourcesJar) {
+            //    builtBy remapSourcesJar
+            //}
+        }
+    }
+
+    repositories {
+
+    }
 }
