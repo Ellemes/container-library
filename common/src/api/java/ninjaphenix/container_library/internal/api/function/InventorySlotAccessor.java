@@ -4,19 +4,19 @@ import java.util.function.ObjIntConsumer;
 
 @SuppressWarnings("ClassCanBeRecord")
 public final class InventorySlotAccessor<T> {
-    private final T object;
-    private final int number;
+    private final T inventory;
+    private final int slot;
 
-    public InventorySlotAccessor(T object, int number) {
-        this.object = object;
-        this.number = number;
+    public InventorySlotAccessor(T inventory, int slot) {
+        this.inventory = inventory;
+        this.slot = slot;
     }
 
     public void consume(ObjIntConsumer<T> consumer) {
-        consumer.accept(object, number);
+        consumer.accept(inventory, slot);
     }
 
     public <U> U apply(InventorySlotFunction<T, U> function) {
-        return function.apply(object, number);
+        return function.apply(inventory, slot);
     }
 }

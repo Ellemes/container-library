@@ -4,7 +4,6 @@
   "plugin": "ninjaphenix.container_library.MixinPlugin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "AmecsCompatMixin",
     "LastAfterInitCallbackMixin"
   ],
   "injectors": {

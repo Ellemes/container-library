@@ -4,9 +4,9 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface ScreenSizePredicate {
-    boolean test(int x, int y);
+    boolean test(int scaledWidth, int scaledHeight);
 
-    static boolean noTest(int x, int y) {
+    static boolean noTest(int scaledWidth, int scaledHeight) {
         return false;
     }
 }

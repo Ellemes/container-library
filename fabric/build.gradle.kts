@@ -21,6 +21,14 @@ loom {
     accessWidenerPath.set(file("src/main/resources/ninjaphenix_container_lib.accessWidener"))
 }
 
+//configurations.getByName(sourceSets["api"].compileClasspathConfigurationName) {
+//    this.extendsFrom(configurations.getByName("minecraftNamed"))
+//}
+//
+//configurations.getByName(sourceSets["api"].runtimeClasspathConfigurationName) {
+//    this.extendsFrom(configurations.getByName("minecraftNamed"))
+//}
+
 repositories {
     maven {
         name = "Shedaniel"

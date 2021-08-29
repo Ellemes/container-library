@@ -25,6 +25,15 @@ subprojects {
 
     // todo: make api source set
     sourceSets {
+        //create("api") {
+        //    java {
+        //        setSrcDirs(listOf(rootDir.resolve("common/${project.name}Src/api/java")))
+        //    }
+        //    resources {
+        //        setSrcDirs(listOf<File>())
+        //    }
+        //}
+
         main {
             java {
                 setSrcDirs(listOf(
@@ -39,6 +48,8 @@ subprojects {
                         rootDir.resolve("common/${project.name}Src/main/resources")
                 ))
             }
+            //compileClasspath += sourceSets["api"].output
+            //runtimeClasspath += sourceSets["api"].output
         }
     }
 
@@ -50,5 +61,11 @@ subprojects {
 tasks.register("buildMod") {
     subprojects.forEach {
         dependsOn(it.tasks["build"])
+    }
+}
+
+tasks.register("publishToMavenLocal") {
+    subprojects.forEach {
+        dependsOn(it.tasks["publishToMavenLocal"])
     }
 }

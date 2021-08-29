@@ -1,17 +1,41 @@
 package ninjaphenix.container_library.wrappers;
 
-import net.minecraft.client.KeyMapping;
+import ninjaphenix.container_library.client.KeyHandler;
 
-public interface PlatformUtils {
-    static PlatformUtils getInstance() {
-        return PlatformUtilsImpl.getInstance();
+import java.util.function.Function;
+
+public final class PlatformUtils {
+    private static PlatformUtils INSTANCE;
+
+    private final boolean isClient;
+    private final KeyHandler keyHandler;
+    private final Function<String, Boolean> modLoadedFunction;
+
+    public PlatformUtils(KeyHandler keyHandler, Function<String, Boolean> modLoadedFunction) {
+        this.keyHandler = keyHandler;
+        this.modLoadedFunction = modLoadedFunction;
+        isClient = keyHandler != null;
+
+        if (PlatformUtils.INSTANCE != null) {
+            throw new IllegalStateException("Tried constructing 2 instances of a singleton");
+        }
+        PlatformUtils.INSTANCE = this;
     }
 
-    boolean isModLoaded(String modId);
+    public static PlatformUtils getInstance() {
+        return PlatformUtils.INSTANCE;
+    }
 
-    boolean isConfigKeyPressed(int keyCode, int scanCode, int modifiers);
+    public boolean isModLoaded(String modId) {
+        return modLoadedFunction.apply(modId);
+    }
 
-    boolean isClient();
+    // Client only.
+    public boolean isConfigKeyPressed(int keyCode, int scanCode, int modifiers) {
+        return keyHandler.isKeyPressed(keyCode, scanCode, modifiers);
+    }
 
-    KeyMapping getConfigKey();
+    public boolean isClient() {
+        return isClient;
+    }
 }

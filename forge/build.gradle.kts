@@ -1,6 +1,8 @@
 import com.gitlab.ninjaphenix.gradle.api.task.MinifyJsonTask
 import com.gitlab.ninjaphenix.gradle.api.task.ParamLocalObfuscatorTask
 import org.gradle.jvm.tasks.Jar
+import java.text.DateFormat
+import java.util.*
 
 plugins {
     alias(libs.plugins.gradleUtils)
@@ -19,6 +21,7 @@ minecraft {
             mods {
                 create("ninjaphenix-container-library") {
                     source(sourceSets.main.get())
+                    //source(sourceSets["api"])
                 }
             }
             // "SCAN": For mods scan.
@@ -37,6 +40,7 @@ minecraft {
             mods {
                 create("ninjaphenix-container-library") {
                     source(sourceSets.main.get())
+                    //source(sourceSets["api"])
                 }
             }
             // "SCAN": For mods scan.
@@ -83,9 +87,20 @@ tasks.withType<ProcessResources> {
 
 val jarTask = tasks.getByName<Jar>("jar") {
     archiveFileName.set("${properties["archivesBaseName"]}-${properties["mod_version"]}+${properties["minecraft_version"]}-fat.jar")
-}
 
-jarTask.finalizedBy("reobfJar")
+    manifest.attributes(mapOf(
+            "Specification-Title" to "NinjaPhenix's Container Library",
+            "Specification-Vendor" to "ninjaphenix",
+            "Specification-Version" to "0.0",
+            "Implementation-Title" to "ninjaphenix_container_library_forge",
+            "Implementation-Version" to "${properties["mod_version"]}",
+            "Implementation-Vendor" to "ninjaphenix",
+            "Implementation-Timestamp" to DateFormat.getDateTimeInstance().format(Date()),
+            "Automatic-Module-Name" to "ninjaphenix.container_library",
+    ))
+
+    this.finalizedBy("reobfJar")
+}
 
 val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     input.set(jarTask.outputs.files.singleFile)
@@ -102,4 +117,24 @@ val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
 
 tasks.getByName("build") {
     dependsOn(releaseJarTask)
+}
+
+// https://docs.gradle.org/current/userguide/publishing_maven.html
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "ninjaphenix.container_library"
+            artifactId = "forge"
+            artifact(jarTask) {
+                builtBy(jarTask)
+            }
+            //artifact(sourcesJar) {
+            //    builtBy remapSourcesJar
+            //}
+        }
+    }
+
+    repositories {
+
+    }
 }
