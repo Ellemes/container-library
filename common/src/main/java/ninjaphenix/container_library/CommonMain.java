@@ -38,9 +38,9 @@ public final class CommonMain {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T extends AbstractMenu<?>> void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> menuTypeFunction) {
-        pageMenuType = menuTypeFunction.apply(Utils.PAGE_SCREEN_TYPE, new PageMenu.Factory());
-        scrollMenuType = menuTypeFunction.apply(Utils.SCROLL_SCREEN_TYPE, new ScrollMenu.Factory());
-        singleMenuType = menuTypeFunction.apply(Utils.SINGLE_SCREEN_TYPE, new SingleMenu.Factory());
+        pageMenuType = menuTypeFunction.apply(Utils.PAGE_SCREEN_TYPE, PageMenu::createClientMenu);
+        scrollMenuType = menuTypeFunction.apply(Utils.SCROLL_SCREEN_TYPE, ScrollMenu::createClientMenu);
+        singleMenuType = menuTypeFunction.apply(Utils.SINGLE_SCREEN_TYPE, SingleMenu::createClientMenu);
 
         if (PlatformUtils.getInstance().isClient()) {
             ConfigWrapper.getInstance().initialise();

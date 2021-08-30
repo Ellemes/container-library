@@ -11,7 +11,6 @@ import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
-import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.screen.ScrollScreenMeta;
 
 import java.util.function.IntUnaryOperator;
@@ -63,13 +62,10 @@ public final class ScrollMenu extends AbstractMenu<ScrollScreenMeta> {
         }
     }
 
-    public static final class Factory implements ClientMenuFactory<ScrollMenu> {
-        @Override
-        public ScrollMenu create(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
-            if (buffer == null) {
-                return null;
-            }
-            return new ScrollMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
+    public static ScrollMenu createClientMenu(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
+        if (buffer == null) {
+            return null;
         }
+        return new ScrollMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
     }
 }

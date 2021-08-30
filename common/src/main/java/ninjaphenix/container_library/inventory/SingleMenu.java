@@ -10,7 +10,6 @@ import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
-import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.screen.SingleScreenMeta;
 
 public final class SingleMenu extends AbstractMenu<SingleScreenMeta> {
@@ -47,13 +46,10 @@ public final class SingleMenu extends AbstractMenu<SingleScreenMeta> {
         }
     }
 
-    public static final class Factory implements ClientMenuFactory<SingleMenu> {
-        @Override
-        public SingleMenu create(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
-            if (buffer == null) {
-                return null;
-            }
-            return new SingleMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
+    public static SingleMenu createClientMenu(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
+        if (buffer == null) {
+            return null;
         }
+        return new SingleMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
     }
 }

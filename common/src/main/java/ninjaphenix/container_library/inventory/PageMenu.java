@@ -11,7 +11,6 @@ import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
-import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.screen.PageScreenMeta;
 
 public final class PageMenu extends AbstractMenu<PageScreenMeta> {
@@ -63,13 +62,10 @@ public final class PageMenu extends AbstractMenu<PageScreenMeta> {
         }
     }
 
-    public static final class Factory implements ClientMenuFactory<PageMenu> {
-        @Override
-        public PageMenu create(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
-            if (buffer == null) {
-                return null;
-            }
-            return new PageMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
+    public static PageMenu createClientMenu(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
+        if (buffer == null) {
+            return null;
         }
+        return new PageMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
     }
 }
