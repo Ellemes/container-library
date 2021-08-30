@@ -59,6 +59,7 @@ public final class PickScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        ResourceLocation currentOption = ConfigWrapper.getInstance().getPreferredScreenType();
         int choices = options.size();
         int columns = Math.min(Mth.intFloorDiv(width, 96), choices);
         int innerPadding = Math.min((width - columns * 96) / (columns + 1), 20); // 20 is smallest gap for any screen.
@@ -90,7 +91,7 @@ public final class PickScreen extends Screen {
                 tooltip = (button, stack, x1, y1) -> PickScreen.this.renderTooltip(stack, button.getMessage(), x1, y1);
             }
             optionWidgets.add(this.addRenderableWidget(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
-                    settings.getLeft(), settings.getMiddle(), warn, button -> this.updatePlayerPreference(option), tooltip)));
+                    settings.getLeft(), settings.getMiddle(), warn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
             x++;
         }
     }
