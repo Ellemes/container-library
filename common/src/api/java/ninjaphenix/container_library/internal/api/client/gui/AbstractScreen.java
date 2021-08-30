@@ -8,8 +8,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.screen.ScreenMeta;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
@@ -26,7 +26,7 @@ public abstract class AbstractScreen<T extends AbstractMenu<R>, R extends Screen
 
     protected AbstractScreen(T container, Inventory playerInventory, Component title, Function<R, Integer> inventoryLabelLeftFunction) {
         super(container, playerInventory, title);
-        screenMeta = container.screenMeta;
+        screenMeta = container.getScreenMeta();
         inventoryLabelLeft = inventoryLabelLeftFunction.apply(screenMeta);
     }
 
@@ -57,7 +57,7 @@ public abstract class AbstractScreen<T extends AbstractMenu<R>, R extends Screen
     @SuppressWarnings("ConstantConditions")
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (PlatformUtils.getInstance().isConfigKeyPressed(keyCode, scanCode, modifiers)) {
-            minecraft.setScreen(new PickScreen(NetworkWrapper.getInstance().getScreenOptions(), null, (selection) -> NetworkWrapper.getInstance().c_openInventoryAt(menu.pos, selection)));
+            minecraft.setScreen(new PickScreen(NetworkWrapper.getInstance().getScreenOptions(), null, (selection) -> NetworkWrapper.getInstance().c_openInventoryAt(menu.getPos(), selection)));
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE || minecraft.options.keyInventory.matches(keyCode, scanCode)) {
             minecraft.player.closeContainer();

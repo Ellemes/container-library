@@ -3,14 +3,13 @@ package ninjaphenix.container_library.inventory;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.screen.SingleScreenMeta;
 
@@ -28,8 +27,8 @@ public final class SingleMenu extends AbstractMenu<SingleScreenMeta> {
             .build();
     // @formatter:on
 
-    public SingleMenu(int windowId, BlockPos pos, Container container, Inventory playerInventory, Component title) {
-        super(CommonMain.getSingleMenuType(), windowId, pos, container, playerInventory, title,
+    public SingleMenu(int windowId, BlockPos pos, Container container, Inventory playerInventory) {
+        super(CommonMain.getSingleMenuType(), windowId, pos, container, playerInventory,
                 AbstractMenu.getNearestScreenMeta(container.getContainerSize(), SingleMenu.SIZES));
         for (int i = 0; i < container.getContainerSize(); i++) {
             int x = i % screenMeta.width;
@@ -54,7 +53,7 @@ public final class SingleMenu extends AbstractMenu<SingleScreenMeta> {
             if (buffer == null) {
                 return null;
             }
-            return new SingleMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory, null);
+            return new SingleMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
         }
     }
 }

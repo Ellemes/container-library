@@ -113,7 +113,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
             @Nullable
             @Override
             public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-                return factory.create(windowId, pos, container, playerInventory, displayName);
+                return factory.create(windowId, pos, container, playerInventory);
             }
         });
     }

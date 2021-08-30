@@ -3,7 +3,6 @@ package ninjaphenix.container_library.inventory;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.screen.ScrollScreenMeta;
 
@@ -31,8 +30,8 @@ public final class ScrollMenu extends AbstractMenu<ScrollScreenMeta> {
             .build();
     // @formatter:on
 
-    public ScrollMenu(int windowId, BlockPos pos, Container container, Inventory inventory, Component title) {
-        super(CommonMain.getScrollMenuType(), windowId, pos, container, inventory, title,
+    public ScrollMenu(int windowId, BlockPos pos, Container container, Inventory inventory) {
+        super(CommonMain.getScrollMenuType(), windowId, pos, container, inventory,
                 AbstractMenu.getNearestScreenMeta(container.getContainerSize(), ScrollMenu.SIZES));
         for (int i = 0; i < container.getContainerSize(); i++) {
             int slotXPos = i % screenMeta.width;
@@ -70,7 +69,7 @@ public final class ScrollMenu extends AbstractMenu<ScrollScreenMeta> {
             if (buffer == null) {
                 return null;
             }
-            return new ScrollMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory, null);
+            return new ScrollMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
         }
     }
 }

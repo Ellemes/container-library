@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.internal.api.inventory;
+package ninjaphenix.container_library.api.inventory;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
@@ -18,21 +18,30 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.Collections;
 import java.util.List;
 
-@ApiStatus.Experimental
+/**
+ * Currently no way to use this with the api, will be added in the future.
+ */
+@ApiStatus.NonExtendable
 public abstract class AbstractMenu<T extends ScreenMeta> extends AbstractContainerMenu {
-    public final BlockPos pos;
-    public final T screenMeta;
+    private final BlockPos pos;
+    protected final T screenMeta;
     protected final Container container;
-    private final Component title;
 
     public AbstractMenu(MenuType<?> menuType, int windowId, BlockPos pos, Container container,
-                        Inventory playerInventory, Component title, T screenMeta) {
+                        Inventory playerInventory, T screenMeta) {
         super(menuType, windowId);
         this.pos = pos;
         this.container = container;
-        this.title = title;
         this.screenMeta = screenMeta;
         container.startOpen(playerInventory.player);
+    }
+
+    public final BlockPos getPos() {
+        return pos;
+    }
+
+    public final T getScreenMeta() {
+        return screenMeta;
     }
 
     public static ResourceLocation getTexture(String type, int slotXCount, int slotYCount) {
@@ -59,17 +68,13 @@ public abstract class AbstractMenu<T extends ScreenMeta> extends AbstractContain
         return container.stillValid(player);
     }
 
-    public Component getTitle() {
-        return title.plainCopy();
-    }
-
     @Override
     public void removed(Player player) {
         super.removed(player);
         container.stopOpen(player);
     }
 
-    public final Container getContainer() {
+    public final Container getInventory() {
         return container;
     }
 

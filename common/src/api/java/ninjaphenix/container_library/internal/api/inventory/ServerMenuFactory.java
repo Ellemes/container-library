@@ -9,5 +9,5 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental
 public interface ServerMenuFactory {
-    AbstractContainerMenu create(int windowId, BlockPos pos, Container container, Inventory playerInventory, Component title);
+    AbstractContainerMenu create(int windowId, BlockPos pos, Container container, Inventory playerInventory);
 }

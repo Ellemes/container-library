@@ -3,7 +3,6 @@ package ninjaphenix.container_library.inventory;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.internal.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
 import ninjaphenix.container_library.inventory.screen.PageScreenMeta;
 
@@ -29,8 +28,8 @@ public final class PageMenu extends AbstractMenu<PageScreenMeta> {
             .build();
     // @formatter:on
 
-    public PageMenu(int windowId, BlockPos pos, Container container, Inventory playerInventory, Component title) {
-        super(CommonMain.getPageMenuType(), windowId, pos, container, playerInventory, title,
+    public PageMenu(int windowId, BlockPos pos, Container container, Inventory playerInventory) {
+        super(CommonMain.getPageMenuType(), windowId, pos, container, playerInventory,
                 AbstractMenu.getNearestScreenMeta(container.getContainerSize(), PageMenu.SIZES));
         this.resetSlotPositions(true);
         int left = (screenMeta.width * Utils.SLOT_SIZE + 14) / 2 - 80;
@@ -70,7 +69,7 @@ public final class PageMenu extends AbstractMenu<PageScreenMeta> {
             if (buffer == null) {
                 return null;
             }
-            return new PageMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory, null);
+            return new PageMenu(windowId, buffer.readBlockPos(), new SimpleContainer(buffer.readInt()), inventory);
         }
     }
 }
