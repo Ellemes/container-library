@@ -29,7 +29,6 @@ import ninjaphenix.container_library.wrappers.PlatformUtils;
 @Mod(Utils.MOD_ID)
 public final class Main {
     public Main() {
-        // Hopefully key doesn't need to be intialized in FMLClientSetupEvent.
         new PlatformUtils(FMLLoader.getDist() == Dist.CLIENT ? new ForgeKeyHandler() : null, ModList.get()::isLoaded);
 
         CommonMain.initialize((menuType, factory) -> new MenuType<>((IContainerFactory<?>) factory::create).setRegistryName(menuType));
