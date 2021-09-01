@@ -111,7 +111,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
 
     public void c_setServerOptions(Set<ResourceLocation> options) {
         options.removeIf(option -> !menuFactories.containsKey(option));
-        Client.screenOptions = Set.copyOf(options);
+        Client.screenOptions = Utils.sortedSetOf(options);
         ResourceLocation option = ConfigWrapper.getInstance().getPreferredScreenType();
         if (options.contains(option)) {
             channel.sendToServer(new ScreenTypeUpdateMessage(option));
@@ -128,7 +128,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     private static class Client {
-        private static Set<ResourceLocation> screenOptions = NetworkWrapperImpl.INSTANCE.menuFactories.keySet();
+        private static Set<ResourceLocation> screenOptions = Utils.sortedSetOf(NetworkWrapperImpl.INSTANCE.menuFactories.keySet());
 
         private void initialize() {
             MinecraftForge.EVENT_BUS.addListener(Client::cOnPlayerDisconnected);
@@ -136,7 +136,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
 
         @SubscribeEvent
         public static void cOnPlayerDisconnected(ClientPlayerNetworkEvent.LoggedOutEvent event) {
-            Client.screenOptions = NetworkWrapperImpl.INSTANCE.menuFactories.keySet();
+            Client.screenOptions = Utils.sortedSetOf(NetworkWrapperImpl.INSTANCE.menuFactories.keySet());
         }
 
         private static void openInventoryAt(BlockPos pos) {

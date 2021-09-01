@@ -1,5 +1,6 @@
 package ninjaphenix.container_library;
 
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,6 +12,7 @@ import ninjaphenix.container_library.config.ResourceLocationTypeAdapter;
 
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Set;
 
 public class Utils {
     public static final String MOD_ID = "ninjaphenix_container_lib";
@@ -43,11 +45,16 @@ public class Utils {
                                                      .setPrettyPrinting()
                                                      .setLenient()
                                                      .create();
+
     public static ResourceLocation resloc(String path) {
         return new ResourceLocation(Utils.MOD_ID, path);
     }
 
     public static MutableComponent translation(String key, Object... values) {
         return new TranslatableComponent(key, values);
+    }
+
+    public static <T> Set<T> sortedSetOf(Set<T> set) {
+        return ImmutableSortedSet.copyOf(set);
     }
 }
