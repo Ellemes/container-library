@@ -62,7 +62,6 @@ dependencies {
     modImplementation(libs.fabric.loader)
     modApi(libs.fabric.api)
 
-    // For base module
     modCompileOnly(libs.rei.api, excludeFabric)
     modRuntime(libs.rei)
 
