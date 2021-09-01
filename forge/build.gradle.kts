@@ -10,6 +10,11 @@ plugins {
     `maven-publish`
 }
 
+//configurations {
+//    this["apiImplementation"].extendsFrom(this["implementation"])
+//    this["apiRuntimeOnly"].extendsFrom(this["runtimeOnly"])
+//}
+
 minecraft {
     mappings("official", "1.17.1")
 
@@ -86,7 +91,7 @@ tasks.withType<ProcessResources> {
 }
 
 val jarTask = tasks.getByName<Jar>("jar") {
-    archiveFileName.set("${properties["archivesBaseName"]}-${properties["mod_version"]}+${properties["minecraft_version"]}-fat.jar")
+    archiveClassifier.set("fat")
 
     manifest.attributes(mapOf(
             "Specification-Title" to "NinjaPhenix's Container Library",
@@ -104,13 +109,12 @@ val jarTask = tasks.getByName<Jar>("jar") {
 
 val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     input.set(jarTask.outputs.files.singleFile)
-    archiveFileName.set("${properties["archivesBaseName"]}-${properties["mod_version"]}+${properties["minecraft_version"]}-min.jar")
+    archiveClassifier.set("min")
     dependsOn(jarTask)
 }
 
 val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
     input.set(minifyJarTask.get().outputs.files.singleFile)
-    archiveFileName.set("${properties["archivesBaseName"]}-${properties["mod_version"]}+${properties["minecraft_version"]}.jar")
     from(rootDir.resolve("LICENSE"))
     dependsOn(minifyJarTask)
 }

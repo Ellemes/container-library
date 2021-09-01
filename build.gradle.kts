@@ -6,7 +6,7 @@ subprojects {
     apply(plugin = "java")
 
     group = properties["maven_group"] as String
-    version = properties["mod_version"] as String
+    version = "${properties["mod_version"]}+${properties["minecraft_version"]}"
     base.archivesName.set(properties["archives_base_name"] as String)
     buildDir = rootDir.resolve("build/${project.name}")
 
@@ -23,7 +23,7 @@ subprojects {
 
     }
 
-    // todo: make api source set
+    // todo: produce an api jar somehow
     sourceSets {
         //create("api") {
         //    java {

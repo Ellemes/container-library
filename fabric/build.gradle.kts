@@ -22,11 +22,11 @@ loom {
 }
 
 //configurations.getByName(sourceSets["api"].compileClasspathConfigurationName) {
-//    this.extendsFrom(configurations.getByName("minecraftNamed"))
+//    this.extendsFrom(configurations["minecraftNamed"])
 //}
 //
 //configurations.getByName(sourceSets["api"].runtimeClasspathConfigurationName) {
-//    this.extendsFrom(configurations.getByName("minecraftNamed"))
+//    this.extendsFrom(configurations["minecraftNamed"])
 //}
 
 repositories {
@@ -80,47 +80,52 @@ tasks.withType<ProcessResources> {
     }
 }
 
-val remapJarTask : RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
-    archiveFileName.set("${properties["archivesBaseName"]}-${properties["mod_version"]}+${properties["minecraft_version"]}-fat.jar")
-}
+afterEvaluate {
 
-tasks.getByName<Jar>("jar") {
-    archiveFileName.set("${properties["archivesBaseName"]}-${properties["mod_version"]}+${properties["minecraft_version"]}-dev.jar")
-}
-
-val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
-    input.set(remapJarTask.outputs.files.singleFile)
-    archiveFileName.set("${properties["archivesBaseName"]}-${properties["mod_version"]}+${properties["minecraft_version"]}-min.jar")
-    dependsOn(remapJarTask)
-}
-
-val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
-    input.set(minifyJarTask.get().outputs.files.singleFile)
-    archiveFileName.set("${properties["archivesBaseName"]}-${properties["mod_version"]}+${properties["minecraft_version"]}.jar")
-    from(rootDir.resolve("LICENSE"))
-    dependsOn(minifyJarTask)
-}
-
-tasks.getByName("build") {
-    dependsOn(releaseJarTask)
-}
-
-// https://docs.gradle.org/current/userguide/publishing_maven.html
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "ninjaphenix.container_library"
-            artifactId = "fabric"
-            artifact(remapJarTask) {
-                builtBy(remapJarTask)
-            }
-            //artifact(sourcesJar) {
-            //    builtBy remapSourcesJar
-            //}
-        }
+    val jarTask : Jar = tasks.getByName<Jar>("jar") {
+    archiveClassifier.set("dev")
     }
 
-    repositories {
+    val remapJarTask : RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
+        archiveClassifier.set("fat")
+        //archiveFileName.set("${properties["archives_base_name"]}-${properties["version"]}-fat.jar")
+        dependsOn(jarTask)
+    }
 
+    val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
+        input.set(remapJarTask.outputs.files.singleFile)
+        archiveClassifier.set("min")
+        dependsOn(remapJarTask)
+    }
+
+    val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
+        input.set(minifyJarTask.get().outputs.files.singleFile)
+        archiveFileName
+        from(rootDir.resolve("LICENSE"))
+        dependsOn(minifyJarTask)
+    }
+
+    tasks.getByName("build") {
+        dependsOn(releaseJarTask)
+    }
+
+    // https://docs.gradle.org/current/userguide/publishing_maven.html
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = "ninjaphenix.container_library"
+                artifactId = "fabric"
+                artifact(remapJarTask) {
+                    builtBy(remapJarTask)
+                }
+                //artifact(sourcesJar) {
+                //    builtBy remapSourcesJar
+                //}
+            }
+        }
+
+        repositories {
+
+        }
     }
 }
