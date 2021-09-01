@@ -70,28 +70,39 @@ public final class PickScreen extends Screen {
         optionWidgets.clear();
         for (ResourceLocation option : options) {
             Triple<ResourceLocation, Component, ScreenSizePredicate> settings = PickScreen.BUTTON_SETTINGS.get(option);
-            boolean warn = settings.getRight().test(width, height);
-            Button.OnTooltip tooltip;
-            if (warn) {
-                tooltip = new Button.OnTooltip() {
-                    final MutableComponent warnText1 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY);
-                    final Component warnText2 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY);
+            boolean isWarn = settings.getRight().test(width, height);
+            boolean isSelected = option.equals(currentOption);
+            Button.OnTooltip tooltip = new Button.OnTooltip() {
+                private static final MutableComponent WARN_TEXT_1 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY);
+                private static final Component WARN_TEXT_2 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY);
+                private static final Component CURRENT_OPTION_TEXT = Utils.translation("screen.ninjaphenix_container_lib.current_option_notice").withStyle(ChatFormatting.GOLD);
 
-                    @Override
-                    public void onTooltip(Button button, PoseStack stack, int x, int y) {
-                        PickScreen.this.renderTooltip(stack, List.of(button.getMessage(), warnText1, warnText2), Optional.empty(), x, y);
+                @Override
+                public void onTooltip(Button button, PoseStack stack, int x, int y) {
+                    List<Component> tooltip = new ArrayList<>(4);
+                    tooltip.add(button.getMessage());
+                    if (isSelected) {
+                        tooltip.add(CURRENT_OPTION_TEXT);
                     }
+                    if (isWarn) {
+                        tooltip.add(WARN_TEXT_1);
+                        tooltip.add(WARN_TEXT_2);
+                    }
+                    PickScreen.this.renderTooltip(stack, tooltip, Optional.empty(), x, y);
+                }
 
-                    @Override
-                    public void narrateTooltip(Consumer<Component> consumer) {
-                        consumer.accept(warnText1.append(warnText2));
+                @Override
+                public void narrateTooltip(Consumer<Component> consumer) {
+                    if (isSelected) {
+                        consumer.accept(CURRENT_OPTION_TEXT);
                     }
-                };
-            } else {
-                tooltip = (button, stack, x1, y1) -> PickScreen.this.renderTooltip(stack, button.getMessage(), x1, y1);
-            }
+                    if (isWarn) {
+                        consumer.accept(WARN_TEXT_1.append(WARN_TEXT_2));
+                    }
+                }
+            };
             optionWidgets.add(this.addRenderableWidget(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
-                    settings.getLeft(), settings.getMiddle(), warn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
+                    settings.getLeft(), settings.getMiddle(), isWarn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
             x++;
         }
     }
