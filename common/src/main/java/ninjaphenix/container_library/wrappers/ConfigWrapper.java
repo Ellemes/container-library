@@ -17,4 +17,8 @@ public interface ConfigWrapper {
     ResourceLocation getPreferredScreenType();
 
     boolean setPreferredScreenType(ResourceLocation screenType);
+
+    int getPreferredScreenWidth(int slots);
+
+    int getPreferredScreenHeight(int slots);
 }

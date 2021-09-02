@@ -1,8 +1,6 @@
 package ninjaphenix.container_library.internal.api.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
@@ -10,31 +8,32 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.internal.api.inventory.screen.ScreenMeta;
-import ninjaphenix.container_library.wrappers.NetworkWrapper;
+import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
-import java.util.function.Function;
 
 @ApiStatus.Experimental
-public abstract class AbstractScreen<T extends AbstractMenu<R>, R extends ScreenMeta> extends AbstractContainerScreen<T> {
-    protected final R screenMeta;
+public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMenu> {
     private final Integer inventoryLabelLeft;
+    protected final int menuWidth, menuHeight, totalSlots;
 
-    protected AbstractScreen(T container, Inventory playerInventory, Component title, Function<R, Integer> inventoryLabelLeftFunction) {
-        super(container, playerInventory, title);
-        screenMeta = container.getScreenMeta();
-        inventoryLabelLeft = inventoryLabelLeftFunction.apply(screenMeta);
+    protected AbstractScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
+        // todo: move to impl classes or re-add screenMeta
+        inventoryLabelLeft = 0;
+        totalSlots = menu.slots.size();
+        menuWidth = ConfigWrapper.getInstance().getPreferredScreenWidth(totalSlots);
+        menuHeight = ConfigWrapper.getInstance().getPreferredScreenHeight(totalSlots);
     }
 
     @Override
     protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, screenMeta.texture);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, screenMeta.textureWidth, screenMeta.textureHeight);
+        // RenderSystem.setShaderTexture(0, screenMeta.texture);
+        // RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        // GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, screenMeta.textureWidth, screenMeta.textureHeight);
     }
 
     @Override
@@ -57,7 +56,8 @@ public abstract class AbstractScreen<T extends AbstractMenu<R>, R extends Screen
     @SuppressWarnings("ConstantConditions")
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (PlatformUtils.getInstance().isConfigKeyPressed(keyCode, scanCode, modifiers)) {
-            minecraft.setScreen(new PickScreen(NetworkWrapper.getInstance().getScreenOptions(), null, (selection) -> NetworkWrapper.getInstance().c_openInventoryAt(menu.getPos(), selection)));
+            // todo: pick screen needs reworking as it's client only now, will need to open the new screen if an inventory is already open.
+            minecraft.setScreen(new PickScreen(null, (selection) -> {}));
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE || minecraft.options.keyInventory.matches(keyCode, scanCode)) {
             minecraft.player.closeContainer();

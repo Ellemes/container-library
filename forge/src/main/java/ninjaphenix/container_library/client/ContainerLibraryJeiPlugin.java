@@ -22,9 +22,9 @@ public class ContainerLibraryJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addGenericGuiContainerHandler(AbstractScreen.class, new IGuiContainerHandler<AbstractScreen<?, ?>>() {
+        registration.addGuiContainerHandler(AbstractScreen.class, new IGuiContainerHandler<>() {
             @Override
-            public List<Rect2i> getGuiExtraAreas(AbstractScreen<?, ?> screen) {
+            public List<Rect2i> getGuiExtraAreas(AbstractScreen screen) {
                 return screen.getExclusionZones();
             }
         });

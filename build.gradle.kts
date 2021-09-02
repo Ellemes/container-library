@@ -15,14 +15,6 @@ subprojects {
         targetCompatibility = JavaVersion.toVersion(properties["mod_java_version"] as String)
     }
 
-    repositories {
-        flatDir { // Cannot use exclusive content as forge does not change the artifact group like fabric does.
-            name = "Local Dependencies"
-            dir(rootDir.resolve("local_dependencies"))
-        }
-
-    }
-
     // todo: produce an api jar somehow
     sourceSets {
         //create("api") {

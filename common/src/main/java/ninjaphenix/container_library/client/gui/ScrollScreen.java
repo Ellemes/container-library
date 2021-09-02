@@ -2,30 +2,32 @@ package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.inventory.ScrollMenu;
-import ninjaphenix.container_library.inventory.screen.ScrollScreenMeta;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Collections;
 import java.util.List;
 
-public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenMeta> {
+public final class ScrollScreen extends AbstractScreen {
     private final boolean hasScrollbar;
     private final boolean scrollingUnrestricted;
+    private final int totalRows;
     private boolean isDragging;
     private int topRow;
 
-    public ScrollScreen(ScrollMenu container, Inventory playerInventory, Component title) {
-        super(container, playerInventory, title, (screenMeta) -> (screenMeta.width * 18 + 14) / 2 - 80);
-        hasScrollbar = screenMeta.totalRows != screenMeta.height;
-        imageWidth = 14 + 18 * screenMeta.width;
-        imageHeight = 17 + 97 + 18 * screenMeta.height;
+    public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
+        totalRows = Mth.ceil(((double) totalSlots) / menuWidth);
+        hasScrollbar = totalRows != menuHeight;
+        imageWidth = 14 + 18 * menuWidth;
+        imageHeight = 17 + 97 + 18 * menuHeight;
         scrollingUnrestricted = ConfigWrapper.getInstance().isScrollingUnrestricted();
     }
 
@@ -42,18 +44,18 @@ public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenM
     protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
         super.renderBg(stack, delta, mouseX, mouseY);
         if (hasScrollbar) {
-            int containerSlotsHeight = screenMeta.height * 18;
-            int scrollbarHeight = containerSlotsHeight + (screenMeta.width > 9 ? 34 : 24);
-            blit(stack, leftPos + imageWidth - 4, topPos, imageWidth, 0, 22, scrollbarHeight, screenMeta.textureWidth, screenMeta.textureHeight);
-            int yOffset = Mth.floor((containerSlotsHeight - 17) * (((double) topRow) / (screenMeta.totalRows - screenMeta.height)));
-            blit(stack, leftPos + imageWidth - 2, topPos + yOffset + 18, imageWidth, scrollbarHeight, 12, 15, screenMeta.textureWidth, screenMeta.textureHeight);
+            int containerSlotsHeight = menuHeight * 18;
+            int scrollbarHeight = containerSlotsHeight + (menuWidth > 9 ? 34 : 24);
+            GuiComponent.blit(stack, leftPos + imageWidth - 4, topPos, imageWidth, 0, 22, scrollbarHeight, screenMeta.textureWidth, screenMeta.textureHeight);
+            int yOffset = Mth.floor((containerSlotsHeight - 17) * (((double) topRow) / (totalRows - menuHeight)));
+            GuiComponent.blit(stack, leftPos + imageWidth - 2, topPos + yOffset + 18, imageWidth, scrollbarHeight, 12, 15, screenMeta.textureWidth, screenMeta.textureHeight);
         }
     }
 
     private boolean isMouseOverScrollbar(double mouseX, double mouseY) {
         int scrollbarTopPos = topPos + 18;
         int scrollbarLeftPos = leftPos + imageWidth - 2;
-        return mouseX >= scrollbarLeftPos && mouseY >= scrollbarTopPos && mouseX < scrollbarLeftPos + 12 && mouseY < scrollbarTopPos + screenMeta.height * 18;
+        return mouseX >= scrollbarLeftPos && mouseY >= scrollbarTopPos && mouseX < scrollbarLeftPos + 12 && mouseY < scrollbarTopPos + menuHeight * 18;
     }
 
     @Override
@@ -65,9 +67,9 @@ public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenM
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (hasScrollbar) {
             if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
-                if (topRow != screenMeta.totalRows - screenMeta.height) {
+                if (topRow != totalRows - menuHeight) {
                     if (hasShiftDown()) {
-                        this.setTopRow(topRow, Math.min(topRow + screenMeta.height, screenMeta.totalRows - screenMeta.height));
+                        this.setTopRow(topRow, Math.min(topRow + menuHeight, totalRows - menuHeight));
                     } else {
                         this.setTopRow(topRow, topRow + 1);
                     }
@@ -76,7 +78,7 @@ public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenM
             } else if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_PAGE_UP) {
                 if (topRow != 0) {
                     if (hasShiftDown()) {
-                        this.setTopRow(topRow, Math.max(topRow - screenMeta.height, 0));
+                        this.setTopRow(topRow, Math.max(topRow - menuHeight, 0));
                     } else {
                         this.setTopRow(topRow, topRow - 1);
                     }
@@ -105,7 +107,7 @@ public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenM
     }
 
     private void updateTopRow(double mouseY) {
-        this.setTopRow(topRow, Mth.floor(Mth.clampedLerp(0, screenMeta.totalRows - screenMeta.height, (mouseY - (topPos + 18)) / (screenMeta.height * 18))));
+        this.setTopRow(topRow, Mth.floor(Mth.clampedLerp(0, totalRows - menuHeight, (mouseY - (topPos + 18)) / (menuHeight * 18))));
     }
 
     @Override
@@ -113,9 +115,9 @@ public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenM
         if (hasScrollbar && (scrollingUnrestricted || this.isMouseOverScrollbar(mouseX, mouseY))) {
             int newTop;
             if (delta < 0) {
-                newTop = Math.min(topRow + (hasShiftDown() ? screenMeta.height : 1), screenMeta.totalRows - screenMeta.height);
+                newTop = Math.min(topRow + (hasShiftDown() ? menuHeight : 1), totalRows - menuHeight);
             } else {
-                newTop = Math.max(topRow - (hasShiftDown() ? screenMeta.height : 1), 0);
+                newTop = Math.max(topRow - (hasShiftDown() ? menuHeight : 1), 0);
             }
             this.setTopRow(topRow, newTop);
             return true;
@@ -130,32 +132,32 @@ public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenM
         topRow = newTopRow;
         int delta = newTopRow - oldTopRow;
         int rows = Math.abs(delta);
-        if (rows < screenMeta.height) {
-            int setAmount = rows * screenMeta.width;
-            int movableAmount = (screenMeta.height - rows) * screenMeta.width;
+        if (rows < menuHeight) {
+            int setAmount = rows * menuWidth;
+            int movableAmount = (menuHeight - rows) * menuWidth;
             if (delta > 0) {
-                int setOutBegin = oldTopRow * screenMeta.width;
-                int movableBegin = newTopRow * screenMeta.width;
+                int setOutBegin = oldTopRow * menuWidth;
+                int movableBegin = newTopRow * menuWidth;
                 int setInBegin = movableBegin + movableAmount;
                 menu.setSlotRange(setOutBegin, setOutBegin + setAmount, index -> -2000);
                 menu.moveSlotRange(movableBegin, setInBegin, -18 * rows);
-                menu.setSlotRange(setInBegin, Math.min(setInBegin + setAmount, screenMeta.totalSlots),
-                        index -> 18 * Mth.intFloorDiv(index - movableBegin + screenMeta.width, screenMeta.width));
+                menu.setSlotRange(setInBegin, Math.min(setInBegin + setAmount, totalSlots),
+                        index -> 18 * Mth.intFloorDiv(index - movableBegin + menuWidth, menuWidth));
             } else {
-                int setInBegin = newTopRow * screenMeta.width;
-                int movableBegin = oldTopRow * screenMeta.width;
+                int setInBegin = newTopRow * menuWidth;
+                int movableBegin = oldTopRow * menuWidth;
                 int setOutBegin = movableBegin + movableAmount;
                 menu.setSlotRange(setInBegin, setInBegin + setAmount,
-                        index -> 18 * Mth.intFloorDiv(index - setInBegin + screenMeta.width, screenMeta.width));
+                        index -> 18 * Mth.intFloorDiv(index - setInBegin + menuWidth, menuWidth));
                 menu.moveSlotRange(movableBegin, setOutBegin, 18 * rows);
-                menu.setSlotRange(setOutBegin, Math.min(setOutBegin + setAmount, screenMeta.totalSlots), index -> -2000);
+                menu.setSlotRange(setOutBegin, Math.min(setOutBegin + setAmount, totalSlots), index -> -2000);
             }
         } else {
-            int oldMin = oldTopRow * screenMeta.width;
-            menu.setSlotRange(oldMin, Math.min(oldMin + screenMeta.width * screenMeta.height, screenMeta.totalSlots), index -> -2000);
-            int newMin = newTopRow * screenMeta.width;
-            menu.setSlotRange(newMin, newMin + screenMeta.width * screenMeta.height,
-                    index -> 18 + 18 * Mth.intFloorDiv(index - newMin, screenMeta.width));
+            int oldMin = oldTopRow * menuWidth;
+            menu.setSlotRange(oldMin, Math.min(oldMin + menuWidth * menuHeight, totalSlots), index -> -2000);
+            int newMin = newTopRow * menuWidth;
+            menu.setSlotRange(newMin, newMin + menuWidth * menuHeight,
+                    index -> 18 + 18 * Mth.intFloorDiv(index - newMin, menuWidth));
         }
     }
 
@@ -181,7 +183,7 @@ public final class ScrollScreen extends AbstractScreen<ScrollMenu, ScrollScreenM
 
     public List<Rect2i> getExclusionZones() {
         if (hasScrollbar) {
-            int height = screenMeta.height * 18 + (screenMeta.width > 9 ? 34 : 24);
+            int height = menuHeight * 18 + (menuWidth > 9 ? 34 : 24);
             return Collections.singletonList(new Rect2i(leftPos + imageWidth - 4, topPos, 22, height));
         }
         return Collections.emptyList();

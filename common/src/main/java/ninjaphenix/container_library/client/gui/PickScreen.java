@@ -1,5 +1,6 @@
 package ninjaphenix.container_library.client.gui;
 
+import com.google.common.collect.ImmutableSortedSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiComponent;
@@ -32,9 +33,9 @@ public final class PickScreen extends Screen {
     private final Consumer<ResourceLocation> onOptionPicked;
     private int topPadding;
 
-    public PickScreen(Set<ResourceLocation> options, Screen returnToScreen, Consumer<ResourceLocation> onOptionPicked) {
+    public PickScreen(Screen returnToScreen, Consumer<ResourceLocation> onOptionPicked) {
         super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
-        this.options = options;
+        this.options = ImmutableSortedSet.of(Utils.PAGE_SCREEN_TYPE, Utils.SCROLL_SCREEN_TYPE, Utils.SINGLE_SCREEN_TYPE);
         this.optionWidgets = new ArrayList<>(options.size());
         this.onOptionPicked = onOptionPicked;
         this.returnToScreen = returnToScreen;

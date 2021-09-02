@@ -12,33 +12,23 @@ import java.util.function.Supplier;
 @SuppressWarnings("ClassCanBeRecord")
 public final class OpenInventoryMessage {
     private final BlockPos pos;
-    @Nullable
-    private final ResourceLocation preference;
 
-    public OpenInventoryMessage(BlockPos pos, @Nullable ResourceLocation preference) {
+    public OpenInventoryMessage(BlockPos pos) {
         this.pos = pos;
-        this.preference = preference;
     }
 
     public static void encode(OpenInventoryMessage message, FriendlyByteBuf buffer) {
         buffer.writeBlockPos(message.pos);
-        if (message.preference != null) {
-            buffer.writeResourceLocation(message.preference);
-        }
     }
 
     public static OpenInventoryMessage decode(FriendlyByteBuf buffer) {
-        var pos = buffer.readBlockPos();
-        ResourceLocation preference = null;
-        if (buffer.readableBytes() > 0) {
-            preference = buffer.readResourceLocation();
-        }
-        return new OpenInventoryMessage(pos, preference);
+        BlockPos pos = buffer.readBlockPos();
+        return new OpenInventoryMessage(pos);
     }
 
     public static void handle(OpenInventoryMessage message, Supplier<NetworkEvent.Context> wrappedContext) {
         NetworkEvent.Context context = wrappedContext.get();
-        context.enqueueWork(() -> NetworkWrapperImpl.getInstance().handleOpenInventory(message.pos, context.getSender(), message.preference));
+        context.enqueueWork(() -> NetworkWrapperImpl.getInstance().handleOpenInventory(message.pos, context.getSender()));
         context.setPacketHandled(true);
     }
 }

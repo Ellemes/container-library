@@ -6,9 +6,6 @@ import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.internal.api.function.ScreenSizePredicate;
 import ninjaphenix.container_library.internal.api.inventory.ClientMenuFactory;
-import ninjaphenix.container_library.inventory.PageMenu;
-import ninjaphenix.container_library.inventory.ScrollMenu;
-import ninjaphenix.container_library.inventory.SingleMenu;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
@@ -20,27 +17,11 @@ import java.util.function.BiFunction;
 
 public final class CommonMain {
     public static final Logger LOGGER = LogManager.getLogger(Utils.MOD_ID);
-    private static MenuType<PageMenu> pageMenuType;
-    private static MenuType<ScrollMenu> scrollMenuType;
-    private static MenuType<SingleMenu> singleMenuType;
-
-    public static MenuType<PageMenu> getPageMenuType() {
-        return pageMenuType;
-    }
-
-    public static MenuType<ScrollMenu> getScrollMenuType() {
-        return scrollMenuType;
-    }
-
-    public static MenuType<SingleMenu> getSingleMenuType() {
-        return singleMenuType;
-    }
+    private static MenuType<AbstractMenu> menuType;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <T extends AbstractMenu<?>> void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> menuTypeFunction) {
-        pageMenuType = menuTypeFunction.apply(Utils.PAGE_SCREEN_TYPE, PageMenu::createClientMenu);
-        scrollMenuType = menuTypeFunction.apply(Utils.SCROLL_SCREEN_TYPE, ScrollMenu::createClientMenu);
-        singleMenuType = menuTypeFunction.apply(Utils.SINGLE_SCREEN_TYPE, SingleMenu::createClientMenu);
+    public static void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> menuTypeFunction) {
+        menuType = menuTypeFunction.apply(Utils.SINGLE_SCREEN_TYPE, AbstractMenu::createClientMenu);
 
         if (PlatformUtils.getInstance().isClient()) {
             ConfigWrapper.getInstance().initialise();
@@ -62,5 +43,9 @@ public final class CommonMain {
 
     public static void warnThrowableMessage(String message, Throwable throwable, Object... values) {
         CommonMain.LOGGER.warn(new FormattedMessage(message, values, throwable));
+    }
+
+    public static MenuType<AbstractMenu> getMenuType() {
+        return menuType;
     }
 }
