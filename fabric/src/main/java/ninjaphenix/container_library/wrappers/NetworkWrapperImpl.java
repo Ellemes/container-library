@@ -75,7 +75,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     private static class Client {
         private static void openInventoryAt(BlockPos pos) {
             if (ConfigWrapper.getInstance().getPreferredScreenType().equals(Utils.UNSET_SCREEN_TYPE)) {
-                Minecraft.getInstance().setScreen(new PickScreen(null, (preference) -> Client.openInventoryAt(pos)));
+                Minecraft.getInstance().setScreen(new PickScreen(null, () -> Client.openInventoryAt(pos)));
             } else {
                 if (ClientPlayNetworking.canSend(NetworkWrapperImpl.OPEN_INVENTORY)) {
                     var buffer = new FriendlyByteBuf(Unpooled.buffer());

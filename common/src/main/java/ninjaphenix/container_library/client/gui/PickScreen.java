@@ -12,10 +12,11 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.internal.api.function.ScreenSizePredicate;
 import ninjaphenix.container_library.internal.api.client.gui.widget.ScreenPickButton;
+import ninjaphenix.container_library.internal.api.function.ScreenSizePredicate;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.apache.commons.lang3.tuple.Triple;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,12 +31,12 @@ public final class PickScreen extends Screen {
     private final Set<ResourceLocation> options;
     private final Screen returnToScreen;
     private final List<ScreenPickButton> optionWidgets;
-    private final Consumer<ResourceLocation> onOptionPicked;
+    private final @Nullable Runnable onOptionPicked;
     private int topPadding;
 
-    public PickScreen(Screen returnToScreen, Consumer<ResourceLocation> onOptionPicked) {
+    public PickScreen(Screen returnToScreen, @Nullable Runnable onOptionPicked) {
         super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
-        this.options = ImmutableSortedSet.of(Utils.PAGE_SCREEN_TYPE, Utils.SCROLL_SCREEN_TYPE, Utils.SINGLE_SCREEN_TYPE);
+        this.options = ImmutableSortedSet.copyOf(PickScreen.BUTTON_SETTINGS.keySet());
         this.optionWidgets = new ArrayList<>(options.size());
         this.onOptionPicked = onOptionPicked;
         this.returnToScreen = returnToScreen;
@@ -110,7 +111,9 @@ public final class PickScreen extends Screen {
 
     private void updatePlayerPreference(ResourceLocation selection) {
         ConfigWrapper.getInstance().setPreferredScreenType(selection);
-        onOptionPicked.accept(selection);
+        if (onOptionPicked != null) {
+            onOptionPicked.run();
+        }
         this.onClose();
     }
 

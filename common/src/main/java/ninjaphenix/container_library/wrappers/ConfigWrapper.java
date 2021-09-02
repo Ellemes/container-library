@@ -2,6 +2,7 @@ package ninjaphenix.container_library.wrappers;
 
 import net.minecraft.resources.ResourceLocation;
 
+// todo: make abstract class
 public interface ConfigWrapper {
     static ConfigWrapper getInstance() {
         return ConfigWrapperImpl.getInstance();

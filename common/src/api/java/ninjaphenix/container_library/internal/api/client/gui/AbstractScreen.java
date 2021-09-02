@@ -5,9 +5,14 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
+import ninjaphenix.container_library.client.gui.ScrollScreen;
+import ninjaphenix.container_library.client.gui.SingleScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
@@ -57,7 +62,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (PlatformUtils.getInstance().isConfigKeyPressed(keyCode, scanCode, modifiers)) {
             // todo: pick screen needs reworking as it's client only now, will need to open the new screen if an inventory is already open.
-            minecraft.setScreen(new PickScreen(null, (selection) -> {}));
+            minecraft.setScreen(new PickScreen(null, null));
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE || minecraft.options.keyInventory.matches(keyCode, scanCode)) {
             minecraft.player.closeContainer();
@@ -71,4 +76,17 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     }
 
     public abstract List<Rect2i> getExclusionZones();
+
+    public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
+        ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
+        if (preference == Utils.PAGE_SCREEN_TYPE) {
+            return new PageScreen(menu, inventory, title);
+        } else if (preference == Utils.SCROLL_SCREEN_TYPE) {
+            return new ScrollScreen(menu, inventory, title);
+        } else if (preference == Utils.SINGLE_SCREEN_TYPE) {
+            return new SingleScreen(menu, inventory, title);
+        }
+        // Should be an illegal state.
+        return null;
+    }
 }

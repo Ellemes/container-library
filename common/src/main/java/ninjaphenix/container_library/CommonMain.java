@@ -21,7 +21,7 @@ public final class CommonMain {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> menuTypeFunction) {
-        menuType = menuTypeFunction.apply(Utils.SINGLE_SCREEN_TYPE, AbstractMenu::createClientMenu);
+        menuType = menuTypeFunction.apply(Utils.MENU_TYPE_ID, AbstractMenu::createClientMenu);
 
         if (PlatformUtils.getInstance().isClient()) {
             ConfigWrapper.getInstance().initialise();

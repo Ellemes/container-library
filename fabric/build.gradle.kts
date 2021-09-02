@@ -15,6 +15,7 @@ loom {
         }
         named("server") {
             ideConfigGenerated(false)
+            serverWithGui()
         }
     }
 

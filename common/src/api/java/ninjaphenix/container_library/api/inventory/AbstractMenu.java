@@ -1,6 +1,7 @@
 package ninjaphenix.container_library.api.inventory;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -9,6 +10,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import ninjaphenix.container_library.CommonMain;
+import ninjaphenix.container_library.Utils;
+
+import java.util.function.IntUnaryOperator;
 
 public final class AbstractMenu extends AbstractContainerMenu {
     private final Container container;
@@ -81,11 +85,11 @@ public final class AbstractMenu extends AbstractContainerMenu {
         return new AbstractMenu(windowId, new SimpleContainer(buffer.readInt()), inventory);
     }
 
-    public void resetSlotPositions(boolean createSlots) {
+    public void resetSlotPositions(boolean createSlots, int menuWidth, int menuHeight) {
         for (int i = 0; i < container.getContainerSize(); i++) {
-            int slotXPos = i % screenMeta.width;
-            int slotYPos = Mth.ceil((((double) (i - slotXPos)) / screenMeta.width));
-            int realYPos = slotYPos >= screenMeta.height ? (Utils.SLOT_SIZE * (slotYPos % screenMeta.height)) - 2000 : slotYPos * Utils.SLOT_SIZE;
+            int slotXPos = i % menuWidth;
+            int slotYPos = Mth.ceil((((double) (i - slotXPos)) / menuWidth));
+            int realYPos = slotYPos >= menuHeight ? (Utils.SLOT_SIZE * (slotYPos % menuHeight)) - 2000 : slotYPos * Utils.SLOT_SIZE;
             if (createSlots) {
                 this.addSlot(new Slot(container, i, slotXPos * Utils.SLOT_SIZE + 8, realYPos + Utils.SLOT_SIZE));
             } else {

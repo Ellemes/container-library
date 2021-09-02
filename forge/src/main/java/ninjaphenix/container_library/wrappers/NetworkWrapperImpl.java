@@ -55,7 +55,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
             @Nullable
             @Override
             public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-                return factory.create(windowId, pos, container, playerInventory);
+                return factory.create(windowId, container, playerInventory);
             }
         }, buffer -> buffer.writeInt(container.getContainerSize()));
     }
@@ -67,7 +67,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     private static class Client {
         private static void openInventoryAt(BlockPos pos) {
             if (ConfigWrapper.getInstance().getPreferredScreenType().equals(Utils.UNSET_SCREEN_TYPE)) {
-                Minecraft.getInstance().setScreen(new PickScreen(null, (preference) -> Client.openInventoryAt(pos)));
+                Minecraft.getInstance().setScreen(new PickScreen(null, () -> Client.openInventoryAt(pos)));
             } else {
                 ClientPacketListener listener = Minecraft.getInstance().getConnection();
                 if (listener != null && NetworkWrapperImpl.INSTANCE.channel.isRemotePresent(listener.getConnection())) {

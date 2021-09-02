@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
@@ -16,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ScrollScreen extends AbstractScreen {
+    private final ResourceLocation textureLocation;
+    private final int textureWidth, textureHeight;
     private final boolean hasScrollbar;
     private final boolean scrollingUnrestricted;
     private final int totalRows;
@@ -24,6 +27,12 @@ public final class ScrollScreen extends AbstractScreen {
 
     public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+
+        // todo: implement
+        textureLocation = new ResourceLocation("null", "null");
+        textureWidth = 0;
+        textureHeight = 0;
+
         totalRows = Mth.ceil(((double) totalSlots) / menuWidth);
         hasScrollbar = totalRows != menuHeight;
         imageWidth = 14 + 18 * menuWidth;
@@ -46,9 +55,9 @@ public final class ScrollScreen extends AbstractScreen {
         if (hasScrollbar) {
             int containerSlotsHeight = menuHeight * 18;
             int scrollbarHeight = containerSlotsHeight + (menuWidth > 9 ? 34 : 24);
-            GuiComponent.blit(stack, leftPos + imageWidth - 4, topPos, imageWidth, 0, 22, scrollbarHeight, screenMeta.textureWidth, screenMeta.textureHeight);
+            GuiComponent.blit(stack, leftPos + imageWidth - 4, topPos, imageWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
             int yOffset = Mth.floor((containerSlotsHeight - 17) * (((double) topRow) / (totalRows - menuHeight)));
-            GuiComponent.blit(stack, leftPos + imageWidth - 2, topPos + yOffset + 18, imageWidth, scrollbarHeight, 12, 15, screenMeta.textureWidth, screenMeta.textureHeight);
+            GuiComponent.blit(stack, leftPos + imageWidth - 2, topPos + yOffset + 18, imageWidth, scrollbarHeight, 12, 15, textureWidth, textureHeight);
         }
     }
 

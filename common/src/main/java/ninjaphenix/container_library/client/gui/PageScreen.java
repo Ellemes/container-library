@@ -36,6 +36,12 @@ public final class PageScreen extends AbstractScreen {
 
     public PageScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+
+        // todo: implement
+        textureLocation = new ResourceLocation("null", "null");
+        textureWidth = 0;
+        textureHeight = 0;
+
         pages = Mth.ceil((double) totalSlots / (menuWidth * menuHeight));
         blankSlots = Math.floorMod(totalSlots, menuWidth * menuHeight);
         imageWidth = 14 + 18 * menuWidth;
@@ -119,7 +125,7 @@ public final class PageScreen extends AbstractScreen {
         if (this.hasPages()) {
             int currentPage = page;
             if (currentPage != 1) {
-                menu.resetSlotPositions(false);
+                menu.resetSlotPositions(false, menuWidth, menuHeight);
                 super.resize(client, width, height);
                 blankArea.clear();
                 this.setPage(1, currentPage);

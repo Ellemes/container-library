@@ -21,9 +21,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import ninjaphenix.container_library.client.ForgeKeyHandler;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.client.gui.ScrollScreen;
-import ninjaphenix.container_library.client.gui.SingleScreen;
-import ninjaphenix.container_library.wrappers.NetworkWrapper;
+import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 @Mod(Utils.MOD_ID)
@@ -35,12 +33,10 @@ public final class Main {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addGenericListener(MenuType.class, (RegistryEvent.Register<MenuType<?>> event) -> {
             IForgeRegistry<MenuType<?>> registry = event.getRegistry();
-            registry.registerAll(CommonMain.getPageMenuType(), CommonMain.getScrollMenuType(), CommonMain.getSingleMenuType());
+            registry.registerAll(CommonMain.getMenuType());
         });
         modEventBus.addListener((FMLClientSetupEvent event) -> {
-            MenuScreens.register(CommonMain.getPageMenuType(), PageScreen::new);
-            MenuScreens.register(CommonMain.getScrollMenuType(), ScrollScreen::new);
-            MenuScreens.register(CommonMain.getSingleMenuType(), SingleScreen::new);
+            MenuScreens.register(CommonMain.getMenuType(), AbstractScreen::createScreen);
         });
         if (PlatformUtils.getInstance().isClient()) {
             this.registerConfigGuiHandler();
@@ -56,9 +52,7 @@ public final class Main {
     private void registerConfigGuiHandler() {
         ModLoadingContext.get().getActiveContainer().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
                 () -> new ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> {
-                    return new PickScreen(NetworkWrapper.getInstance().getScreenOptions(), screen, (selection) -> {
-                        NetworkWrapper.getInstance().c2s_sendTypePreference(selection);
-                    });
+                    return new PickScreen(screen, null);
                 })
         );
     }
