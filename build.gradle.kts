@@ -43,6 +43,22 @@ subprojects {
             //compileClasspath += sourceSets["api"].output
             //runtimeClasspath += sourceSets["api"].output
         }
+
+        test {
+            java {
+                setSrcDirs(listOf(
+                        "src/test/java",
+                        rootDir.resolve("common/${project.name}Src/test/java")
+                ))
+            }
+            resources {
+                setSrcDirs(listOf(
+                        "src/test/resources",
+                        rootDir.resolve("common/${project.name}Src/test/resources")
+                ))
+            }
+            compileClasspath += this@sourceSets["main"].compileClasspath
+        }
     }
 
     tasks.withType<JavaCompile>().configureEach {

@@ -17,6 +17,14 @@ loom {
             ideConfigGenerated(false)
             serverWithGui()
         }
+        create("testClient") {
+            inherit(this@runs["client"])
+            source("test")
+        }
+        create("testServer") {
+            inherit(this@runs["server"])
+            source("test")
+        }
     }
 
     accessWidenerPath.set(file("src/main/resources/ninjaphenix_container_lib.accessWidener"))

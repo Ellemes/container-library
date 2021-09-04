@@ -79,11 +79,11 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
 
     public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
-        if (preference == Utils.PAGE_SCREEN_TYPE) {
+        if (Utils.PAGE_SCREEN_TYPE.equals(preference)) {
             return new PageScreen(menu, inventory, title);
-        } else if (preference == Utils.SCROLL_SCREEN_TYPE) {
+        } else if (Utils.SCROLL_SCREEN_TYPE.equals(preference)) {
             return new ScrollScreen(menu, inventory, title);
-        } else if (preference == Utils.SINGLE_SCREEN_TYPE) {
+        } else if (Utils.SINGLE_SCREEN_TYPE.equals(preference)) {
             return new SingleScreen(menu, inventory, title);
         }
         // Should be an illegal state.
