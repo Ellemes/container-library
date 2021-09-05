@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-final class ConfigWrapperImpl implements ConfigWrapper {
+final class ConfigWrapperImpl extends ConfigWrapper {
     private static ConfigWrapperImpl INSTANCE;
     private Path configPath;
     private ConfigV0 config;

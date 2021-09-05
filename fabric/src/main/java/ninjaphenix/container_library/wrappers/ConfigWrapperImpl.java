@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-final class ConfigWrapperImpl implements ConfigWrapper {
+final class ConfigWrapperImpl extends ConfigWrapper {
     private static ConfigWrapperImpl INSTANCE;
     private Path configPath;
     private ConfigV0 config;
@@ -62,16 +62,6 @@ final class ConfigWrapperImpl implements ConfigWrapper {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public int getPreferredScreenWidth(int slots) {
-        return 0;
-    }
-
-    @Override
-    public int getPreferredScreenHeight(int slots) {
-        return 0;
     }
 
     private <T extends Config> void saveConfig(T config) {

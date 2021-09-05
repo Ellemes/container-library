@@ -1,25 +1,57 @@
 package ninjaphenix.container_library.wrappers;
 
 import net.minecraft.resources.ResourceLocation;
+import ninjaphenix.container_library.Utils;
 
-// todo: make abstract class
-public interface ConfigWrapper {
-    static ConfigWrapper getInstance() {
+public abstract class ConfigWrapper {
+    public static ConfigWrapper getInstance() {
         return ConfigWrapperImpl.getInstance();
     }
 
-    void initialise();
+    public abstract void initialise();
 
-    boolean isScrollingUnrestricted();
+    public abstract boolean isScrollingUnrestricted();
 
     @SuppressWarnings("unused")
-    void setScrollingRestricted(boolean value);
+    public abstract void setScrollingRestricted(boolean value);
 
-    ResourceLocation getPreferredScreenType();
+    public abstract ResourceLocation getPreferredScreenType();
 
-    boolean setPreferredScreenType(ResourceLocation screenType);
+    public abstract boolean setPreferredScreenType(ResourceLocation screenType);
 
-    int getPreferredScreenWidth(int slots);
+    public int getPreferredScreenWidth(int slots) {
+        if (Utils.SINGLE_SCREEN_TYPE.equals(this.getPreferredScreenType())) {
+            if (slots <= 81) {
+                return 9;
+            } else if (slots <= 108) {
+                return 12;
+            } else if (slots <= 135) {
+                return 15;
+            } else if (slots <= 270) {
+                return 18;
+            }
+        } else {
+            return 9;
+        }
+        throw new IllegalStateException("Cannot display single screen of size " + slots);
+    }
 
-    int getPreferredScreenHeight(int slots);
+    public int getPreferredScreenHeight(int slots) {
+        if (Utils.SINGLE_SCREEN_TYPE.equals(this.getPreferredScreenType())) {
+            if (slots <= 27) {
+                return 3;
+            } else if (slots <= 54) {
+                return 6;
+            } else if (slots <= 162) {
+                return 9;
+            } else if (slots <= 204) {
+                return 12;
+            } else if (slots <= 270) {
+                return 15;
+            }
+        } else {
+            return 6;
+        }
+        throw new IllegalStateException("Cannot display single screen of size " + slots);
+    }
 }
