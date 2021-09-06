@@ -1,6 +1,7 @@
 package ninjaphenix.container_library.api.inventory;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,7 +12,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 import java.util.function.IntUnaryOperator;
 
@@ -22,7 +22,7 @@ public final class AbstractMenu extends AbstractContainerMenu {
         super(CommonMain.getMenuType(), windowId);
         this.container = container;
         container.startOpen(playerInventory.player);
-        if (!PlatformUtils.isClient()) {
+        if (playerInventory.player instanceof ServerPlayer) {
             for (int i = 0; i < container.getContainerSize(); i++) {
                 this.addSlot(new Slot(container, i, i * Utils.SLOT_SIZE, 0));
             }

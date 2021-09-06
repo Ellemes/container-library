@@ -1,5 +1,6 @@
 package ninjaphenix.container_library.client.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -27,15 +28,19 @@ public final class ScrollScreen extends AbstractScreen {
     private boolean isDragging;
     private int topRow;
 
+    // todo: need to add slot blanking for inventory slots < screen slots
     public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
         this.initializeSlots(playerInventory);
 
-        // todo: implement
-        textureLocation = new ResourceLocation("null", "null");
-        textureWidth = 0;
-        textureHeight = 0;
+        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_"+menuWidth+"_"+menuHeight+".png");
+        textureWidth = 208;
+        textureHeight = switch(menuHeight) {
+            case 3 -> 192;
+            case 6 -> 240;
+            default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
+        };
 
         totalRows = Mth.ceil(((double) totalSlots) / menuWidth);
         hasScrollbar = totalRows > menuHeight;
@@ -74,7 +79,9 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
-        super.renderBg(stack, delta, mouseX, mouseY);
+        RenderSystem.setShaderTexture(0, textureLocation);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
         if (hasScrollbar) {
             int containerSlotsHeight = menuHeight * 18;
             int scrollbarHeight = containerSlotsHeight + (menuWidth > 9 ? 34 : 24);

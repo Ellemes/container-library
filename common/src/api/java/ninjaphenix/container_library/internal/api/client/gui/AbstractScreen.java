@@ -22,23 +22,13 @@ import java.util.List;
 
 @ApiStatus.Experimental
 public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMenu> {
-    private final Integer inventoryLabelLeft;
     protected final int menuWidth, menuHeight, totalSlots;
 
     protected AbstractScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        // todo: move to impl classes or re-add screenMeta
-        inventoryLabelLeft = 0;
         totalSlots = menu.getInventory().getContainerSize();
         menuWidth = ConfigWrapper.getInstance().getPreferredScreenWidth(totalSlots);
         menuHeight = ConfigWrapper.getInstance().getPreferredScreenHeight(totalSlots);
-    }
-
-    @Override
-    protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
-        // RenderSystem.setShaderTexture(0, screenMeta.texture);
-        // RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        // GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, screenMeta.textureWidth, screenMeta.textureHeight);
     }
 
     @Override
@@ -48,10 +38,10 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
         this.renderTooltip(stack, mouseX, mouseY);
     }
 
-    @Override
+    @Override // todo: move to impl classes, then abstract later
     protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
         font.draw(stack, title, 8, 6, 4210752);
-        font.draw(stack, playerInventoryTitle, inventoryLabelLeft, imageHeight - 96 + 2, 4210752);
+        font.draw(stack, playerInventoryTitle, 0, imageHeight - 96 + 2, 4210752);
     }
 
     /**

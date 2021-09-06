@@ -1,7 +1,9 @@
 package ninjaphenix.container_library.client.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -35,20 +37,32 @@ public final class PageScreen extends AbstractScreen {
     private TranslatableComponent currentPageText;
     private float pageTextX;
 
+    // todo: need to rework slot blanking to work for inventory slots < screen slots
     public PageScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
         this.initializeSlots(playerInventory);
 
-        // todo: implement
-        textureLocation = new ResourceLocation("null", "null");
-        textureWidth = 0;
-        textureHeight = 0;
+        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_"+menuWidth+"_"+menuHeight+".png");
+        textureWidth = 208;
+        textureHeight = switch(menuHeight) {
+            case 3 -> 192;
+            case 6 -> 240;
+            default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
+        };
 
         pages = Mth.ceil((double) totalSlots / (menuWidth * menuHeight));
         blankSlots = Math.floorMod(totalSlots, menuWidth * menuHeight);
         imageWidth = 14 + 18 * menuWidth;
         imageHeight = 17 + 97 + 18 * menuHeight;
+    }
+
+    @Override
+    protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
+        RenderSystem.setShaderTexture(0, textureLocation);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
+        blankArea.forEach(image -> image.render(stack));
     }
 
     private void initializeSlots(Inventory playerInventory) {
@@ -129,12 +143,6 @@ public final class PageScreen extends AbstractScreen {
             leftPageButton.renderTooltip(stack, mouseX, mouseY);
             rightPageButton.renderTooltip(stack, mouseX, mouseY);
         }
-    }
-
-    @Override
-    protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
-        super.renderBg(stack, delta, mouseX, mouseY);
-        blankArea.forEach(image -> image.render(stack));
     }
 
     @Override

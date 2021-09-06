@@ -1,7 +1,11 @@
 package ninjaphenix.container_library.client.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
@@ -12,13 +16,41 @@ import java.util.Collections;
 import java.util.List;
 
 public final class SingleScreen extends AbstractScreen {
+    private final ResourceLocation textureLocation;
+    private final int textureWidth;
+    private final int textureHeight;
+
     public SingleScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
         this.initializeSlots(playerInventory);
 
-        imageWidth = 14 + 18 * width;
-        imageHeight = 17 + 97 + 18 * height;
+        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_"+menuWidth+"_"+menuHeight+".png");
+        textureWidth = switch (menuWidth) {
+            case 9 -> 208;
+            case 12 -> 256;
+            case 15 -> 320;
+            case 18 -> 368;
+            default -> throw new IllegalStateException("Unexpected value: " + menuWidth);
+        };
+        textureHeight = switch (menuHeight) {
+            case 3 -> 192;
+            case 6 -> 240;
+            case 9 -> 304;
+            case 12 -> 352;
+            case 15 -> 416;
+            default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
+        };
+
+        imageWidth = 14 + 18 * menuWidth;
+        imageHeight = 17 + 97 + 18 * menuHeight;
+    }
+
+    @Override
+    protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
+        RenderSystem.setShaderTexture(0, textureLocation);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
     }
 
     private void initializeSlots(Inventory playerInventory) {
