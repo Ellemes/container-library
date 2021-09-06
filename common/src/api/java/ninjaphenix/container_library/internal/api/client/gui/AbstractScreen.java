@@ -41,7 +41,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     @Override // todo: move to impl classes, then abstract later
     protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
         font.draw(stack, title, 8, 6, 4210752);
-        font.draw(stack, playerInventoryTitle, 0, imageHeight - 96 + 2, 4210752);
+        font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 4210752);
     }
 
     /**

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -37,7 +38,6 @@ public final class PageScreen extends AbstractScreen {
     private TranslatableComponent currentPageText;
     private float pageTextX;
 
-    // todo: need to rework slot blanking to work for inventory slots < screen slots
     public PageScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
@@ -51,10 +51,37 @@ public final class PageScreen extends AbstractScreen {
             default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
         };
 
-        pages = Mth.ceil((double) totalSlots / (menuWidth * menuHeight));
-        blankSlots = Math.floorMod(totalSlots, menuWidth * menuHeight);
+        int slotsPerPage = menuWidth * menuHeight;
+        pages = Mth.ceil((double) totalSlots / slotsPerPage);
+
+        blankSlots = slotsPerPage > totalSlots ? slotsPerPage - totalSlots : totalSlots % slotsPerPage;
+
         imageWidth = 14 + 18 * menuWidth;
         imageHeight = 17 + 97 + 18 * menuHeight;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        // todo: should abstract into a method
+        if (blankSlots > 0 && pages == 1) {
+            blankArea.clear();
+            int rows = Mth.intFloorDiv(blankSlots, menuWidth);
+            int remainder = (blankSlots - menuWidth * rows);
+            int yTop = topPos + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
+            int xLeft = leftPos + Utils.CONTAINER_PADDING_WIDTH;
+            for (int i = 0; i < rows; i++) {
+                blankArea.add(new TexturedRect(xLeft, yTop, menuWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
+                        Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
+                yTop -= Utils.SLOT_SIZE;
+            }
+            if (remainder > 0) {
+                int xRight = leftPos + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
+                int width = remainder * Utils.SLOT_SIZE;
+                blankArea.add(new TexturedRect(xRight - width, yTop, width, Utils.SLOT_SIZE,
+                        Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
+            }
+        }
     }
 
     @Override
@@ -172,10 +199,10 @@ public final class PageScreen extends AbstractScreen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (this.hasPages()) {
             if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
-                this.setPage(page, hasShiftDown() ? pages : page + 1);
+                this.setPage(page, Screen.hasShiftDown() ? pages : page + 1);
                 return true;
             } else if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_PAGE_UP) {
-                this.setPage(page, hasShiftDown() ? 1 : page - 1);
+                this.setPage(page, Screen.hasShiftDown() ? 1 : page - 1);
                 return true;
             }
         }

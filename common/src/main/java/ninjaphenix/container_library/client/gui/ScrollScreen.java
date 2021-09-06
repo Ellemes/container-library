@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -107,7 +108,7 @@ public final class ScrollScreen extends AbstractScreen {
         if (hasScrollbar) {
             if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
                 if (topRow != totalRows - menuHeight) {
-                    if (hasShiftDown()) {
+                    if (Screen.hasShiftDown()) {
                         this.setTopRow(topRow, Math.min(topRow + menuHeight, totalRows - menuHeight));
                     } else {
                         this.setTopRow(topRow, topRow + 1);
@@ -116,7 +117,7 @@ public final class ScrollScreen extends AbstractScreen {
                 return true;
             } else if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_PAGE_UP) {
                 if (topRow != 0) {
-                    if (hasShiftDown()) {
+                    if (Screen.hasShiftDown()) {
                         this.setTopRow(topRow, Math.max(topRow - menuHeight, 0));
                     } else {
                         this.setTopRow(topRow, topRow - 1);
