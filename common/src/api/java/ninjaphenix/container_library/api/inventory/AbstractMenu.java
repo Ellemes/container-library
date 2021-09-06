@@ -22,7 +22,7 @@ public final class AbstractMenu extends AbstractContainerMenu {
         super(CommonMain.getMenuType(), windowId);
         this.container = container;
         container.startOpen(playerInventory.player);
-        if (!PlatformUtils.getInstance().isClient()) {
+        if (!PlatformUtils.isClient()) {
             for (int i = 0; i < container.getContainerSize(); i++) {
                 this.addSlot(new Slot(container, i, i * Utils.SLOT_SIZE, 0));
             }
@@ -109,5 +109,9 @@ public final class AbstractMenu extends AbstractContainerMenu {
         this.slots.clear();
         this.remoteSlots.clear();
         this.lastSlots.clear();
+    }
+
+    public void addClientSlot(Slot slot) {
+        this.addSlot(slot);
     }
 }

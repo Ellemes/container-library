@@ -9,6 +9,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
@@ -37,6 +38,8 @@ public final class PageScreen extends AbstractScreen {
     public PageScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
+        this.initializeSlots(playerInventory);
+
         // todo: implement
         textureLocation = new ResourceLocation("null", "null");
         textureWidth = 0;
@@ -46,6 +49,20 @@ public final class PageScreen extends AbstractScreen {
         blankSlots = Math.floorMod(totalSlots, menuWidth * menuHeight);
         imageWidth = 14 + 18 * menuWidth;
         imageHeight = 17 + 97 + 18 * menuHeight;
+    }
+
+    private void initializeSlots(Inventory playerInventory) {
+        menu.resetSlotPositions(true, menuWidth, menuHeight);
+        int left = (menuWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
+        int top = Utils.SLOT_SIZE + 14 + (menuHeight * Utils.SLOT_SIZE);
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 3; y++) {
+                menu.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, left + Utils.SLOT_SIZE * x, top + y * Utils.SLOT_SIZE));
+            }
+        }
+        for (int x = 0; x < 9; x++) {
+            menu.addClientSlot(new Slot(playerInventory, x, left + Utils.SLOT_SIZE * x, top + 58));
+        }
     }
 
     private static boolean regionIntersects(AbstractWidget widget, int x, int y, int width, int height) {
@@ -186,7 +203,7 @@ public final class PageScreen extends AbstractScreen {
             page = 1;
             this.setPageText();
             // Honestly this is dumb.
-            if (x == originalX && PlatformUtils.getInstance().isModLoaded("inventoryprofiles")) {
+            if (x == originalX && PlatformUtils.isModLoaded("inventoryprofiles")) {
                 x -= 14;
             }
             leftPageButton = new PageButton(x, y, 0,

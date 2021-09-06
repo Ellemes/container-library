@@ -23,7 +23,7 @@ public final class CommonMain {
     public static void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> menuTypeFunction) {
         menuType = menuTypeFunction.apply(Utils.MENU_TYPE_ID, AbstractMenu::createClientMenu);
 
-        if (PlatformUtils.getInstance().isClient()) {
+        if (PlatformUtils.isClient()) {
             ConfigWrapper.getInstance().initialise();
             PickScreen.declareButtonSettings(Utils.PAGE_SCREEN_TYPE,
                     Utils.resloc("textures/gui/paged_button.png"),

@@ -52,16 +52,16 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    protected void openMenu(ServerPlayer player, BlockPos pos, Container container, ServerMenuFactory factory, Component displayName) {
+    protected void openMenu(ServerPlayer player, BlockPos pos, Container container, ServerMenuFactory factory, Component title) {
         player.openMenu(new ExtendedScreenHandlerFactory() {
             @Override
-            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-                buf.writeInt(container.getContainerSize());
+            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buffer) {
+                buffer.writeInt(container.getContainerSize());
             }
 
             @Override
             public Component getDisplayName() {
-                return displayName;
+                return title;
             }
 
             @Nullable
@@ -78,7 +78,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
                 Minecraft.getInstance().setScreen(new PickScreen(null, () -> Client.openInventoryAt(pos)));
             } else {
                 if (ClientPlayNetworking.canSend(NetworkWrapperImpl.OPEN_INVENTORY)) {
-                    var buffer = new FriendlyByteBuf(Unpooled.buffer());
+                    FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
                     buffer.writeBlockPos(pos);
                     ClientPlayNetworking.send(NetworkWrapperImpl.OPEN_INVENTORY, buffer);
                 }

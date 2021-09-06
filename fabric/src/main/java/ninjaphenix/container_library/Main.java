@@ -14,13 +14,13 @@ public class Main implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        new PlatformUtils(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT
+        PlatformUtils.initialize(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT
                 ? FabricLoader.getInstance().isModLoaded("amecs") ? new AmecsKeyHandler() : new FabricKeyHandler()
                 : null, FabricLoader.getInstance()::isModLoaded);
 
         CommonMain.initialize((menuType, factory) -> ScreenHandlerRegistry.registerExtended(menuType, factory::create));
 
-        if (PlatformUtils.getInstance().isClient()) {
+        if (PlatformUtils.isClient()) {
             ScreenRegistry.register(CommonMain.getMenuType(), AbstractScreen::createScreen);
         }
     }

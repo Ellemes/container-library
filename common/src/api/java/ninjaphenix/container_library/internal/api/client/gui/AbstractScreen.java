@@ -29,7 +29,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
         super(menu, playerInventory, title);
         // todo: move to impl classes or re-add screenMeta
         inventoryLabelLeft = 0;
-        totalSlots = menu.slots.size();
+        totalSlots = menu.getInventory().getContainerSize();
         menuWidth = ConfigWrapper.getInstance().getPreferredScreenWidth(totalSlots);
         menuHeight = ConfigWrapper.getInstance().getPreferredScreenHeight(totalSlots);
     }
@@ -60,7 +60,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     @Override
     @SuppressWarnings("ConstantConditions")
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (PlatformUtils.getInstance().isConfigKeyPressed(keyCode, scanCode, modifiers)) {
+        if (PlatformUtils.isConfigKeyPressed(keyCode, scanCode, modifiers)) {
             minecraft.setScreen(new PickScreen(() -> {
                 menu.clearSlots(); // Clear slots as each screen position slots differently.
                 return AbstractScreen.createScreen(menu, minecraft.player.getInventory(), title);

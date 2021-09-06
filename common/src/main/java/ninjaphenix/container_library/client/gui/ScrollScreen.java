@@ -8,6 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
@@ -28,16 +30,37 @@ public final class ScrollScreen extends AbstractScreen {
     public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
+        this.initializeSlots(playerInventory);
+
         // todo: implement
         textureLocation = new ResourceLocation("null", "null");
         textureWidth = 0;
         textureHeight = 0;
 
         totalRows = Mth.ceil(((double) totalSlots) / menuWidth);
-        hasScrollbar = totalRows != menuHeight;
+        hasScrollbar = totalRows > menuHeight;
         imageWidth = 14 + 18 * menuWidth;
         imageHeight = 17 + 97 + 18 * menuHeight;
         scrollingUnrestricted = ConfigWrapper.getInstance().isScrollingUnrestricted();
+    }
+
+    private void initializeSlots(Inventory playerInventory) {
+        for (int i = 0; i < totalSlots; i++) {
+            int slotXPos = i % menuWidth;
+            int slotYPos = Mth.ceil((((double) (i - slotXPos)) / menuWidth));
+            int realYPos = slotYPos >= menuHeight ? -2000 : slotYPos * Utils.SLOT_SIZE + Utils.SLOT_SIZE;
+            menu.addClientSlot(new Slot(menu.getInventory(), i, slotXPos * Utils.SLOT_SIZE + 8, realYPos));
+        }
+        int left = (menuWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
+        int top = Utils.SLOT_SIZE + 14 + (menuHeight * Utils.SLOT_SIZE);
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 3; y++) {
+                menu.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, left + Utils.SLOT_SIZE * x, top + y * Utils.SLOT_SIZE));
+            }
+        }
+        for (int x = 0; x < 9; x++) {
+            menu.addClientSlot(new Slot(playerInventory, x, left + Utils.SLOT_SIZE * x, top + 58));
+        }
     }
 
     @Override

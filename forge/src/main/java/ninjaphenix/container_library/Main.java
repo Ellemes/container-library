@@ -27,7 +27,7 @@ import ninjaphenix.container_library.wrappers.PlatformUtils;
 @Mod(Utils.MOD_ID)
 public final class Main {
     public Main() {
-        new PlatformUtils(FMLLoader.getDist() == Dist.CLIENT ? new ForgeKeyHandler() : null, ModList.get()::isLoaded);
+        PlatformUtils.initialize(FMLLoader.getDist() == Dist.CLIENT ? new ForgeKeyHandler() : null, ModList.get()::isLoaded);
 
         CommonMain.initialize((menuType, factory) -> new MenuType<>((IContainerFactory<?>) factory::create).setRegistryName(menuType));
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -38,7 +38,7 @@ public final class Main {
         modEventBus.addListener((FMLClientSetupEvent event) -> {
             MenuScreens.register(CommonMain.getMenuType(), AbstractScreen::createScreen);
         });
-        if (PlatformUtils.getInstance().isClient()) {
+        if (PlatformUtils.isClient()) {
             this.registerConfigGuiHandler();
             MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (GuiScreenEvent.InitGuiEvent.Post event) -> {
                 if (event.getGui() instanceof PageScreen screen) {
@@ -48,7 +48,7 @@ public final class Main {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT) // Required unless moved to client only class, tries to class load Screen.
     private void registerConfigGuiHandler() {
         ModLoadingContext.get().getActiveContainer().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
                 () -> new ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> {

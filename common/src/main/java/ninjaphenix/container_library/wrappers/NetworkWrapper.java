@@ -29,12 +29,12 @@ public abstract class NetworkWrapper {
         if (state.getBlock() instanceof OpenableBlockEntityProvider block) {
             OpenableBlockEntity inventory = block.getOpenableBlockEntity(level, state, pos);
             if (inventory != null) {
-                Component displayName = inventory.getInventoryName();
+                Component title = inventory.getInventoryName();
                 if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
                     if (inventory.canBeUsedBy(player)) {
                         block.onInitialOpen(player);
                     } else {
-                        player.displayClientMessage(new TranslatableComponent("container.isLocked", displayName), true);
+                        player.displayClientMessage(new TranslatableComponent("container.isLocked", title), true);
                         player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
                         return;
                     }
@@ -42,10 +42,10 @@ public abstract class NetworkWrapper {
                 if (!inventory.canContinueUse(player)) {
                     return;
                 }
-                this.openMenu(player, pos, inventory.getInventory(), AbstractMenu::new, displayName);
+                this.openMenu(player, pos, inventory.getInventory(), AbstractMenu::new, title);
             }
         }
     }
 
-    protected abstract void openMenu(ServerPlayer player, BlockPos pos, Container container, ServerMenuFactory factory, Component displayName);
+    protected abstract void openMenu(ServerPlayer player, BlockPos pos, Container container, ServerMenuFactory factory, Component title);
 }
