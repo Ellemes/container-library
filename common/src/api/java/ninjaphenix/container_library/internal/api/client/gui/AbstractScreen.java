@@ -61,8 +61,10 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     @SuppressWarnings("ConstantConditions")
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (PlatformUtils.getInstance().isConfigKeyPressed(keyCode, scanCode, modifiers)) {
-            // todo: pick screen needs reworking as it's client only now, will need to open the new screen if an inventory is already open.
-            minecraft.setScreen(new PickScreen(null, null));
+            minecraft.setScreen(new PickScreen(() -> {
+                menu.clearSlots(); // Clear slots as each screen position slots differently.
+                return AbstractScreen.createScreen(menu, minecraft.player.getInventory(), title);
+            }, null));
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE || minecraft.options.keyInventory.matches(keyCode, scanCode)) {
             minecraft.player.closeContainer();

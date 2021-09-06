@@ -11,6 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 import java.util.function.IntUnaryOperator;
 
@@ -21,27 +22,18 @@ public final class AbstractMenu extends AbstractContainerMenu {
         super(CommonMain.getMenuType(), windowId);
         this.container = container;
         container.startOpen(playerInventory.player);
-        // todo: set slot positions
+        if (!PlatformUtils.getInstance().isClient()) {
+            for (int i = 0; i < container.getContainerSize(); i++) {
+                this.addSlot(new Slot(container, i, i * Utils.SLOT_SIZE, 0));
+            }
+            for (int i = 0; i < 27; i++) {
+                this.addSlot(new Slot(playerInventory, i + 9, i * Utils.SLOT_SIZE, Utils.SLOT_SIZE));
+            }
+            for (int i = 0; i < 9; i++) {
+                this.addSlot(new Slot(playerInventory, i, i * Utils.SLOT_SIZE, 2 * Utils.SLOT_SIZE));
+            }
+        }
     }
-
-    //private static ResourceLocation getTexture(String type, int slotXCount, int slotYCount) {
-    //    return Utils.resloc(String.format("textures/gui/container/%s_%d_%d.png", type, slotXCount, slotYCount));
-    //}
-
-    //private static <T extends ScreenMeta> T getNearestScreenMeta(int inventorySize, ImmutableMap<Integer, T> knownSizes) {
-    //    T exactScreenMeta = knownSizes.get(inventorySize);
-    //    if (exactScreenMeta != null) {
-    //        return exactScreenMeta;
-    //    }
-    //    List<Integer> keys = knownSizes.keySet().asList();
-    //    int index = Collections.binarySearch(keys, inventorySize);
-    //    int largestKey = keys.get(Math.abs(index) - 1);
-    //    T nearestMeta = knownSizes.get(largestKey);
-    //    if (nearestMeta != null && largestKey > inventorySize && largestKey - inventorySize <= nearestMeta.width) {
-    //        return nearestMeta;
-    //    }
-    //    throw new RuntimeException("No screen can show an inventory of size " + inventorySize + ".");
-    //}
 
     @Override
     public boolean stillValid(Player player) {
@@ -54,6 +46,7 @@ public final class AbstractMenu extends AbstractContainerMenu {
         container.stopOpen(player);
     }
 
+    // Public API, required for mods to check if blocks should be considered open
     public Container getInventory() {
         return container;
     }
@@ -80,6 +73,8 @@ public final class AbstractMenu extends AbstractContainerMenu {
         }
         return originalStack;
     }
+
+    // Below are client only methods
 
     public static AbstractMenu createClientMenu(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
         return new AbstractMenu(windowId, new SimpleContainer(buffer.readInt()), inventory);
@@ -108,5 +103,11 @@ public final class AbstractMenu extends AbstractContainerMenu {
         for (int i = minSlotIndex; i < maxSlotIndex; i++) {
             slots.get(i).y = yMutator.applyAsInt(i);
         }
+    }
+
+    public void clearSlots() {
+        this.slots.clear();
+        this.remoteSlots.clear();
+        this.lastSlots.clear();
     }
 }

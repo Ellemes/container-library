@@ -50,7 +50,11 @@ public abstract class ConfigWrapper {
                 return 15;
             }
         } else {
-            return 6;
+            if (slots > 27) {
+                return 6;
+            } else {
+                return 3;
+            }
         }
         throw new IllegalStateException("Cannot display single screen of size " + slots);
     }

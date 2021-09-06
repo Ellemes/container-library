@@ -102,7 +102,7 @@ public final class PageScreen extends AbstractScreen {
     }
 
     private void setPageText() {
-        currentPageText = new TranslatableComponent("screen.expandedstorage.page_x_y", page, pages);
+        currentPageText = new TranslatableComponent("screen.ninjaphenix_container_lib.page_x_y", page, pages);
     }
 
     @Override
@@ -190,12 +190,12 @@ public final class PageScreen extends AbstractScreen {
                 x -= 14;
             }
             leftPageButton = new PageButton(x, y, 0,
-                    new TranslatableComponent("screen.expandedstorage.prev_page"), button -> this.setPage(page, page - 1),
+                    new TranslatableComponent("screen.ninjaphenix_container_lib.prev_page"), button -> this.setPage(page, page - 1),
                     this::renderButtonTooltip);
             leftPageButton.active = false;
             this.addRenderableWidget(leftPageButton);
             rightPageButton = new PageButton(x + 42, y, 1,
-                    new TranslatableComponent("screen.expandedstorage.next_page"), button -> this.setPage(page, page + 1),
+                    new TranslatableComponent("screen.ninjaphenix_container_lib.next_page"), button -> this.setPage(page, page + 1),
                     this::renderButtonTooltip);
             this.addRenderableWidget(rightPageButton);
             pageTextX = (1 + leftPageButton.x + rightPageButton.x - rightPageButton.getWidth() / 2F) / 2F;

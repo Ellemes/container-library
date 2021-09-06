@@ -52,7 +52,7 @@ public final class Main {
     private void registerConfigGuiHandler() {
         ModLoadingContext.get().getActiveContainer().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
                 () -> new ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> {
-                    return new PickScreen(screen, null);
+                    return new PickScreen(() -> screen, null);
                 })
         );
     }

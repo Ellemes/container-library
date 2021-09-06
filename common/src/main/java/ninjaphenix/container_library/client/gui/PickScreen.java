@@ -25,16 +25,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class PickScreen extends Screen {
     private static final Map<ResourceLocation, Triple<ResourceLocation, Component, ScreenSizePredicate>> BUTTON_SETTINGS = new HashMap<>();
     private final Set<ResourceLocation> options;
-    private final Screen returnToScreen;
+    private final Supplier<Screen> returnToScreen;
     private final List<ScreenPickButton> optionWidgets;
     private final @Nullable Runnable onOptionPicked;
     private int topPadding;
 
-    public PickScreen(Screen returnToScreen, @Nullable Runnable onOptionPicked) {
+    public PickScreen(Supplier<Screen> returnToScreen, @Nullable Runnable onOptionPicked) {
         super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
         this.options = ImmutableSortedSet.copyOf(PickScreen.BUTTON_SETTINGS.keySet());
         this.optionWidgets = new ArrayList<>(options.size());
@@ -49,7 +50,7 @@ public final class PickScreen extends Screen {
     @Override
     public void onClose() {
         //noinspection ConstantConditions
-        minecraft.setScreen(returnToScreen);
+        minecraft.setScreen(returnToScreen.get());
     }
 
     @Override
