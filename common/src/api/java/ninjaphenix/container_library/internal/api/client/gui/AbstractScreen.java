@@ -31,6 +31,19 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
         menuHeight = ConfigWrapper.getInstance().getPreferredScreenHeight(totalSlots);
     }
 
+    public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
+        ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
+        if (Utils.PAGE_SCREEN_TYPE.equals(preference)) {
+            return new PageScreen(menu, inventory, title);
+        } else if (Utils.SCROLL_SCREEN_TYPE.equals(preference)) {
+            return new ScrollScreen(menu, inventory, title);
+        } else if (Utils.SINGLE_SCREEN_TYPE.equals(preference)) {
+            return new SingleScreen(menu, inventory, title);
+        }
+        // Should be an illegal state.
+        return null;
+    }
+
     @Override
     public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
         this.renderBackground(stack);
@@ -68,17 +81,4 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     }
 
     public abstract List<Rect2i> getExclusionZones();
-
-    public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
-        ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
-        if (Utils.PAGE_SCREEN_TYPE.equals(preference)) {
-            return new PageScreen(menu, inventory, title);
-        } else if (Utils.SCROLL_SCREEN_TYPE.equals(preference)) {
-            return new ScrollScreen(menu, inventory, title);
-        } else if (Utils.SINGLE_SCREEN_TYPE.equals(preference)) {
-            return new SingleScreen(menu, inventory, title);
-        }
-        // Should be an illegal state.
-        return null;
-    }
 }

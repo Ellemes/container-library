@@ -24,14 +24,15 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public final class PageScreen extends AbstractScreen {
     private final ResourceLocation textureLocation;
-    private final int textureWidth, textureHeight, blankSlots, pages;
-    private final Set<TexturedRect> blankArea = new HashSet<>();
+    private final int textureWidth, textureHeight;
+    private final Set<TexturedRect> blankArea = new LinkedHashSet<>();
+    private final int blankSlots, pages;
     private PageButton leftPageButton, rightPageButton;
     private int page;
     private TranslatableComponent currentPageText;
@@ -42,9 +43,9 @@ public final class PageScreen extends AbstractScreen {
 
         this.initializeSlots(playerInventory);
 
-        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_"+menuWidth+"_"+menuHeight+".png");
+        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
         textureWidth = 208;
-        textureHeight = switch(menuHeight) {
+        textureHeight = switch (menuHeight) {
             case 3 -> 192;
             case 6 -> 240;
             default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
@@ -57,6 +58,11 @@ public final class PageScreen extends AbstractScreen {
 
         imageWidth = 14 + 18 * menuWidth;
         imageHeight = 17 + 97 + 18 * menuHeight;
+    }
+
+    private static boolean regionIntersects(AbstractWidget widget, int x, int y, int width, int height) {
+        return widget.x <= x + width && y <= widget.y + widget.getHeight() ||
+                x <= widget.x + widget.getWidth() && widget.y <= y + height;
     }
 
     @Override
@@ -103,11 +109,6 @@ public final class PageScreen extends AbstractScreen {
         for (int x = 0; x < 9; x++) {
             menu.addClientSlot(new Slot(playerInventory, x, left + Utils.SLOT_SIZE * x, top + 58));
         }
-    }
-
-    private static boolean regionIntersects(AbstractWidget widget, int x, int y, int width, int height) {
-        return widget.x <= x + width && y <= widget.y + widget.getHeight() ||
-                x <= widget.x + widget.getWidth() && widget.y <= y + height;
     }
 
     private void setPage(int oldPage, int newPage) {

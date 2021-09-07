@@ -16,7 +16,6 @@ import java.util.Set;
 
 public class Utils {
     public static final String MOD_ID = "ninjaphenix_container_lib";
-    private static final String LEGACY_MOD_ID = "expandedstorage";
     // Expanded Storage Inventory Sizes
     public static final int WOOD_STACK_COUNT = 27;
     public static final int IRON_STACK_COUNT = 54;
@@ -27,11 +26,6 @@ public class Utils {
     public static final int SLOT_SIZE = 18;
     public static final int CONTAINER_HEADER_HEIGHT = 17;
     public static final int CONTAINER_PADDING_WIDTH = 7;
-    // Inbuilt Screen Types
-    public static final ResourceLocation UNSET_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "auto");
-    public static final ResourceLocation SCROLL_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "scroll");
-    public static final ResourceLocation SINGLE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "single");
-    public static final ResourceLocation PAGE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "page");
     // Menu Type ID
     public static final ResourceLocation MENU_TYPE_ID = Utils.resloc("menu_type");
     // Config Paths
@@ -40,13 +34,18 @@ public class Utils {
     // Config Related
     public static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
-
     // todo: look into possibility of replacing with GsonHelper?
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter())
                                                      .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                                                      .setPrettyPrinting()
                                                      .setLenient()
                                                      .create();
+    private static final String LEGACY_MOD_ID = "expandedstorage";
+    // Inbuilt Screen Types
+    public static final ResourceLocation UNSET_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "auto");
+    public static final ResourceLocation SCROLL_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "scroll");
+    public static final ResourceLocation SINGLE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "single");
+    public static final ResourceLocation PAGE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "page");
 
     public static ResourceLocation resloc(String path) {
         return new ResourceLocation(Utils.MOD_ID, path);

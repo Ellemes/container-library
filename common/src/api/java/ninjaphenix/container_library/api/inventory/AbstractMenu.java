@@ -35,6 +35,11 @@ public final class AbstractMenu extends AbstractContainerMenu {
         }
     }
 
+    // Client only
+    public static AbstractMenu createClientMenu(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
+        return new AbstractMenu(windowId, new SimpleContainer(buffer.readInt()), inventory);
+    }
+
     @Override
     public boolean stillValid(Player player) {
         return container.stillValid(player);
@@ -75,11 +80,6 @@ public final class AbstractMenu extends AbstractContainerMenu {
     }
 
     // Below are client only methods
-
-    public static AbstractMenu createClientMenu(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
-        return new AbstractMenu(windowId, new SimpleContainer(buffer.readInt()), inventory);
-    }
-
     public void resetSlotPositions(boolean createSlots, int menuWidth, int menuHeight) {
         for (int i = 0; i < container.getContainerSize(); i++) {
             int slotXPos = i % menuWidth;
