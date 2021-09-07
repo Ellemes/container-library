@@ -196,7 +196,7 @@ public final class PageScreen extends AbstractScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    protected boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
         if (this.hasPages()) {
             if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
                 this.setPage(page, Screen.hasShiftDown() ? pages : page + 1);
@@ -206,7 +206,7 @@ public final class PageScreen extends AbstractScreen {
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return false;
     }
 
     public List<Rect2i> getExclusionZones() {

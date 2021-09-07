@@ -103,7 +103,7 @@ public final class ScrollScreen extends AbstractScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    protected boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
         if (hasScrollbar) {
             if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
                 if (topRow != totalRows - menuHeight) {
@@ -125,7 +125,7 @@ public final class ScrollScreen extends AbstractScreen {
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return false;
     }
 
     @Override

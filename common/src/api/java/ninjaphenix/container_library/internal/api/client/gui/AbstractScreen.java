@@ -57,13 +57,12 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
         font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 4210752);
     }
 
-    /**
-     * Implementors of this method should call super to allow pick screen key bind to work.
-     */
     @Override
     @SuppressWarnings("ConstantConditions")
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (PlatformUtils.isConfigKeyPressed(keyCode, scanCode, modifiers)) {
+    public final boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (this.handleKeyPress(keyCode, scanCode, modifiers)) {
+            return true;
+        } else if (PlatformUtils.isConfigKeyPressed(keyCode, scanCode, modifiers)) {
             minecraft.setScreen(new PickScreen(() -> {
                 menu.clearSlots(); // Clear slots as each screen position slots differently.
                 return AbstractScreen.createScreen(menu, minecraft.player.getInventory(), title);
@@ -74,6 +73,13 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    /**
+     * @return true if a screen specific keybinding is pressed otherwise false to follow through with additional checks.
+     */
+    protected boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
+        return false;
     }
 
     protected final void renderButtonTooltip(AbstractButton button, PoseStack stack, int x, int y) {
