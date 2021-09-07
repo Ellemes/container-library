@@ -24,15 +24,14 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public final class PageScreen extends AbstractScreen {
     private final ResourceLocation textureLocation;
-    private final int textureWidth, textureHeight;
-    private final Set<TexturedRect> blankArea = new LinkedHashSet<>();
-    private final int blankSlots, pages;
+    private final int textureWidth, textureHeight, blankSlots, pages;
+    private final Set<TexturedRect> blankArea = new HashSet<>();
     private PageButton leftPageButton, rightPageButton;
     private int page;
     private TranslatableComponent currentPageText;

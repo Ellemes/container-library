@@ -22,14 +22,13 @@ import java.util.List;
 
 public final class ScrollScreen extends AbstractScreen {
     private final ResourceLocation textureLocation;
-    private final int textureWidth, textureHeight;
-    private final boolean hasScrollbar;
-    private final boolean scrollingUnrestricted;
-    private final int totalRows;
+    private final int textureWidth, textureHeight, totalRows;
+    private final boolean hasScrollbar, scrollingUnrestricted;
     private boolean isDragging;
     private int topRow;
 
     // todo: need to add slot blanking for inventory slots < screen slots
+    //  not designed to be blanked so might be a pain
     public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
