@@ -3,7 +3,7 @@ rei = "6.0.264-alpha"
 
 [libraries]
 # Common Deps
-jetbrainAnnotations = { group = "org.jetbrains", name = "annotations", version = "21.0.1" }
+jetbrainAnnotations = { group = "org.jetbrains", name = "annotations", version = "22.0.0" }
 # Forge Deps
 minecraft-forge = { group = "net.minecraftforge", name = "forge", version = "1.17.1-37.0.19" }
 jei-api = { group = "mezz.jei", name = "jei-1.17.1", version = "8.0.0.10:api" }
