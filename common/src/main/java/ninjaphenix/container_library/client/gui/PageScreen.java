@@ -189,7 +189,8 @@ public final class PageScreen extends AbstractScreen {
 
     @Override
     protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-        super.renderLabels(stack, mouseX, mouseY);
+        font.draw(stack, title, 8, 6, 0x404040);
+        font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 0x404040);
         if (currentPageText != null) {
             font.draw(stack, currentPageText.getVisualOrderText(), pageTextX - leftPos, imageHeight - 94, 0x404040);
         }

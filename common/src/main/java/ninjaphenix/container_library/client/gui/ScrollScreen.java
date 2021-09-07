@@ -91,6 +91,12 @@ public final class ScrollScreen extends AbstractScreen {
         }
     }
 
+    @Override
+    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+        font.draw(stack, title, 8, 6, 0x404040);
+        font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 0x404040);
+    }
+
     private boolean isMouseOverScrollbar(double mouseX, double mouseY) {
         int scrollbarTopPos = topPos + 18;
         int scrollbarLeftPos = leftPos + imageWidth - 2;

@@ -83,6 +83,12 @@ public final class SingleScreen extends AbstractScreen {
         blankArea.forEach(image -> image.render(stack));
     }
 
+    @Override
+    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+        font.draw(stack, title, 8, 6, 0x404040);
+        font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 0x404040);
+    }
+
     private void initializeSlots(Inventory playerInventory) {
         for (int i = 0; i < menu.getInventory().getContainerSize(); i++) {
             int x = i % menuWidth;
