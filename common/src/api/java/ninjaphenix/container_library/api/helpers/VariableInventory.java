@@ -4,9 +4,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import ninjaphenix.container_library.internal.api.function.InventorySlotAccessor;
+import ninjaphenix.container_library.inventory.InventorySlotAccessor;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 public final class VariableInventory implements Container {
@@ -16,7 +17,7 @@ public final class VariableInventory implements Container {
 
     private VariableInventory(Container... parts) {
         for (int i = 0; i < parts.length; i++) {
-            assert parts[i] != null : "part at index " + i + " must not be null";
+            Objects.requireNonNull(parts[i], "part at index" + i + " must not be null");
         }
         this.parts = parts;
         this.size = Arrays.stream(parts).mapToInt(Container::getContainerSize).sum();

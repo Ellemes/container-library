@@ -3,6 +3,6 @@
   "textures": {
     "top": "test:block/blockn",
     "front": "test:block/block27",
-    "side": "test:block/blockn"
+    "side": "test:block/block27"
   }
 }

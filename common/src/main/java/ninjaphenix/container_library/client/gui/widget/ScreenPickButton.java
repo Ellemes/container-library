@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.internal.api.client.gui.widget;
+package ninjaphenix.container_library.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -7,10 +7,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.Utils;
-import org.jetbrains.annotations.ApiStatus;
 
-@ApiStatus.Experimental
-public class ScreenPickButton extends Button {
+public final class ScreenPickButton extends Button {
     private static final ResourceLocation WARNING_TEXTURE = Utils.resloc("textures/gui/warning.png");
     private final ResourceLocation texture;
     private final boolean warn;

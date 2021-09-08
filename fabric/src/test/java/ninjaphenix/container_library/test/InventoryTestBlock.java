@@ -26,6 +26,7 @@ public class InventoryTestBlock extends Block implements EntityBlock, OpenableBl
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
             NCL_ClientApi.openInventoryAt(pos);

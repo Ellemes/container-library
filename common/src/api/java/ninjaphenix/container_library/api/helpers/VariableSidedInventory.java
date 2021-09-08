@@ -7,7 +7,7 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import ninjaphenix.container_library.internal.api.function.InventorySlotAccessor;
+import ninjaphenix.container_library.inventory.InventorySlotAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;

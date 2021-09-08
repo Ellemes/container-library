@@ -12,10 +12,11 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.internal.api.client.gui.widget.ScreenPickButton;
-import ninjaphenix.container_library.internal.api.function.ScreenSizePredicate;
+import ninjaphenix.container_library.client.gui.widget.ScreenPickButton;
+import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.apache.commons.lang3.tuple.Triple;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public final class PickScreen extends Screen {
         this.returnToScreen = returnToScreen;
     }
 
+    @ApiStatus.Internal
     public static void declareButtonSettings(ResourceLocation screenType, ResourceLocation texture, Component text, ScreenSizePredicate warnTest) {
         PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, Triple.of(texture, text, warnTest));
     }
@@ -75,6 +77,7 @@ public final class PickScreen extends Screen {
             Triple<ResourceLocation, Component, ScreenSizePredicate> settings = PickScreen.BUTTON_SETTINGS.get(option);
             boolean isWarn = settings.getRight().test(width, height);
             boolean isSelected = option.equals(currentOption);
+            // todo: expose warning text for more specific messages?
             Button.OnTooltip tooltip = new Button.OnTooltip() {
                 private static final MutableComponent WARN_TEXT_1 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY);
                 private static final Component WARN_TEXT_2 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY);

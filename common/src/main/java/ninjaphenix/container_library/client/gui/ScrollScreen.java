@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
-import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.lwjgl.glfw.GLFW;
 

@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.internal.api.client.gui.widget;
+package ninjaphenix.container_library.client.gui.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -8,10 +8,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.Utils;
-import org.jetbrains.annotations.ApiStatus;
 
-@ApiStatus.Experimental
-public class PageButton extends Button {
+public final class PageButton extends Button {
     private static final ResourceLocation TEXTURE = Utils.resloc("textures/gui/page_buttons.png");
     private final int textureOffset;
 

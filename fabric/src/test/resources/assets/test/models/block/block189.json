@@ -2,7 +2,7 @@
   "parent": "minecraft:block/orientable",
   "textures": {
     "top": "test:block/blockn",
-    "front": "test:block/block108",
-    "side": "test:block/block108"
+    "front": "test:block/block189",
+    "side": "test:block/block189"
   }
 }

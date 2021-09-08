@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.internal.api.function;
+package ninjaphenix.container_library.inventory;
 
 import java.util.function.ObjIntConsumer;
 

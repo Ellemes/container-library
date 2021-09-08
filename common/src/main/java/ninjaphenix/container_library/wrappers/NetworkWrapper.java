@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import ninjaphenix.container_library.api.OpenableBlockEntity;
 import ninjaphenix.container_library.api.OpenableBlockEntityProvider;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
-import ninjaphenix.container_library.internal.api.inventory.ServerMenuFactory;
+import ninjaphenix.container_library.inventory.ServerMenuFactory;
 
 public abstract class NetworkWrapper {
     public static NetworkWrapper getInstance() {

@@ -21,7 +21,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import ninjaphenix.container_library.client.ForgeKeyHandler;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.internal.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 @Mod(Utils.MOD_ID)

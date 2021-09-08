@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.internal.api.inventory.ServerMenuFactory;
+import ninjaphenix.container_library.inventory.ServerMenuFactory;
 import org.jetbrains.annotations.Nullable;
 
 final class NetworkWrapperImpl extends NetworkWrapper {

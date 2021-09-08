@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.internal.api.client.gui;
+package ninjaphenix.container_library.api.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -7,41 +7,47 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.api.client.ScreenConstructor;
+import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
-import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.client.gui.ScrollScreen;
-import ninjaphenix.container_library.client.gui.SingleScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@ApiStatus.Experimental
 public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMenu> {
+    private static final Map<ResourceLocation, ScreenConstructor<?>> SCREEN_CONSTRUCTORS = new HashMap<>();
+    private static final Map<ResourceLocation, ScreenSizeRetriever> SIZE_RETRIEVERS = new HashMap<>();
+
     protected final int menuWidth, menuHeight, totalSlots;
 
     protected AbstractScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         totalSlots = menu.getInventory().getContainerSize();
-        menuWidth = ConfigWrapper.getInstance().getPreferredScreenWidth(totalSlots);
-        menuHeight = ConfigWrapper.getInstance().getPreferredScreenHeight(totalSlots);
+        var retriever = SIZE_RETRIEVERS.get(ConfigWrapper.getInstance().getPreferredScreenType()).get(totalSlots);
+        menuWidth = retriever.getWidth();
+        menuHeight = retriever.getHeight();
     }
 
+    @ApiStatus.Internal
     public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
-        if (Utils.PAGE_SCREEN_TYPE.equals(preference)) {
-            return new PageScreen(menu, inventory, title);
-        } else if (Utils.SCROLL_SCREEN_TYPE.equals(preference)) {
-            return new ScrollScreen(menu, inventory, title);
-        } else if (Utils.SINGLE_SCREEN_TYPE.equals(preference)) {
-            return new SingleScreen(menu, inventory, title);
-        }
-        // Should be an illegal state.
-        return null;
+        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(menu, inventory, title);
+    }
+
+    @ApiStatus.Internal
+    public static void declareScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
+        SCREEN_CONSTRUCTORS.putIfAbsent(type, screenConstructor);
+    }
+
+    @ApiStatus.Internal
+    public static void declareScreenSizeRetriever(ResourceLocation type, ScreenSizeRetriever retriever) {
+        SIZE_RETRIEVERS.putIfAbsent(type, retriever);
     }
 
     @Override

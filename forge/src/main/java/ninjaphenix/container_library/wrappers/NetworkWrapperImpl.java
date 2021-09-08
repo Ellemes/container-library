@@ -16,7 +16,7 @@ import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.internal.api.inventory.ServerMenuFactory;
+import ninjaphenix.container_library.inventory.ServerMenuFactory;
 import ninjaphenix.container_library.network.OpenInventoryMessage;
 import org.jetbrains.annotations.Nullable;
 
