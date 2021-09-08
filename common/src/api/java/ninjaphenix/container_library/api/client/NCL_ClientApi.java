@@ -26,7 +26,6 @@ public final class NCL_ClientApi {
     }
 
     // may be wise to allow width and height to be edited rather than fixed 256x256
-    // also allow visibility test to be customized by providing
     public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component text, ScreenSizePredicate visibilityTest) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
