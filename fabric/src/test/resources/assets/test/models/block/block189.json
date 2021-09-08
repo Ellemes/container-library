@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "top": "test:block/blockn",
-    "front": "test:block/block189",
-    "side": "test:block/block189"
-  }
-}

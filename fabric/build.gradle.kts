@@ -58,6 +58,10 @@ repositories {
         name = "Siphalor's Maven"
         url = uri("https://maven.siphalor.de/")
     }
+    maven {
+        name = "Devan Maven"
+        url = uri("https://storage.googleapis.com/devan-maven/")
+    }
 }
 
 val excludeFabric: (ExternalModuleDependency) -> Unit = {
@@ -77,7 +81,12 @@ dependencies {
     modCompileOnly(libs.modmenu, excludeFabric)
     modRuntime(libs.modmenu)
 
+
     modCompileOnly(libs.amecs.api)
+
+    // Used for tests only, added to main class path as loom doesn't have a test source set equivalent
+    modCompileOnly(libs.arrp, excludeFabric)
+    modRuntime(libs.arrp)
 }
 
 tasks.withType<ProcessResources> {

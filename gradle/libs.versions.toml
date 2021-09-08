@@ -15,7 +15,7 @@ rei = { group = "me.shedaniel", name = "RoughlyEnoughItems-fabric", version.ref 
 rei-api = { group = "me.shedaniel", name = "RoughlyEnoughItems-api-fabric", version.ref = "rei" }
 modmenu = { group = "com.terraformersmc", name = "modmenu", version = "2.0.0-beta.7" }
 amecs-api = { group = "de.siphalor", name = "amecsapi-1.17", version = "1.1.+" }
-
+arrp = { group = "net.devtech", name = "arrp", version = "0.5.1" }
 [plugins]
 # Common Plugins
 gradleUtils = { id = "com.gitlab.ninjaphenix.gradle-utils", version = "0.1.0-beta.5" }
