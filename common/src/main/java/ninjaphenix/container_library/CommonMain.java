@@ -5,6 +5,7 @@ import net.minecraft.world.inventory.MenuType;
 import ninjaphenix.container_library.api.client.NCL_ClientApi;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
+import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.ScrollScreen;
@@ -46,35 +47,30 @@ public final class CommonMain {
             NCL_ClientApi.registerScreenType(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::new);
             NCL_ClientApi.registerScreenType(Utils.SINGLE_SCREEN_TYPE, SingleScreen::new);
 
-            NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, (slots, scaledWidth, scaledHeight) -> {
+            // todo: these settings leave no room for rei/jei should we take those into consideration for minimum screen width / height
+            // might want to revert for initial release since the auto page -> single internal code is not screen size aware.
+            ScreenSizeRetriever nonSingleRetriever = (slots, scaledWidth, scaledHeight) -> {
                 int width = 9;
-                int height;
+                int height = 6;
                 if (slots <= 27) {
                     height = 3;
-                } else if (slots <= 54) {
-                    height = 6;
                 } else if (scaledHeight >= 276) {
-                    height = 9;
-                } else {
-                    height = 6;
+                    if (slots > 54) {
+                        height = 9;
+                        if (scaledWidth >= 338 && slots > 135) {
+                            width = 18;
+                        } else if (slots > 108) {
+                            width = 15;
+                        } else if (slots > 81) {
+                            width = 12;
+                        }
+                    }
                 }
                 return ScreenSize.of(width, height);
-            });
+            };
 
-            NCL_ClientApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, (slots, scaledWidth, scaledHeight) -> {
-                int width = 9;
-                int height;
-                if (slots <= 27) {
-                    height = 3;
-                } else if (slots <= 54) {
-                    height = 6;
-                } else if (scaledHeight >= 276) {
-                    height = 9;
-                } else {
-                    height = 6;
-                }
-                return ScreenSize.of(width, height);
-            });
+            NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, nonSingleRetriever);
+            NCL_ClientApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, nonSingleRetriever);
 
             NCL_ClientApi.registerDefaultScreenSize(Utils.SINGLE_SCREEN_TYPE, (slots, scaledWidth, scaledHeight) -> {
                 int width;

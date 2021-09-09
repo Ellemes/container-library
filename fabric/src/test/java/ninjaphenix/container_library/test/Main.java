@@ -42,9 +42,11 @@ public class Main {
     public static void initialize() {
         creativeTab = FabricItemGroupBuilder.create(new ResourceLocation("test", "test")).build();
         JLang lang = JLang.lang().itemGroup(new ResourceLocation("test", "test"), "Test Inventory Blocks");
-        InventoryTestBlock[] blocks = new ListBuilder<>(i -> Main.register(i, lang)).range(3, 540, 24)
-                                                                       .build()
-                                                                       .toArray(InventoryTestBlock[]::new);
+        InventoryTestBlock[] blocks = new ListBuilder<>(i -> Main.register(i, lang)).range(27, 540, 27)
+                                                                                    .range(24, 540, 27)
+                                                                                    .range(30, 540, 27)
+                                                                                    .build()
+                                                                                    .toArray(InventoryTestBlock[]::new);
         RESOURCE_PACK.addLang(new ResourceLocation("test", "en_us"), lang);
         blockEntityType = FabricBlockEntityTypeBuilder.create((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state, 0), blocks).build();
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation("test", "block_entity_type"), blockEntityType);
@@ -88,7 +90,7 @@ public class Main {
             graphics.fillRect(0, 0, 16, 16);
             String characters = inventorySize.toString();
             for (int i = 0; i < characters.length(); i++) {
-                String letter = characters.substring(i, i+1);
+                String letter = characters.substring(i, i + 1);
                 BufferedImage number = numbers.getSubimage(1, Main.getNumberOffset(letter.charAt(0)), 3, 5);
                 graphics.drawImage(number, 1 + 4 * i, 1, 3, 5, null);
             }
