@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.config.Config;
 import ninjaphenix.container_library.config.ConfigV0;
 import ninjaphenix.container_library.config.Converter;
@@ -33,15 +34,18 @@ final class ConfigWrapperImpl extends ConfigWrapper {
         return ConfigWrapperImpl.INSTANCE;
     }
 
+    @Override
     public void initialise() {
         configPath = FabricLoader.getInstance().getConfigDir().resolve(Utils.CONFIG_PATH);
         config = this.getConfig();
     }
 
+    @Override
     public boolean isScrollingUnrestricted() {
         return !config.isScrollingRestricted();
     }
 
+    @Override
     public void setScrollingRestricted(boolean value) {
         if (config.isScrollingRestricted() == value) {
             config.setScrollingRestricted(!value);
@@ -49,15 +53,14 @@ final class ConfigWrapperImpl extends ConfigWrapper {
         }
     }
 
+    @Override
     public ResourceLocation getPreferredScreenType() {
         return config.getScreenType();
     }
 
+    @Override
     public boolean setPreferredScreenType(ResourceLocation type) {
-        // todo: check AbstractScreen.SCREEN_CONSTRUCTORS keySet
-        if ((Utils.UNSET_SCREEN_TYPE.equals(type) || Utils.PAGE_SCREEN_TYPE.equals(type)
-                || Utils.SCROLL_SCREEN_TYPE.equals(type) || Utils.SINGLE_SCREEN_TYPE.equals(type))
-                && type != config.getScreenType()) {
+        if (AbstractScreen.isScreenTypeDeclared(type) && type != config.getScreenType()) {
             config.setScreenType(type);
             this.saveConfig(config);
             return true;

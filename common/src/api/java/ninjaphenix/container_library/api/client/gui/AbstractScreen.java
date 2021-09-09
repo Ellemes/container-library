@@ -67,6 +67,13 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
         SIZE_RETRIEVERS.putIfAbsent(type, retriever);
     }
 
+    @Deprecated
+    @ApiStatus.Internal
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public static boolean isScreenTypeDeclared(ResourceLocation type) {
+        return SCREEN_CONSTRUCTORS.containsKey(type);
+    }
+
     @Override
     public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
         this.renderBackground(stack);

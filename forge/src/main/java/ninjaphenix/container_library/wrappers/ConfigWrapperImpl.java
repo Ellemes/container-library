@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.fml.loading.FMLPaths;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.config.Config;
 import ninjaphenix.container_library.config.ConfigV0;
 import ninjaphenix.container_library.config.Converter;
@@ -61,9 +62,7 @@ final class ConfigWrapperImpl extends ConfigWrapper {
 
     @Override
     public boolean setPreferredScreenType(ResourceLocation type) {
-        if ((Utils.UNSET_SCREEN_TYPE.equals(type) || Utils.PAGE_SCREEN_TYPE.equals(type)
-                || Utils.SCROLL_SCREEN_TYPE.equals(type) || Utils.SINGLE_SCREEN_TYPE.equals(type))
-                && type != config.getScreenType()) {
+        if (AbstractScreen.isScreenTypeDeclared(type) && type != config.getScreenType()) {
             config.setScreenType(type);
             this.saveConfig(config);
             return true;
