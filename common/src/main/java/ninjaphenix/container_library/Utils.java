@@ -16,12 +16,6 @@ import java.util.Set;
 
 public class Utils {
     public static final String MOD_ID = "ninjaphenix_container_lib";
-    // Expanded Storage Inventory Sizes
-    public static final int WOOD_STACK_COUNT = 27;
-    public static final int IRON_STACK_COUNT = 54;
-    public static final int GOLD_STACK_COUNT = 81;
-    public static final int DIAMOND_STACK_COUNT = 108;
-    public static final int NETHERITE_STACK_COUNT = 135;
     // Gui Element Sizes
     public static final int SLOT_SIZE = 18;
     public static final int CONTAINER_HEADER_HEIGHT = 17;

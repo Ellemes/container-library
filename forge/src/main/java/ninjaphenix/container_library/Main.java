@@ -18,10 +18,10 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fmlclient.ConfigGuiHandler;
 import net.minecraftforge.fmllegacy.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.ForgeKeyHandler;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 @Mod(Utils.MOD_ID)
@@ -35,9 +35,7 @@ public final class Main {
             IForgeRegistry<MenuType<?>> registry = event.getRegistry();
             registry.registerAll(CommonMain.getMenuType());
         });
-        modEventBus.addListener((FMLClientSetupEvent event) -> {
-            MenuScreens.register(CommonMain.getMenuType(), AbstractScreen::createScreen);
-        });
+        modEventBus.addListener((FMLClientSetupEvent event) -> MenuScreens.register(CommonMain.getMenuType(), AbstractScreen::createScreen));
         if (PlatformUtils.isClient()) {
             this.registerConfigGuiHandler();
             MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (GuiScreenEvent.InitGuiEvent.Post event) -> {
@@ -51,9 +49,7 @@ public final class Main {
     @OnlyIn(Dist.CLIENT) // Required unless moved to client only class, tries to class load Screen.
     private void registerConfigGuiHandler() {
         ModLoadingContext.get().getActiveContainer().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-                () -> new ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> {
-                    return new PickScreen(() -> screen, null);
-                })
+                () -> new ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> new PickScreen(() -> screen, null))
         );
     }
 }

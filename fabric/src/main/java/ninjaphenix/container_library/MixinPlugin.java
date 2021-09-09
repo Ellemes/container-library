@@ -11,7 +11,7 @@ import java.util.Set;
 public final class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassPath, String mixinClassPath) {
-        if (mixinClassPath.equals("ninjaphenix.container_library.mixin.AmecsCompatMixin")) {
+        if ("ninjaphenix.container_library.mixin.AmecsCompatMixin".equals(mixinClassPath)) {
             return FabricLoader.getInstance().isModLoaded("amecs");
         }
         return true;

@@ -12,9 +12,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.client.gui.TexturedRect;
+import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Collections;
@@ -23,27 +25,25 @@ import java.util.List;
 public final class ScrollScreen extends AbstractScreen {
     private final ResourceLocation textureLocation;
     private final int textureWidth, textureHeight, totalRows;
-    private final boolean hasScrollbar, scrollingUnrestricted;
-    private boolean isDragging;
+    private final boolean scrollingUnrestricted;
+    private boolean isDragging, blankAreaVisible;
     private int topRow;
+    private @Nullable TexturedRect blankArea;
 
-    // todo: need to add slot blanking for inventory slots < screen slots
-    //  not designed to be blanked so might be a pain
     public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
         this.initializeSlots(playerInventory);
 
-        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_"+menuWidth+"_"+menuHeight+".png");
+        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
         textureWidth = 208;
-        textureHeight = switch(menuHeight) {
+        textureHeight = switch (menuHeight) {
             case 3 -> 192;
             case 6 -> 240;
             default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
         };
 
         totalRows = Mth.ceil(((double) totalSlots) / menuWidth);
-        hasScrollbar = totalRows > menuHeight;
         imageWidth = 14 + 18 * menuWidth;
         imageHeight = 17 + 97 + 18 * menuHeight;
         scrollingUnrestricted = ConfigWrapper.getInstance().isScrollingUnrestricted();
@@ -71,9 +71,17 @@ public final class ScrollScreen extends AbstractScreen {
     @Override
     protected void init() {
         super.init();
-        if (hasScrollbar) {
-            isDragging = false;
-            topRow = 0;
+        isDragging = false;
+        topRow = 0;
+
+        int remainderSlots = (totalSlots % menuWidth);
+        if (remainderSlots > 0) {
+            int blankSlots = menuWidth - remainderSlots;
+            int xRight = leftPos + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
+            int y = topPos + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
+            int width = blankSlots * Utils.SLOT_SIZE;
+            blankArea = new TexturedRect(xRight - width, y, width, Utils.SLOT_SIZE, Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight);
+            blankAreaVisible = false;
         }
     }
 
@@ -82,12 +90,13 @@ public final class ScrollScreen extends AbstractScreen {
         RenderSystem.setShaderTexture(0, textureLocation);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
-        if (hasScrollbar) {
-            int containerSlotsHeight = menuHeight * 18;
-            int scrollbarHeight = containerSlotsHeight + (menuWidth > 9 ? 34 : 24);
-            GuiComponent.blit(stack, leftPos + imageWidth - 4, topPos, imageWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
-            int yOffset = Mth.floor((containerSlotsHeight - 17) * (((double) topRow) / (totalRows - menuHeight)));
-            GuiComponent.blit(stack, leftPos + imageWidth - 2, topPos + yOffset + 18, imageWidth, scrollbarHeight, 12, 15, textureWidth, textureHeight);
+        int containerSlotsHeight = menuHeight * 18;
+        int scrollbarHeight = containerSlotsHeight + (menuWidth > 9 ? 34 : 24);
+        GuiComponent.blit(stack, leftPos + imageWidth - 4, topPos, imageWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
+        int yOffset = Mth.floor((containerSlotsHeight - 17) * (((double) topRow) / (totalRows - menuHeight)));
+        GuiComponent.blit(stack, leftPos + imageWidth - 2, topPos + yOffset + 18, imageWidth, scrollbarHeight, 12, 15, textureWidth, textureHeight);
+        if (blankArea != null && blankAreaVisible) {
+            blankArea.render(stack);
         }
     }
 
@@ -110,33 +119,31 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     protected boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
-        if (hasScrollbar) {
-            if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
-                if (topRow != totalRows - menuHeight) {
-                    if (Screen.hasShiftDown()) {
-                        this.setTopRow(topRow, Math.min(topRow + menuHeight, totalRows - menuHeight));
-                    } else {
-                        this.setTopRow(topRow, topRow + 1);
-                    }
+        if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
+            if (topRow != totalRows - menuHeight) {
+                if (Screen.hasShiftDown()) {
+                    this.setTopRow(topRow, Math.min(topRow + menuHeight, totalRows - menuHeight));
+                } else {
+                    this.setTopRow(topRow, topRow + 1);
                 }
-                return true;
-            } else if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_PAGE_UP) {
-                if (topRow != 0) {
-                    if (Screen.hasShiftDown()) {
-                        this.setTopRow(topRow, Math.max(topRow - menuHeight, 0));
-                    } else {
-                        this.setTopRow(topRow, topRow - 1);
-                    }
-                }
-                return true;
             }
+            return true;
+        } else if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_PAGE_UP) {
+            if (topRow != 0) {
+                if (Screen.hasShiftDown()) {
+                    this.setTopRow(topRow, Math.max(topRow - menuHeight, 0));
+                } else {
+                    this.setTopRow(topRow, topRow - 1);
+                }
+            }
+            return true;
         }
         return false;
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (hasScrollbar && this.isMouseOverScrollbar(mouseX, mouseY) && button == 0) {
+        if (this.isMouseOverScrollbar(mouseX, mouseY) && button == 0) {
             isDragging = true;
             this.updateTopRow(mouseY);
         }
@@ -145,7 +152,7 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (hasScrollbar && isDragging) {
+        if (isDragging) {
             this.updateTopRow(mouseY);
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -157,12 +164,12 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (hasScrollbar && (scrollingUnrestricted || this.isMouseOverScrollbar(mouseX, mouseY))) {
+        if (scrollingUnrestricted || this.isMouseOverScrollbar(mouseX, mouseY)) {
             int newTop;
             if (delta < 0) {
-                newTop = Math.min(topRow + (hasShiftDown() ? menuHeight : 1), totalRows - menuHeight);
+                newTop = Math.min(topRow + (Screen.hasShiftDown() ? menuHeight : 1), totalRows - menuHeight);
             } else {
-                newTop = Math.max(topRow - (hasShiftDown() ? menuHeight : 1), 0);
+                newTop = Math.max(topRow - (Screen.hasShiftDown() ? menuHeight : 1), 0);
             }
             this.setTopRow(topRow, newTop);
             return true;
@@ -175,6 +182,7 @@ public final class ScrollScreen extends AbstractScreen {
             return;
         }
         topRow = newTopRow;
+        blankAreaVisible = topRow == (totalRows - menuHeight);
         int delta = newTopRow - oldTopRow;
         int rows = Math.abs(delta);
         if (rows < menuHeight) {
@@ -208,18 +216,14 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     public void resize(Minecraft client, int width, int height) {
-        if (hasScrollbar) {
-            int row = topRow;
-            super.resize(client, width, height);
-            this.setTopRow(topRow, row);
-        } else {
-            super.resize(client, width, height);
-        }
+        int row = topRow;
+        super.resize(client, width, height);
+        this.setTopRow(topRow, row);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (hasScrollbar && isDragging) {
+        if (isDragging) {
             isDragging = false;
             return true;
         }
@@ -227,10 +231,7 @@ public final class ScrollScreen extends AbstractScreen {
     }
 
     public List<Rect2i> getExclusionZones() {
-        if (hasScrollbar) {
-            int height = menuHeight * 18 + (menuWidth > 9 ? 34 : 24);
-            return Collections.singletonList(new Rect2i(leftPos + imageWidth - 4, topPos, 22, height));
-        }
-        return Collections.emptyList();
+        int height = menuHeight * 18 + (menuWidth > 9 ? 34 : 24);
+        return Collections.singletonList(new Rect2i(leftPos + imageWidth - 4, topPos, 22, height));
     }
 }

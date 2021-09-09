@@ -1,13 +1,14 @@
 package ninjaphenix.container_library.api.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.ScreenConstructor;
+import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.client.gui.PickScreen;
@@ -29,14 +30,18 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     protected AbstractScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         totalSlots = menu.getInventory().getContainerSize();
-        var retriever = SIZE_RETRIEVERS.get(ConfigWrapper.getInstance().getPreferredScreenType()).get(totalSlots);
-        menuWidth = retriever.getWidth();
-        menuHeight = retriever.getHeight();
+        ScreenSize screenSize = SIZE_RETRIEVERS.get(ConfigWrapper.getInstance().getPreferredScreenType()).get(totalSlots);
+        menuWidth = screenSize.getWidth();
+        menuHeight = screenSize.getHeight();
     }
 
     @ApiStatus.Internal
     public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
+        int slots = menu.getInventory().getContainerSize(); // todo: expose this to other custom screen types?
+        if (slots <= 54 && (preference.equals(Utils.PAGE_SCREEN_TYPE) || preference.equals(Utils.SCROLL_SCREEN_TYPE))) {
+            preference = Utils.SINGLE_SCREEN_TYPE;
+        }
         return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(menu, inventory, title);
     }
 
@@ -80,10 +85,6 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
      */
     protected boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
         return false;
-    }
-
-    protected final void renderButtonTooltip(AbstractButton button, PoseStack stack, int x, int y) {
-        this.renderTooltip(stack, button.getMessage(), x, y);
     }
 
     public abstract List<Rect2i> getExclusionZones();

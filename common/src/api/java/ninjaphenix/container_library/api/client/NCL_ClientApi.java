@@ -8,7 +8,6 @@ import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
 

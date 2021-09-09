@@ -2,10 +2,8 @@ package ninjaphenix.container_library.network;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import ninjaphenix.container_library.wrappers.NetworkWrapperImpl;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 

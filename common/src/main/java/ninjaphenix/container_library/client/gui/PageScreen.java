@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
@@ -14,9 +15,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
+import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.client.gui.widget.PageButton;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.lwjgl.glfw.GLFW;
@@ -54,7 +55,7 @@ public final class PageScreen extends AbstractScreen {
         int slotsPerPage = menuWidth * menuHeight;
         pages = Mth.ceil((double) totalSlots / slotsPerPage);
 
-        blankSlots = slotsPerPage > totalSlots ? slotsPerPage - totalSlots : slotsPerPage - (totalSlots % slotsPerPage);
+        blankSlots = slotsPerPage - (totalSlots % slotsPerPage);
 
         imageWidth = 14 + 18 * menuWidth;
         imageHeight = 17 + 97 + 18 * menuHeight;
@@ -63,30 +64,6 @@ public final class PageScreen extends AbstractScreen {
     private static boolean regionIntersects(AbstractWidget widget, int x, int y, int width, int height) {
         return widget.x <= x + width && y <= widget.y + widget.getHeight() ||
                 x <= widget.x + widget.getWidth() && widget.y <= y + height;
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        // todo: should abstract into a method
-        if (blankSlots > 0 && pages == 1) {
-            blankArea.clear();
-            int rows = Mth.intFloorDiv(blankSlots, menuWidth);
-            int remainder = (blankSlots - menuWidth * rows);
-            int yTop = topPos + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
-            int xLeft = leftPos + Utils.CONTAINER_PADDING_WIDTH;
-            for (int i = 0; i < rows; i++) {
-                blankArea.add(new TexturedRect(xLeft, yTop, menuWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
-                        Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
-                yTop -= Utils.SLOT_SIZE;
-            }
-            if (remainder > 0) {
-                int xRight = leftPos + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
-                int width = remainder * Utils.SLOT_SIZE;
-                blankArea.add(new TexturedRect(xRight - width, yTop, width, Utils.SLOT_SIZE,
-                        Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
-            }
-        }
     }
 
     @Override
@@ -164,25 +141,21 @@ public final class PageScreen extends AbstractScreen {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
-        super.render(stack, mouseX, mouseY, delta);
-        if (this.hasPages()) {
-            leftPageButton.renderTooltip(stack, mouseX, mouseY);
-            rightPageButton.renderTooltip(stack, mouseX, mouseY);
-        }
+    protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
+        super.renderTooltip(stack, mouseX, mouseY);
+        leftPageButton.renderTooltip(stack, mouseX, mouseY);
+        rightPageButton.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
     public void resize(Minecraft client, int width, int height) {
-        if (this.hasPages()) {
-            int currentPage = page;
-            if (currentPage != 1) {
-                menu.resetSlotPositions(false, menuWidth, menuHeight);
-                super.resize(client, width, height);
-                blankArea.clear();
-                this.setPage(1, currentPage);
-                return;
-            }
+        int currentPage = page;
+        if (currentPage != 1) {
+            menu.resetSlotPositions(false, menuWidth, menuHeight);
+            super.resize(client, width, height);
+            blankArea.clear();
+            this.setPage(1, currentPage);
+            return;
         }
         super.resize(client, width, height);
     }
@@ -198,14 +171,12 @@ public final class PageScreen extends AbstractScreen {
 
     @Override
     protected boolean handleKeyPress(int keyCode, int scanCode, int modifiers) {
-        if (this.hasPages()) {
-            if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
-                this.setPage(page, Screen.hasShiftDown() ? pages : page + 1);
-                return true;
-            } else if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_PAGE_UP) {
-                this.setPage(page, Screen.hasShiftDown() ? 1 : page - 1);
-                return true;
-            }
+        if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
+            this.setPage(page, Screen.hasShiftDown() ? pages : page + 1);
+            return true;
+        } else if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_PAGE_UP) {
+            this.setPage(page, Screen.hasShiftDown() ? 1 : page - 1);
+            return true;
         }
         return false;
     }
@@ -214,44 +185,42 @@ public final class PageScreen extends AbstractScreen {
         return Collections.emptyList();
     }
 
-    private boolean hasPages() {
-        return pages != 1;
+    public void addPageButtons() {
+        int width = 54;
+        int x = leftPos + imageWidth - 61;
+        int originalX = x;
+        int y = topPos + imageHeight - 96;
+        List<AbstractWidget> renderableChildren = new ArrayList<>();
+        for (var child : this.children()) {
+            if (child instanceof AbstractWidget widget) {
+                renderableChildren.add(widget);
+            }
+        }
+        renderableChildren.sort(Comparator.comparingInt(a -> -a.x));
+        for (AbstractWidget widget : renderableChildren) {
+            if (PageScreen.regionIntersects(widget, x, y, width, 12)) {
+                x = widget.x - width - 2;
+            }
+        }
+        page = 1;
+        this.setPageText();
+        // Honestly this is dumb.
+        if (x == originalX && PlatformUtils.isModLoaded("inventoryprofiles")) {
+            x -= 14;
+        }
+        leftPageButton = new PageButton(x, y, 0,
+                new TranslatableComponent("screen.ninjaphenix_container_lib.prev_page"), button -> this.setPage(page, page - 1),
+                this::renderButtonTooltip);
+        leftPageButton.active = false;
+        this.addRenderableWidget(leftPageButton);
+        rightPageButton = new PageButton(x + 42, y, 1,
+                new TranslatableComponent("screen.ninjaphenix_container_lib.next_page"), button -> this.setPage(page, page + 1),
+                this::renderButtonTooltip);
+        this.addRenderableWidget(rightPageButton);
+        pageTextX = (1 + leftPageButton.x + rightPageButton.x - rightPageButton.getWidth() / 2F) / 2F;
     }
 
-    public void addPageButtons() {
-        if (this.hasPages()) {
-            int width = 54;
-            int x = leftPos + imageWidth - 61;
-            int originalX = x;
-            int y = topPos + imageHeight - 96;
-            List<AbstractWidget> renderableChildren = new ArrayList<>();
-            for (var child : this.children()) {
-                if (child instanceof AbstractWidget widget) {
-                    renderableChildren.add(widget);
-                }
-            }
-            renderableChildren.sort(Comparator.comparingInt(a -> -a.x));
-            for (AbstractWidget widget : renderableChildren) {
-                if (PageScreen.regionIntersects(widget, x, y, width, 12)) {
-                    x = widget.x - width - 2;
-                }
-            }
-            page = 1;
-            this.setPageText();
-            // Honestly this is dumb.
-            if (x == originalX && PlatformUtils.isModLoaded("inventoryprofiles")) {
-                x -= 14;
-            }
-            leftPageButton = new PageButton(x, y, 0,
-                    new TranslatableComponent("screen.ninjaphenix_container_lib.prev_page"), button -> this.setPage(page, page - 1),
-                    this::renderButtonTooltip);
-            leftPageButton.active = false;
-            this.addRenderableWidget(leftPageButton);
-            rightPageButton = new PageButton(x + 42, y, 1,
-                    new TranslatableComponent("screen.ninjaphenix_container_lib.next_page"), button -> this.setPage(page, page + 1),
-                    this::renderButtonTooltip);
-            this.addRenderableWidget(rightPageButton);
-            pageTextX = (1 + leftPageButton.x + rightPageButton.x - rightPageButton.getWidth() / 2F) / 2F;
-        }
+    private void renderButtonTooltip(AbstractButton button, PoseStack stack, int x, int y) {
+        this.renderTooltip(stack, button.getMessage(), x, y);
     }
 }

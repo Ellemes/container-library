@@ -10,9 +10,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
+import ninjaphenix.container_library.api.inventory.AbstractMenu;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ public final class SingleScreen extends AbstractScreen {
 
         this.initializeSlots(playerInventory);
 
-        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_"+menuWidth+"_"+menuHeight+".png");
+        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
         textureWidth = switch (menuWidth) {
             case 9 -> 208;
             case 12 -> 256;
@@ -55,7 +55,7 @@ public final class SingleScreen extends AbstractScreen {
     @Override
     protected void init() {
         super.init();
-        if (blankSlots > 0 ) {
+        if (blankSlots > 0) {
             blankArea.clear();
             int rows = Mth.intFloorDiv(blankSlots, menuWidth);
             int remainder = (blankSlots - menuWidth * rows);

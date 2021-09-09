@@ -1,7 +1,6 @@
 package ninjaphenix.container_library.wrappers;
 
 import net.minecraft.resources.ResourceLocation;
-import ninjaphenix.container_library.Utils;
 
 public abstract class ConfigWrapper {
     public static ConfigWrapper getInstance() {

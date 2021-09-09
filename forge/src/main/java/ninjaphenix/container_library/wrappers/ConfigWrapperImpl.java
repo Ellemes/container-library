@@ -71,16 +71,6 @@ final class ConfigWrapperImpl extends ConfigWrapper {
         return false;
     }
 
-    @Override
-    public int getPreferredScreenWidth(int slots) {
-        return 0;
-    }
-
-    @Override
-    public int getPreferredScreenHeight(int slots) {
-        return 0;
-    }
-
     private <T extends Config> void saveConfig(T config) {
         try (BufferedWriter writer = Files.newBufferedWriter(configPath)) {
             Map<String, Object> configValues = config.getConverter().toSource(config);

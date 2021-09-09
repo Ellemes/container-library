@@ -12,7 +12,7 @@ public final class AmecsKeyHandler implements KeyHandler {
     private final KeyMapping key;
 
     public AmecsKeyHandler() {
-       key = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.resloc("config"), InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_W, "key.categories.inventory", new KeyModifiers().setShift(true)));
+        key = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.resloc("config"), InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_W, "key.categories.inventory", new KeyModifiers().setShift(true)));
     }
 
     @Override

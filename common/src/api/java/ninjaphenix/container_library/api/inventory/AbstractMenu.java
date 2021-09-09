@@ -36,8 +36,8 @@ public final class AbstractMenu extends AbstractContainerMenu {
     }
 
     // Client only
-    public static AbstractMenu createClientMenu(int windowId, Inventory inventory, FriendlyByteBuf buffer) {
-        return new AbstractMenu(windowId, new SimpleContainer(buffer.readInt()), inventory);
+    public static AbstractMenu createClientMenu(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
+        return new AbstractMenu(windowId, new SimpleContainer(buffer.readInt()), playerInventory);
     }
 
     @Override

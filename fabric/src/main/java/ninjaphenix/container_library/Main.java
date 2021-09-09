@@ -5,9 +5,9 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.AmecsKeyHandler;
 import ninjaphenix.container_library.client.FabricKeyHandler;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 public class Main implements ModInitializer {
