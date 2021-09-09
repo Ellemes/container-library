@@ -36,9 +36,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
 
     public void initialise() {
         // Register Server Receivers
-        ServerPlayConnectionEvents.INIT.register((listener_init, server_unused) -> {
-            ServerPlayNetworking.registerReceiver(listener_init, NetworkWrapperImpl.OPEN_INVENTORY, this::s_handleOpenInventory);
-        });
+        ServerPlayConnectionEvents.INIT.register((listener, server) -> ServerPlayNetworking.registerReceiver(listener, NetworkWrapperImpl.OPEN_INVENTORY, this::s_handleOpenInventory));
     }
 
     private void s_handleOpenInventory(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, FriendlyByteBuf buffer, PacketSender sender) {
@@ -52,11 +50,11 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    protected void openMenu(ServerPlayer player, BlockPos pos, Container container, ServerMenuFactory factory, Component title) {
+    protected void openMenu(ServerPlayer player, BlockPos pos, Container inventory, ServerMenuFactory factory, Component title) {
         player.openMenu(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buffer) {
-                buffer.writeInt(container.getContainerSize());
+                buffer.writeInt(inventory.getContainerSize());
             }
 
             @Override
@@ -67,7 +65,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
             @Nullable
             @Override
             public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-                return factory.create(windowId, container, playerInventory);
+                return factory.create(windowId, inventory, playerInventory);
             }
         });
     }

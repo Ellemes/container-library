@@ -44,7 +44,9 @@ public final class PickScreen extends Screen {
         this.returnToScreen = returnToScreen;
     }
 
+    @Deprecated
     @ApiStatus.Internal
+    @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareButtonSettings(ResourceLocation screenType, ResourceLocation texture, Component text, ScreenSizePredicate warnTest) {
         PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, Triple.of(texture, text, warnTest));
     }

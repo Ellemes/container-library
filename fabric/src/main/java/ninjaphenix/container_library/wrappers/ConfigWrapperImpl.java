@@ -53,11 +53,12 @@ final class ConfigWrapperImpl extends ConfigWrapper {
         return config.getScreenType();
     }
 
-    public boolean setPreferredScreenType(ResourceLocation screenType) {
-        if ((Utils.UNSET_SCREEN_TYPE.equals(screenType) || Utils.PAGE_SCREEN_TYPE.equals(screenType)
-                || Utils.SCROLL_SCREEN_TYPE.equals(screenType) || Utils.SINGLE_SCREEN_TYPE.equals(screenType))
-                && screenType != config.getScreenType()) {
-            config.setScreenType(screenType);
+    public boolean setPreferredScreenType(ResourceLocation type) {
+        // todo: check AbstractScreen.SCREEN_CONSTRUCTORS keySet
+        if ((Utils.UNSET_SCREEN_TYPE.equals(type) || Utils.PAGE_SCREEN_TYPE.equals(type)
+                || Utils.SCROLL_SCREEN_TYPE.equals(type) || Utils.SINGLE_SCREEN_TYPE.equals(type))
+                && type != config.getScreenType()) {
+            config.setScreenType(type);
             this.saveConfig(config);
             return true;
         }
@@ -119,7 +120,6 @@ final class ConfigWrapperImpl extends ConfigWrapper {
         try {
             Map<String, Object> configMap = Utils.GSON.fromJson(lines, Utils.MAP_TYPE);
             // Do not edit, gson returns a double, we want an int.
-            // This is so fucking cursed.
             int configVersion = Mth.floor((Double) configMap.getOrDefault("config_version", (double) -1));
             if (configVersion == converter.getSourceVersion()) {
                 T returnValue = converter.fromSource(configMap);
@@ -143,8 +143,8 @@ final class ConfigWrapperImpl extends ConfigWrapper {
         try {
             Path backupPath = path.resolveSibling(path.getFileName() + new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date()) + ".backup");
             Files.move(path, backupPath);
-        } catch (IOException e2) {
-            CommonMain.LOGGER.warn(failureMessage, e2);
+        } catch (IOException e) {
+            CommonMain.LOGGER.warn(failureMessage, e);
             if (contents != null) {
                 CommonMain.LOGGER.warn(contents);
             }

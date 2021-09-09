@@ -46,23 +46,37 @@ public final class CommonMain {
             NCL_ClientApi.registerScreenType(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::new);
             NCL_ClientApi.registerScreenType(Utils.SINGLE_SCREEN_TYPE, SingleScreen::new);
 
-            NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, (slots) -> {
+            NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, (slots, scaledWidth, scaledHeight) -> {
+                int width = 9;
+                int height;
                 if (slots <= 27) {
-                    return ScreenSize.of(9, 3);
+                    height = 3;
+                } else if (slots <= 54) {
+                    height = 6;
+                } else if (scaledHeight >= 276) {
+                    height = 9;
                 } else {
-                    return ScreenSize.of(9, 6);
+                    height = 6;
                 }
+                return ScreenSize.of(width, height);
             });
 
-            NCL_ClientApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, (slots) -> {
+            NCL_ClientApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, (slots, scaledWidth, scaledHeight) -> {
+                int width = 9;
+                int height;
                 if (slots <= 27) {
-                    return ScreenSize.of(9, 3);
+                    height = 3;
+                } else if (slots <= 54) {
+                    height = 6;
+                } else if (scaledHeight >= 276) {
+                    height = 9;
                 } else {
-                    return ScreenSize.of(9, 6);
+                    height = 6;
                 }
+                return ScreenSize.of(width, height);
             });
 
-            NCL_ClientApi.registerDefaultScreenSize(Utils.SINGLE_SCREEN_TYPE, (slots) -> {
+            NCL_ClientApi.registerDefaultScreenSize(Utils.SINGLE_SCREEN_TYPE, (slots, scaledWidth, scaledHeight) -> {
                 int width;
 
                 if (slots <= 81) {

@@ -14,8 +14,6 @@ public class ReiCompat implements REIClientPlugin {
 
     @Override
     public void registerExclusionZones(ExclusionZones zones) {
-        zones.register(AbstractScreen.class, (AbstractScreen screen) -> {
-            return CollectionUtils.map(screen.getExclusionZones(), ReiCompat::asReiRectangle);
-        });
+        zones.register(AbstractScreen.class, (AbstractScreen screen) -> CollectionUtils.map(screen.getExclusionZones(), ReiCompat::asReiRectangle));
     }
 }

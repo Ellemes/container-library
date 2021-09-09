@@ -3,6 +3,7 @@ package ninjaphenix.container_library.wrappers;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class ConfigWrapper {
+    // todo: set config field here
     public static ConfigWrapper getInstance() {
         return ConfigWrapperImpl.getInstance();
     }

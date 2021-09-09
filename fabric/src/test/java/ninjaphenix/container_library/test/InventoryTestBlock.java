@@ -18,11 +18,11 @@ import ninjaphenix.container_library.api.client.NCL_ClientApi;
 import org.jetbrains.annotations.Nullable;
 
 public class InventoryTestBlock extends Block implements EntityBlock, OpenableBlockEntityProvider {
-    private final int slots;
+    private final int inventorySize;
 
-    public InventoryTestBlock(Properties properties, int slots) {
+    public InventoryTestBlock(Properties properties, int inventorySize) {
         super(properties);
-        this.slots = slots;
+        this.inventorySize = inventorySize;
     }
 
     @Override
@@ -36,12 +36,12 @@ public class InventoryTestBlock extends Block implements EntityBlock, OpenableBl
 
     @Override
     public void onInitialOpen(ServerPlayer player) {
-        player.sendMessage(new TextComponent(player.getName().getString() + " has opened a test inventory with " + slots + " slots!"), Util.NIL_UUID);
+        player.sendMessage(new TextComponent(player.getName().getString() + " has opened a test inventory with " + inventorySize + " slots!"), Util.NIL_UUID);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state, slots);
+        return new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state, inventorySize);
     }
 }

@@ -1,10 +1,14 @@
 package ninjaphenix.container_library.api.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.entity.player.Inventory;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.ScreenConstructor;
@@ -24,18 +28,22 @@ import java.util.Map;
 public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMenu> {
     private static final Map<ResourceLocation, ScreenConstructor<?>> SCREEN_CONSTRUCTORS = new HashMap<>();
     private static final Map<ResourceLocation, ScreenSizeRetriever> SIZE_RETRIEVERS = new HashMap<>();
+    @VisibleForDebug
+    public static boolean DEBUG_RENDER = false;
 
     protected final int menuWidth, menuHeight, totalSlots;
 
     protected AbstractScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         totalSlots = menu.getInventory().getContainerSize();
-        ScreenSize screenSize = SIZE_RETRIEVERS.get(ConfigWrapper.getInstance().getPreferredScreenType()).get(totalSlots);
+        ScreenSize screenSize = SIZE_RETRIEVERS.get(ConfigWrapper.getInstance().getPreferredScreenType()).get(totalSlots, Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
         menuWidth = screenSize.getWidth();
         menuHeight = screenSize.getHeight();
     }
 
+    @Deprecated
     @ApiStatus.Internal
+    @SuppressWarnings("DeprecatedIsStillUsed")
     public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
         int slots = menu.getInventory().getContainerSize(); // todo: expose this to other custom screen types?
@@ -45,12 +53,16 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
         return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(menu, inventory, title);
     }
 
+    @Deprecated
     @ApiStatus.Internal
+    @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
         SCREEN_CONSTRUCTORS.putIfAbsent(type, screenConstructor);
     }
 
+    @Deprecated
     @ApiStatus.Internal
+    @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareScreenSizeRetriever(ResourceLocation type, ScreenSizeRetriever retriever) {
         SIZE_RETRIEVERS.putIfAbsent(type, retriever);
     }
@@ -60,6 +72,10 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, delta);
         this.renderTooltip(stack, mouseX, mouseY);
+        if (AbstractScreen.DEBUG_RENDER) {
+            this.renderTooltip(stack, new TextComponent("width: " + width), 5, 20);
+            this.renderTooltip(stack, new TextComponent("height: " + height), 5, 40);
+        }
     }
 
     @Override

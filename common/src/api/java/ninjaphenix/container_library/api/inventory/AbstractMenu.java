@@ -16,15 +16,15 @@ import ninjaphenix.container_library.Utils;
 import java.util.function.IntUnaryOperator;
 
 public final class AbstractMenu extends AbstractContainerMenu {
-    private final Container container;
+    private final Container inventory;
 
-    public AbstractMenu(int windowId, Container container, Inventory playerInventory) {
+    public AbstractMenu(int windowId, Container inventory, Inventory playerInventory) {
         super(CommonMain.getMenuType(), windowId);
-        this.container = container;
-        container.startOpen(playerInventory.player);
+        this.inventory = inventory;
+        inventory.startOpen(playerInventory.player);
         if (playerInventory.player instanceof ServerPlayer) {
-            for (int i = 0; i < container.getContainerSize(); i++) {
-                this.addSlot(new Slot(container, i, i * Utils.SLOT_SIZE, 0));
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                this.addSlot(new Slot(inventory, i, i * Utils.SLOT_SIZE, 0));
             }
             for (int i = 0; i < 27; i++) {
                 this.addSlot(new Slot(playerInventory, i + 9, i * Utils.SLOT_SIZE, Utils.SLOT_SIZE));
@@ -42,18 +42,18 @@ public final class AbstractMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return container.stillValid(player);
+        return inventory.stillValid(player);
     }
 
     @Override
     public void removed(Player player) {
         super.removed(player);
-        container.stopOpen(player);
+        inventory.stopOpen(player);
     }
 
     // Public API, required for mods to check if blocks should be considered open
     public Container getInventory() {
-        return container;
+        return inventory;
     }
 
     @Override
@@ -63,11 +63,11 @@ public final class AbstractMenu extends AbstractContainerMenu {
         if (slot.hasItem()) {
             ItemStack newStack = slot.getItem();
             originalStack = newStack.copy();
-            if (index < container.getContainerSize()) {
-                if (!this.moveItemStackTo(newStack, container.getContainerSize(), container.getContainerSize() + 36, true)) {
+            if (index < inventory.getContainerSize()) {
+                if (!this.moveItemStackTo(newStack, inventory.getContainerSize(), inventory.getContainerSize() + 36, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(newStack, 0, container.getContainerSize(), false)) {
+            } else if (!this.moveItemStackTo(newStack, 0, inventory.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
             if (newStack.isEmpty()) {
@@ -81,12 +81,12 @@ public final class AbstractMenu extends AbstractContainerMenu {
 
     // Below are client only methods
     public void resetSlotPositions(boolean createSlots, int menuWidth, int menuHeight) {
-        for (int i = 0; i < container.getContainerSize(); i++) {
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
             int slotXPos = i % menuWidth;
             int slotYPos = Mth.ceil((((double) (i - slotXPos)) / menuWidth));
             int realYPos = slotYPos >= menuHeight ? (Utils.SLOT_SIZE * (slotYPos % menuHeight)) - 2000 : slotYPos * Utils.SLOT_SIZE;
             if (createSlots) {
-                this.addSlot(new Slot(container, i, slotXPos * Utils.SLOT_SIZE + 8, realYPos + Utils.SLOT_SIZE));
+                this.addSlot(new Slot(inventory, i, slotXPos * Utils.SLOT_SIZE + 8, realYPos + Utils.SLOT_SIZE));
             } else {
                 slots.get(i).y = realYPos + Utils.SLOT_SIZE;
             }

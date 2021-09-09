@@ -28,7 +28,7 @@ public final class VariableInventory implements Container {
     }
 
     public static Container of(Container... parts) {
-        assert parts.length > 0 : "parts must contain at least 1 item";
+        assert parts.length > 0 : "parts must contain at least 1 inventory";
         if (parts.length == 1) {
             return parts[0];
         } else {

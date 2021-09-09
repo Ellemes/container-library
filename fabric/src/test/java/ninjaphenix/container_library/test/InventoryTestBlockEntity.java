@@ -14,13 +14,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import ninjaphenix.container_library.api.OpenableBlockEntity;
 
 public class InventoryTestBlockEntity extends RandomizableContainerBlockEntity implements OpenableBlockEntity {
-    private final int slots;
+    private final int inventorySize;
     private NonNullList<ItemStack> inventory;
 
-    public InventoryTestBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, int slots) {
+    public InventoryTestBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, int inventorySize) {
         super(blockEntityType, blockPos, blockState);
-        this.slots = slots;
-        this.inventory = NonNullList.withSize(slots, ItemStack.EMPTY);
+        this.inventorySize = inventorySize;
+        this.inventory = NonNullList.withSize(inventorySize, ItemStack.EMPTY);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class InventoryTestBlockEntity extends RandomizableContainerBlockEntity i
 
     @Override
     protected Component getDefaultName() {
-        return new TextComponent("Inventory " + slots);
+        return new TextComponent("Inventory " + inventorySize);
     }
 
     // Not used.
@@ -46,6 +46,6 @@ public class InventoryTestBlockEntity extends RandomizableContainerBlockEntity i
 
     @Override
     public int getContainerSize() {
-        return slots;
+        return inventorySize;
     }
 }

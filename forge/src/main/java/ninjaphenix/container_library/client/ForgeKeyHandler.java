@@ -14,9 +14,7 @@ public class ForgeKeyHandler implements KeyHandler {
 
     public ForgeKeyHandler() {
         key = new KeyMapping("key.expandedstorage.config", KeyConflictContext.GUI, KeyModifier.SHIFT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_W, "key.categories.inventory");
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent event) -> {
-            ClientRegistry.registerKeyBinding(key);
-        });
+        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent event) -> ClientRegistry.registerKeyBinding(key));
     }
 
     @Override

@@ -22,7 +22,6 @@ public final class VariableSidedInventory implements WorldlyContainer {
     private final Map<Direction, int[]> slotsAccessibleThroughFace = new HashMap<>();
 
     private VariableSidedInventory(WorldlyContainer... parts) {
-        assert parts.length > 0 : "parts must contain at least 1 item";
         for (int i = 0; i < parts.length; i++) {
             assert parts[i] != null : "part at index " + i + " must not be null";
         }
@@ -35,7 +34,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
     }
 
     public static WorldlyContainer of(WorldlyContainer... parts) {
-        assert parts.length > 0 : "parts must contain at least 1 item";
+        assert parts.length > 0 : "parts must contain at least 1 inventory";
         if (parts.length == 1) {
             return parts[0];
         } else {

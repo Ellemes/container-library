@@ -49,6 +49,7 @@ public final class PageScreen extends AbstractScreen {
         textureHeight = switch (menuHeight) {
             case 3 -> 192;
             case 6 -> 240;
+            case 9 -> 304;
             default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
         };
 

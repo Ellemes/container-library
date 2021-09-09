@@ -45,7 +45,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    protected void openMenu(ServerPlayer player, BlockPos pos, Container container, ServerMenuFactory factory, Component displayName) {
+    protected void openMenu(ServerPlayer player, BlockPos pos, Container inventory, ServerMenuFactory factory, Component displayName) {
         NetworkHooks.openGui(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {
@@ -55,9 +55,9 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
             @Nullable
             @Override
             public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-                return factory.create(windowId, container, playerInventory);
+                return factory.create(windowId, inventory, playerInventory);
             }
-        }, buffer -> buffer.writeInt(container.getContainerSize()));
+        }, buffer -> buffer.writeInt(inventory.getContainerSize()));
     }
 
     public void handleOpenInventory(BlockPos pos, ServerPlayer player) {

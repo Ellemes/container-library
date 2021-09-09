@@ -1,6 +1,6 @@
 package ninjaphenix.container_library.api.client.function;
 
-// To prevent anonymous class creation as ScreenSizeRetiever was planned to have a getWidth(slots) and getHeight(slots)
+// To prevent anonymous class creation as ScreenSizeRetriever was planned to have a getWidth(slots) and getHeight(slots)
 @SuppressWarnings("ClassCanBeRecord")
 public final class ScreenSize {
     private final int width, height;

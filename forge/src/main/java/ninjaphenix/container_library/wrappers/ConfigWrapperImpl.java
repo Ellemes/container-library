@@ -60,11 +60,11 @@ final class ConfigWrapperImpl extends ConfigWrapper {
     }
 
     @Override
-    public boolean setPreferredScreenType(ResourceLocation screenType) {
-        if ((Utils.UNSET_SCREEN_TYPE.equals(screenType) || Utils.PAGE_SCREEN_TYPE.equals(screenType)
-                || Utils.SCROLL_SCREEN_TYPE.equals(screenType) || Utils.SINGLE_SCREEN_TYPE.equals(screenType))
-                && screenType != config.getScreenType()) {
-            config.setScreenType(screenType);
+    public boolean setPreferredScreenType(ResourceLocation type) {
+        if ((Utils.UNSET_SCREEN_TYPE.equals(type) || Utils.PAGE_SCREEN_TYPE.equals(type)
+                || Utils.SCROLL_SCREEN_TYPE.equals(type) || Utils.SINGLE_SCREEN_TYPE.equals(type))
+                && type != config.getScreenType()) {
+            config.setScreenType(type);
             this.saveConfig(config);
             return true;
         }
@@ -158,8 +158,8 @@ final class ConfigWrapperImpl extends ConfigWrapper {
         try {
             Path backupPath = path.resolveSibling(path.getFileName() + new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date()) + ".backup");
             Files.move(path, backupPath);
-        } catch (IOException e2) {
-            CommonMain.LOGGER.warn(failureMessage, e2);
+        } catch (IOException e) {
+            CommonMain.LOGGER.warn(failureMessage, e);
             if (contents != null) {
                 CommonMain.LOGGER.warn(contents);
             }

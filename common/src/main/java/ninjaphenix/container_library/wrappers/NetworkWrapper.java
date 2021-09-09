@@ -24,10 +24,10 @@ public abstract class NetworkWrapper {
     public abstract void c_openInventoryAt(BlockPos pos);
 
     protected final void openMenuIfAllowed(BlockPos pos, ServerPlayer player) {
-        ServerLevel level = player.getLevel();
-        BlockState state = level.getBlockState(pos);
+        ServerLevel world = player.getLevel();
+        BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof OpenableBlockEntityProvider block) {
-            OpenableBlockEntity inventory = block.getOpenableBlockEntity(level, state, pos);
+            OpenableBlockEntity inventory = block.getOpenableBlockEntity(world, state, pos);
             if (inventory != null) {
                 Component title = inventory.getInventoryName();
                 if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
@@ -47,5 +47,5 @@ public abstract class NetworkWrapper {
         }
     }
 
-    protected abstract void openMenu(ServerPlayer player, BlockPos pos, Container container, ServerMenuFactory factory, Component title);
+    protected abstract void openMenu(ServerPlayer player, BlockPos pos, Container inventory, ServerMenuFactory factory, Component title);
 }
