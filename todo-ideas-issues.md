@@ -7,5 +7,6 @@
 # Issues
 - Switching from page / scroll screen type to single may crash the game if the single screen cannot display the inventory e.g. too big.
 - Default key bind needs changing as it conflicts with movement when amecs is present.
+- Scrollbar de-syncs when moved with mouse ( mouse cursor is ahead of scroll thing pos)
 # 1.18
 - Remove legacy config converter and revert to `ninjaphenix-container-library.json` config name.
