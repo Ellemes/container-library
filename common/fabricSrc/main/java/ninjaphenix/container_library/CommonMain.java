@@ -48,8 +48,9 @@ public final class CommonMain {
             NCL_ClientApi.registerScreenType(Utils.SINGLE_SCREEN_TYPE, SingleScreen::new);
 
             // todo: these settings leave no room for rei/jei should we take those into consideration for minimum screen width / height
-            // might want to revert for initial release since the auto page -> single internal code is not screen size aware.
             ScreenSizeRetriever nonSingleRetriever = (slots, scaledWidth, scaledHeight) -> {
+                // todo: rework this, start with fixed list of screen sizes, pick the best which gives less blank slots with minimal pages.
+                //  An extra page with 0 blank slots should be preferred over any amount of blank slots.
                 int width = 9;
                 int height = 6;
                 if (slots <= 27) {
@@ -57,13 +58,13 @@ public final class CommonMain {
                 } else if (scaledHeight >= 276) {
                     if (slots > 54) {
                         height = 9;
-                        if (scaledWidth >= 338 && slots > 135) {
-                            width = 18;
-                        } else if (slots > 108) {
-                            width = 15;
-                        } else if (slots > 81) {
-                            width = 12;
-                        }
+                        //if (scaledWidth >= 338 && slots > 135) {
+                        //    width = 18;
+                        //} else if (slots > 108) {
+                        //    width = 15;
+                        //} else if (slots > 81) {
+                        //    width = 12;
+                        //}
                     }
                 }
                 return ScreenSize.of(width, height);

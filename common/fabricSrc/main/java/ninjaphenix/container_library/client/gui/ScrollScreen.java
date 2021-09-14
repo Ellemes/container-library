@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
@@ -30,8 +31,8 @@ public final class ScrollScreen extends AbstractScreen {
     private int topRow;
     private @Nullable TexturedRect blankArea;
 
-    public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
+    public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title, ScreenSize screenSize) {
+        super(menu, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
 

@@ -33,10 +33,9 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
 
     protected final int menuWidth, menuHeight, totalSlots;
 
-    protected AbstractScreen(AbstractMenu menu, Inventory playerInventory, Component title) {
+    protected AbstractScreen(AbstractMenu menu, Inventory playerInventory, Component title, ScreenSize screenSize) {
         super(menu, playerInventory, title);
         totalSlots = menu.getInventory().getContainerSize();
-        ScreenSize screenSize = SIZE_RETRIEVERS.get(ConfigWrapper.getInstance().getPreferredScreenType()).get(totalSlots, Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
         menuWidth = screenSize.getWidth();
         menuHeight = screenSize.getHeight();
     }
@@ -46,11 +45,16 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
-        int slots = menu.getInventory().getContainerSize(); // todo: expose this to other custom screen types?
-        if (slots <= 54 && (preference.equals(Utils.PAGE_SCREEN_TYPE) || preference.equals(Utils.SCROLL_SCREEN_TYPE))) {
-            preference = Utils.SINGLE_SCREEN_TYPE;
+        ScreenSize screenSize = ScreenSize.current();
+        int slots = menu.getInventory().getContainerSize();
+        // todo: expose this kind of functionality as api, also less hard-code it
+        {
+            int screenSlots = screenSize.getHeight() >= 276 ? 81 : 54;
+            if (slots <= screenSlots && (preference.equals(Utils.PAGE_SCREEN_TYPE) || preference.equals(Utils.SCROLL_SCREEN_TYPE))) {
+                preference = Utils.SINGLE_SCREEN_TYPE;
+            }
         }
-        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(menu, inventory, title);
+        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(menu, inventory, title, SIZE_RETRIEVERS.get(preference).get(slots, screenSize.getWidth(), screenSize.getHeight()));
     }
 
     @Deprecated
