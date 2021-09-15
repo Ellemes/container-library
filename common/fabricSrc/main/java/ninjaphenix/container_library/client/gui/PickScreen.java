@@ -15,7 +15,6 @@ import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.client.gui.widget.ScreenPickButton;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
-import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,12 +28,16 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class PickScreen extends Screen {
-    private static final Map<ResourceLocation, Triple<ResourceLocation, Component, ScreenSizePredicate>> BUTTON_SETTINGS = new HashMap<>();
+    private static final Map<ResourceLocation, PickButton> BUTTON_SETTINGS = new HashMap<>();
     private final Set<ResourceLocation> options;
     private final Supplier<Screen> returnToScreen;
     private final List<ScreenPickButton> optionWidgets;
     private final @Nullable Runnable onOptionPicked;
     private int topPadding;
+
+    private record PickButton(ResourceLocation texture, Component text, ScreenSizePredicate warnTest) {
+
+    }
 
     public PickScreen(Supplier<Screen> returnToScreen, @Nullable Runnable onOptionPicked) {
         super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
@@ -48,7 +51,7 @@ public final class PickScreen extends Screen {
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareButtonSettings(ResourceLocation screenType, ResourceLocation texture, Component text, ScreenSizePredicate warnTest) {
-        PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, Triple.of(texture, text, warnTest));
+        PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, new PickButton(texture, text, warnTest));
     }
 
     @Override
@@ -76,8 +79,8 @@ public final class PickScreen extends Screen {
         this.topPadding = topPadding;
         optionWidgets.clear();
         for (ResourceLocation option : options) {
-            Triple<ResourceLocation, Component, ScreenSizePredicate> settings = PickScreen.BUTTON_SETTINGS.get(option);
-            boolean isWarn = settings.getRight().test(width, height);
+            PickButton settings = PickScreen.BUTTON_SETTINGS.get(option);
+            boolean isWarn = settings.warnTest().test(width, height);
             boolean isSelected = option.equals(currentOption);
             // todo: expose warning text for more specific messages?
             Button.OnTooltip tooltip = new Button.OnTooltip() {
@@ -110,7 +113,7 @@ public final class PickScreen extends Screen {
                 }
             };
             optionWidgets.add(this.addRenderableWidget(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
-                    settings.getLeft(), settings.getMiddle(), isWarn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
+                    settings.texture(), settings.text(), isWarn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
             x++;
         }
     }

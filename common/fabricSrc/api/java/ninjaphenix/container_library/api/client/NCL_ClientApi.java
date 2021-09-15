@@ -25,18 +25,19 @@ public final class NCL_ClientApi {
     }
 
     // may be wise to allow width and height to be edited rather than fixed 256x256
-    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component text, ScreenSizePredicate visibilityTest) {
+    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component text, ScreenSizePredicate warningTest) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
         Objects.requireNonNull(text, "text must not be null");
-        Objects.requireNonNull(visibilityTest, "visibilityText must not be null");
+        Objects.requireNonNull(warningTest, "warningTest must not be null");
         //noinspection deprecation
-        PickScreen.declareButtonSettings(type, texture, text, visibilityTest);
+        PickScreen.declareButtonSettings(type, texture, text, warningTest);
     }
 
     public static void registerScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(screenConstructor, "screenConstructor must not be null");
+        //noinspection deprecation
         if (screenConstructor == ScreenConstructor.NULL) {
             throw new IllegalArgumentException("screenConstructor must not be ScreenConstructor.NULL");
         }
