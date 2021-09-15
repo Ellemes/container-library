@@ -68,8 +68,7 @@ public final class CommonMain {
                         ScreenSize iterDim = option.getFirst();
                         if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
                             picked = option;
-                            // todo: remove below if statement depending on user feedback, or make config option
-                        } else if (pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+                        } else if (ConfigWrapper.getInstance().preferBiggerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
 
                         } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
                             picked = option;

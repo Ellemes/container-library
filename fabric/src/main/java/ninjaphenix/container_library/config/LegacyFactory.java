@@ -20,7 +20,7 @@ public final class LegacyFactory implements Converter<Map<String, Object>, Confi
             } else if ("expandedstorage:scrollable".equals(temp)) {
                 temp = Utils.SCROLL_SCREEN_TYPE.toString();
             }
-            return new ConfigV0(ResourceLocation.tryParse(temp), restrictiveScrolling);
+            return new ConfigV0(ResourceLocation.tryParse(temp), restrictiveScrolling, false);
         }
         return null;
     }

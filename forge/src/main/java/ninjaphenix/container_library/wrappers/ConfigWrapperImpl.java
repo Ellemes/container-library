@@ -48,26 +48,21 @@ final class ConfigWrapperImpl extends ConfigWrapper {
     }
 
     @Override
-    public void setScrollingRestricted(boolean value) {
-        if (config.isScrollingRestricted() == value) {
-            config.setScrollingRestricted(!value);
-            this.saveConfig(config);
-        }
-    }
-
-    @Override
     public ResourceLocation getPreferredScreenType() {
         return config.getScreenType();
     }
 
     @Override
-    public boolean setPreferredScreenType(ResourceLocation type) {
+    public void setPreferredScreenType(ResourceLocation type) {
         if (AbstractScreen.isScreenTypeDeclared(type) && type != config.getScreenType()) {
             config.setScreenType(type);
             this.saveConfig(config);
-            return true;
         }
-        return false;
+    }
+
+    @Override
+    public boolean preferBiggerScreens() {
+        return config.preferBiggerScreens();
     }
 
     private <T extends Config> void saveConfig(T config) {

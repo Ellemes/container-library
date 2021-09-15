@@ -12,10 +12,9 @@ public abstract class ConfigWrapper {
 
     public abstract boolean isScrollingUnrestricted();
 
-    @SuppressWarnings("unused")
-    public abstract void setScrollingRestricted(boolean value);
-
     public abstract ResourceLocation getPreferredScreenType();
 
-    public abstract boolean setPreferredScreenType(ResourceLocation screenType);
+    public abstract void setPreferredScreenType(ResourceLocation screenType);
+
+    public abstract boolean preferBiggerScreens();
 }
