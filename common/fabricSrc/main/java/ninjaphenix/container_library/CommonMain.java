@@ -1,12 +1,12 @@
 package ninjaphenix.container_library;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.MenuType;
 import ninjaphenix.container_library.api.client.NCL_ClientApi;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
-import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.client.gui.PageScreen;
@@ -22,6 +22,7 @@ import org.apache.logging.log4j.message.FormattedMessage;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 
 public final class CommonMain {
@@ -38,16 +39,18 @@ public final class CommonMain {
             ConfigWrapper.getInstance().initialise(configPath, oldConfigPath);
             NCL_ClientApi.registerScreenButton(Utils.PAGE_SCREEN_TYPE,
                     Utils.resloc("textures/gui/paged_button.png"),
-                    Utils.translation("screen.ninjaphenix_container_lib.paged_screen"),
-                    ScreenSizePredicate::noTest);
+                    Utils.translation("screen.ninjaphenix_container_lib.paged_screen"));
             NCL_ClientApi.registerScreenButton(Utils.SCROLL_SCREEN_TYPE,
                     Utils.resloc("textures/gui/scrollable_button.png"),
-                    Utils.translation("screen.ninjaphenix_container_lib.scrollable_screen"),
-                    ScreenSizePredicate::noTest);
+                    Utils.translation("screen.ninjaphenix_container_lib.scrollable_screen"));
             NCL_ClientApi.registerScreenButton(Utils.SINGLE_SCREEN_TYPE,
                     Utils.resloc("textures/gui/single_button.png"),
                     Utils.translation("screen.ninjaphenix_container_lib.single_screen"),
-                    (width, height) -> width < 370 || height < 386); // Smallest possible resolution a double netherite chest fits on.
+                    (width, height) -> width < 370 || height < 386, // Smallest possible resolution a double netherite chest fits on.
+                    List.of(
+                            Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY),
+                            Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY)
+                    ));
 
             NCL_ClientApi.registerScreenType(Utils.PAGE_SCREEN_TYPE, PageScreen::new);
             NCL_ClientApi.registerScreenType(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::new);

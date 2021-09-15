@@ -7,13 +7,13 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.client.gui.widget.ScreenPickButton;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
+import ninjaphenix.container_library.client.gui.widget.ScreenPickButton;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +35,8 @@ public final class PickScreen extends Screen {
     private final @Nullable Runnable onOptionPicked;
     private int topPadding;
 
-    private record PickButton(ResourceLocation texture, Component text, ScreenSizePredicate warnTest) {
+    private record PickButton(ResourceLocation texture, Component title, ScreenSizePredicate warnTest,
+                              List<Component> warningText) {
 
     }
 
@@ -50,8 +51,8 @@ public final class PickScreen extends Screen {
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
-    public static void declareButtonSettings(ResourceLocation screenType, ResourceLocation texture, Component text, ScreenSizePredicate warnTest) {
-        PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, new PickButton(texture, text, warnTest));
+    public static void declareButtonSettings(ResourceLocation screenType, ResourceLocation texture, Component title, ScreenSizePredicate warnTest, List<Component> warningText) {
+        PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, new PickButton(texture, title, warnTest, warningText));
     }
 
     @Override
@@ -82,10 +83,7 @@ public final class PickScreen extends Screen {
             PickButton settings = PickScreen.BUTTON_SETTINGS.get(option);
             boolean isWarn = settings.warnTest().test(width, height);
             boolean isSelected = option.equals(currentOption);
-            // todo: expose warning text for more specific messages?
             Button.OnTooltip tooltip = new Button.OnTooltip() {
-                private static final MutableComponent WARN_TEXT_1 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY);
-                private static final Component WARN_TEXT_2 = Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY);
                 private static final Component CURRENT_OPTION_TEXT = Utils.translation("screen.ninjaphenix_container_lib.current_option_notice").withStyle(ChatFormatting.GOLD);
 
                 @Override
@@ -96,8 +94,7 @@ public final class PickScreen extends Screen {
                         tooltip.add(CURRENT_OPTION_TEXT);
                     }
                     if (isWarn) {
-                        tooltip.add(WARN_TEXT_1);
-                        tooltip.add(WARN_TEXT_2);
+                        tooltip.addAll(settings.warningText());
                     }
                     PickScreen.this.renderTooltip(stack, tooltip, Optional.empty(), x, y);
                 }
@@ -108,12 +105,16 @@ public final class PickScreen extends Screen {
                         consumer.accept(CURRENT_OPTION_TEXT);
                     }
                     if (isWarn) {
-                        consumer.accept(WARN_TEXT_1.append(WARN_TEXT_2));
+                        var text = new TextComponent("");
+                        for (Component component : settings.warningText()) {
+                            text.append(component);
+                        }
+                        consumer.accept(text);
                     }
                 }
             };
             optionWidgets.add(this.addRenderableWidget(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
-                    settings.texture(), settings.text(), isWarn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
+                    settings.texture(), settings.title(), isWarn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
             x++;
         }
     }

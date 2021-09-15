@@ -9,6 +9,7 @@ import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class NCL_ClientApi {
@@ -25,13 +26,22 @@ public final class NCL_ClientApi {
     }
 
     // may be wise to allow width and height to be edited rather than fixed 256x256
-    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component text, ScreenSizePredicate warningTest) {
+    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component title, ScreenSizePredicate warningTest, List<Component> warningText) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
-        Objects.requireNonNull(text, "text must not be null");
+        Objects.requireNonNull(title, "title must not be null");
         Objects.requireNonNull(warningTest, "warningTest must not be null");
+        Objects.requireNonNull(warningText, "warningText must not be null");
         //noinspection deprecation
-        PickScreen.declareButtonSettings(type, texture, text, warningTest);
+        PickScreen.declareButtonSettings(type, texture, title, warningTest, warningText);
+    }
+
+    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component title) {
+        Objects.requireNonNull(type, "type must not be null");
+        Objects.requireNonNull(texture, "texture must not be null");
+        Objects.requireNonNull(title, "title must not be null");
+        //noinspection deprecation
+        PickScreen.declareButtonSettings(type, texture, title, ScreenSizePredicate::noTest, List.of());
     }
 
     public static void registerScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
