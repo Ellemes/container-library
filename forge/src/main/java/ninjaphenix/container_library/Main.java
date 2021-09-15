@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fmlclient.ConfigGuiHandler;
 import net.minecraftforge.fmllegacy.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -29,12 +30,15 @@ public final class Main {
     public Main() {
         PlatformUtils.initialize(FMLLoader.getDist() == Dist.CLIENT ? new ForgeKeyHandler() : null, ModList.get()::isLoaded);
 
-        CommonMain.initialize((menuType, factory) -> new MenuType<>((IContainerFactory<?>) factory::create).setRegistryName(menuType));
+        CommonMain.initialize((menuType, factory) -> new MenuType<>((IContainerFactory<?>) factory::create).setRegistryName(menuType),
+                FMLPaths.CONFIGDIR.get().resolve(Utils.CONFIG_PATH),
+                FMLPaths.CONFIGDIR.get().resolve(Utils.FORGE_LEGACY_CONFIG_PATH));
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addGenericListener(MenuType.class, (RegistryEvent.Register<MenuType<?>> event) -> {
             IForgeRegistry<MenuType<?>> registry = event.getRegistry();
             registry.registerAll(CommonMain.getMenuType());
         });
+        //noinspection deprecation
         modEventBus.addListener((FMLClientSetupEvent event) -> MenuScreens.register(CommonMain.getMenuType(), AbstractScreen::createScreen));
         if (PlatformUtils.isClient()) {
             this.registerConfigGuiHandler();

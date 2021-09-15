@@ -18,9 +18,12 @@ public class Main implements ModInitializer {
                 ? FabricLoader.getInstance().isModLoaded("amecs") ? new AmecsKeyHandler() : new FabricKeyHandler()
                 : null, FabricLoader.getInstance()::isModLoaded);
 
-        CommonMain.initialize((menuType, factory) -> ScreenHandlerRegistry.registerExtended(menuType, factory::create));
+        CommonMain.initialize((menuType, factory) -> ScreenHandlerRegistry.registerExtended(menuType, factory::create),
+                FabricLoader.getInstance().getConfigDir().resolve(Utils.CONFIG_PATH),
+                FabricLoader.getInstance().getConfigDir().resolve(Utils.FABRIC_LEGACY_CONFIG_PATH));
 
         if (PlatformUtils.isClient()) {
+            //noinspection deprecation
             ScreenRegistry.register(CommonMain.getMenuType(), AbstractScreen::createScreen);
         }
     }

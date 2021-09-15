@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.function.BiFunction;
 
@@ -28,11 +29,13 @@ public final class CommonMain {
     private static MenuType<AbstractMenu> menuType;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> menuTypeFunction) {
+    public static void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> menuTypeFunction,
+                                  Path configPath,
+                                  Path oldConfigPath) {
         menuType = menuTypeFunction.apply(Utils.MENU_TYPE_ID, AbstractMenu::createClientMenu);
 
         if (PlatformUtils.isClient()) {
-            ConfigWrapper.getInstance().initialise();
+            ConfigWrapper.getInstance().initialise(configPath, oldConfigPath);
             NCL_ClientApi.registerScreenButton(Utils.PAGE_SCREEN_TYPE,
                     Utils.resloc("textures/gui/paged_button.png"),
                     Utils.translation("screen.ninjaphenix_container_lib.paged_screen"),
@@ -68,7 +71,7 @@ public final class CommonMain {
                         ScreenSize iterDim = option.getFirst();
                         if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
                             picked = option;
-                        } else if (ConfigWrapper.getInstance().preferBiggerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+                        } else if (ConfigWrapper.getInstance().preferSmallerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
 
                         } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
                             picked = option;
@@ -126,12 +129,9 @@ public final class CommonMain {
                     height = 9;
                 } else if (slots <= 216) {
                     height = 12;
-                } else if (slots <= 270) {
+                } else /* if (slots <= 270) */ {
                     height = 15;
-                } else {
-                    // Never called, checked before, to silence javac errors.
-                    throw new IllegalStateException("Cannot display single screen of size " + slots);
-                }
+                } // slots is guaranteed to be 270 or below when getting width.
 
                 return ScreenSize.of(width, height);
             });

@@ -24,6 +24,7 @@ public class Utils {
     public static final ResourceLocation MENU_TYPE_ID = Utils.resloc("menu_type");
     // Config Paths
     public static final String FABRIC_LEGACY_CONFIG_PATH = "ninjaphenix-container-library.json";
+    public static final String FORGE_LEGACY_CONFIG_PATH = "expandedstorage-client.toml";
     public static final String CONFIG_PATH = "expandedstorage.json";
     // Config Related
     public static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {

@@ -47,7 +47,8 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
         ScreenSize screenSize = ScreenSize.current();
         int slots = menu.getInventory().getContainerSize();
-        // todo: expose this kind of functionality as api, also less hard-code it
+        // todo: expose this kind of functionality as api
+        //  this should support showing screens up to what the single screen can show given the screen size can support it.
         {
             int screenSlots = screenSize.getHeight() >= 276 ? 81 : 54;
             if (slots <= screenSlots && (preference.equals(Utils.PAGE_SCREEN_TYPE) || preference.equals(Utils.SCROLL_SCREEN_TYPE))) {
