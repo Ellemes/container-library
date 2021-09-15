@@ -1,6 +1,8 @@
 package ninjaphenix.container_library;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.MenuType;
 import ninjaphenix.container_library.api.client.NCL_ClientApi;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
@@ -18,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 
+import java.util.ArrayList;
 import java.util.function.BiFunction;
 
 public final class CommonMain {
@@ -48,9 +51,35 @@ public final class CommonMain {
             NCL_ClientApi.registerScreenType(Utils.SINGLE_SCREEN_TYPE, SingleScreen::new);
 
             // todo: these settings leave no room for rei/jei should we take those into consideration for minimum screen width / height
-            ScreenSizeRetriever nonSingleRetriever = (slots, scaledWidth, scaledHeight) -> {
-                // todo: rework this, start with fixed list of screen sizes, pick the best which gives less blank slots with minimal pages.
-                //  An extra page with 0 blank slots should be preferred over any amount of blank slots.
+            ScreenSizeRetriever pageRetriever = (slots, scaledWidth, scaledHeight) -> {
+                ArrayList<Pair<ScreenSize, ScreenSize>> options = new ArrayList<>();
+                CommonMain.addEntry(options, slots, 9, 3);
+                CommonMain.addEntry(options, slots, 9, 6);
+                if (scaledHeight >= 276) {
+                    CommonMain.addEntry(options, slots, 9, 9);
+                }
+                Pair<ScreenSize, ScreenSize> picked = null;
+                for (Pair<ScreenSize, ScreenSize> option : options) {
+                    if (picked == null) {
+                        picked = option;
+                    } else {
+                        ScreenSize pickedMeta = picked.getSecond();
+                        ScreenSize iterMeta = option.getSecond();
+                        ScreenSize iterDim = option.getFirst();
+                        if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
+                            picked = option;
+                            // todo: remove below if statement depending on user feedback, or make config option
+                        } else if (pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+
+                        } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+                            picked = option;
+                        }
+                    }
+                }
+                return picked.getFirst();
+            };
+
+            ScreenSizeRetriever scrollRetriever = (slots, scaledWidth, scaledHeight) -> {
                 int width = 9;
                 int height = 6;
                 if (slots <= 27) {
@@ -70,8 +99,8 @@ public final class CommonMain {
                 return ScreenSize.of(width, height);
             };
 
-            NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, nonSingleRetriever);
-            NCL_ClientApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, nonSingleRetriever);
+            NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, pageRetriever);
+            NCL_ClientApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, scrollRetriever);
 
             NCL_ClientApi.registerDefaultScreenSize(Utils.SINGLE_SCREEN_TYPE, (slots, scaledWidth, scaledHeight) -> {
                 int width;
@@ -109,6 +138,12 @@ public final class CommonMain {
             });
         }
         NetworkWrapper.getInstance().initialise();
+    }
+
+    private static void addEntry(ArrayList<Pair<ScreenSize, ScreenSize>> options, int slots, int width, int height) {
+        int pages = Mth.ceil((double) slots / (width * height));
+        int blanked = slots - pages * width * height;
+        options.add(new Pair<>(ScreenSize.of(width, height), ScreenSize.of(pages, blanked)));
     }
 
     public static void warnThrowableMessage(String message, Throwable throwable, Object... values) {

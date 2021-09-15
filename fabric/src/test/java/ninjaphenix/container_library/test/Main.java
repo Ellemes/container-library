@@ -48,7 +48,7 @@ public class Main {
                                                                                     .build()
                                                                                     .toArray(InventoryTestBlock[]::new);
         RESOURCE_PACK.addLang(new ResourceLocation("test", "en_us"), lang);
-        blockEntityType = FabricBlockEntityTypeBuilder.create((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state, 0), blocks).build();
+        blockEntityType = FabricBlockEntityTypeBuilder.create((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state), blocks).build();
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation("test", "block_entity_type"), blockEntityType);
 
         RRPCallback.AFTER_VANILLA.register(resources -> resources.add(RESOURCE_PACK));

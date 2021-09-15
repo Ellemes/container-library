@@ -42,6 +42,10 @@ public class InventoryTestBlock extends Block implements EntityBlock, OpenableBl
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state, inventorySize);
+        return new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state);
+    }
+
+    public int getInventorySize() {
+        return inventorySize;
     }
 }

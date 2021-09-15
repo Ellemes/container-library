@@ -2,6 +2,7 @@ package ninjaphenix.container_library.test;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,9 +18,9 @@ public class InventoryTestBlockEntity extends RandomizableContainerBlockEntity i
     private final int inventorySize;
     private NonNullList<ItemStack> inventory;
 
-    public InventoryTestBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, int inventorySize) {
+    public InventoryTestBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
-        this.inventorySize = inventorySize;
+        this.inventorySize = ((InventoryTestBlock) blockState.getBlock()).getInventorySize();
         this.inventory = NonNullList.withSize(inventorySize, ItemStack.EMPTY);
     }
 

@@ -62,8 +62,8 @@ public final class PageScreen extends AbstractScreen {
 
         int slotsPerPage = menuWidth * menuHeight;
         pages = Mth.ceil((double) totalSlots / slotsPerPage);
-
-        blankSlots = slotsPerPage - (totalSlots % slotsPerPage);
+        int lastPageSlots = totalSlots - (pages - 1) * slotsPerPage;
+        blankSlots = slotsPerPage - lastPageSlots;
 
         imageWidth = 14 + 18 * menuWidth;
         imageHeight = 17 + 97 + 18 * menuHeight;
