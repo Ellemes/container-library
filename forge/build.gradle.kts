@@ -129,8 +129,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "ninjaphenix.container_library"
-            artifactId = "forge-${properties["minecraft_version"]}"
-            version = properties["mod_version"] as String
+            artifactId = "forge"
             artifact(releaseJarTask) {
                 builtBy(releaseJarTask)
             }

@@ -131,8 +131,7 @@ afterEvaluate {
         publications {
             create<MavenPublication>("maven") {
                 groupId = "ninjaphenix.container_library"
-                artifactId = "fabric-${properties["minecraft_version"]}"
-                version = properties["mod_version"] as String
+                artifactId = "fabric"
                 artifact(releaseJarTask) {
                     builtBy(releaseJarTask)
                 }
