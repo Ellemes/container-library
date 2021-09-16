@@ -1,8 +1,5 @@
 package ninjaphenix.container_library.api.client;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -11,6 +8,9 @@ import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 import java.util.List;
 import java.util.Objects;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 public final class NCL_ClientApi {
     private NCL_ClientApi() {
@@ -26,7 +26,7 @@ public final class NCL_ClientApi {
     }
 
     // may be wise to allow width and height to be edited rather than fixed 256x256
-    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component title, ScreenSizePredicate warningTest, List<Component> warningText) {
+    public static void registerScreenButton(Identifier type, Identifier texture, Text title, ScreenSizePredicate warningTest, List<Text> warningText) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
         Objects.requireNonNull(title, "title must not be null");
@@ -36,7 +36,7 @@ public final class NCL_ClientApi {
         PickScreen.declareButtonSettings(type, texture, title, warningTest, warningText);
     }
 
-    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component title) {
+    public static void registerScreenButton(Identifier type, Identifier texture, Text title) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
         Objects.requireNonNull(title, "title must not be null");
@@ -44,7 +44,7 @@ public final class NCL_ClientApi {
         PickScreen.declareButtonSettings(type, texture, title, ScreenSizePredicate::noTest, List.of());
     }
 
-    public static void registerScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
+    public static void registerScreenType(Identifier type, ScreenConstructor<?> screenConstructor) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(screenConstructor, "screenConstructor must not be null");
         //noinspection deprecation
@@ -56,7 +56,7 @@ public final class NCL_ClientApi {
     }
 
     // Register default screen sizes, currently hard-coded however it is planned to allow users to override this in the future.
-    public static void registerDefaultScreenSize(ResourceLocation type, ScreenSizeRetriever retriever) {
+    public static void registerDefaultScreenSize(Identifier type, ScreenSizeRetriever retriever) {
         //noinspection deprecation
         AbstractScreen.declareScreenSizeRetriever(type, retriever);
     }

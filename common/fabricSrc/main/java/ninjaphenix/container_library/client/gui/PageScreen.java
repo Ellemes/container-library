@@ -1,19 +1,6 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -29,23 +16,37 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.PressableWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Rect2i;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 public final class PageScreen extends AbstractScreen {
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
     private final int textureWidth, textureHeight;
     private final Set<TexturedRect> blankArea = new LinkedHashSet<>();
     private final int blankSlots, pages;
     private PageButton leftPageButton, rightPageButton;
     private int page;
-    private TranslatableComponent currentPageText;
+    private TranslatableText currentPageText;
     private float pageTextX;
 
-    public PageScreen(AbstractMenu menu, Inventory playerInventory, Component title, ScreenSize screenSize) {
+    public PageScreen(AbstractMenu menu, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
         super(menu, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
 
-        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
+        textureLocation = new Identifier("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
         textureWidth = switch (menuWidth) {
             case 9 -> 208;
             case 12 -> 256;
@@ -61,38 +62,38 @@ public final class PageScreen extends AbstractScreen {
         };
 
         int slotsPerPage = menuWidth * menuHeight;
-        pages = Mth.ceil((double) totalSlots / slotsPerPage);
+        pages = MathHelper.ceil((double) totalSlots / slotsPerPage);
         int lastPageSlots = totalSlots - (pages - 1) * slotsPerPage;
         blankSlots = slotsPerPage - lastPageSlots;
 
-        imageWidth = 14 + 18 * menuWidth;
-        imageHeight = 17 + 97 + 18 * menuHeight;
+        backgroundWidth = 14 + 18 * menuWidth;
+        backgroundHeight = 17 + 97 + 18 * menuHeight;
     }
 
-    private static boolean regionIntersects(AbstractWidget widget, int x, int y, int width, int height) {
+    private static boolean regionIntersects(ClickableWidget widget, int x, int y, int width, int height) {
         return widget.x <= x + width && y <= widget.y + widget.getHeight() ||
                 x <= widget.x + widget.getWidth() && widget.y <= y + height;
     }
 
     @Override
-    protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
+    protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
         RenderSystem.setShaderTexture(0, textureLocation);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
+        DrawableHelper.drawTexture(stack, x, y, 0, 0, backgroundWidth, backgroundHeight, textureWidth, textureHeight);
         blankArea.forEach(image -> image.render(stack));
     }
 
-    private void initializeSlots(Inventory playerInventory) {
-        menu.resetSlotPositions(true, menuWidth, menuHeight);
+    private void initializeSlots(PlayerInventory playerInventory) {
+        handler.resetSlotPositions(true, menuWidth, menuHeight);
         int left = (menuWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
         int top = Utils.SLOT_SIZE + 14 + (menuHeight * Utils.SLOT_SIZE);
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 3; y++) {
-                menu.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, left + Utils.SLOT_SIZE * x, top + y * Utils.SLOT_SIZE));
+                handler.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, left + Utils.SLOT_SIZE * x, top + y * Utils.SLOT_SIZE));
             }
         }
         for (int x = 0; x < 9; x++) {
-            menu.addClientSlot(new Slot(playerInventory, x, left + Utils.SLOT_SIZE * x, top + 58));
+            handler.addClientSlot(new Slot(playerInventory, x, left + Utils.SLOT_SIZE * x, top + 58));
         }
     }
 
@@ -105,20 +106,20 @@ public final class PageScreen extends AbstractScreen {
             if (page == pages) {
                 rightPageButton.setActive(false);
                 if (blankSlots > 0) {
-                    int rows = Mth.intFloorDiv(blankSlots, menuWidth);
+                    int rows = MathHelper.floorDiv(blankSlots, menuWidth);
                     int remainder = (blankSlots - menuWidth * rows);
-                    int yTop = topPos + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
-                    int xLeft = leftPos + Utils.CONTAINER_PADDING_WIDTH;
+                    int yTop = y + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
+                    int xLeft = x + Utils.CONTAINER_PADDING_WIDTH;
                     for (int i = 0; i < rows; i++) {
                         blankArea.add(new TexturedRect(xLeft, yTop, menuWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
-                                Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
+                                Utils.CONTAINER_PADDING_WIDTH, backgroundHeight, textureWidth, textureHeight));
                         yTop -= Utils.SLOT_SIZE;
                     }
                     if (remainder > 0) {
-                        int xRight = leftPos + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
+                        int xRight = x + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
                         int width = remainder * Utils.SLOT_SIZE;
                         blankArea.add(new TexturedRect(xRight - width, yTop, width, Utils.SLOT_SIZE,
-                                Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
+                                Utils.CONTAINER_PADDING_WIDTH, backgroundHeight, textureWidth, textureHeight));
                     }
                 }
             }
@@ -137,29 +138,29 @@ public final class PageScreen extends AbstractScreen {
         int slotsPerPage = menuWidth * menuHeight;
         int oldMin = slotsPerPage * (oldPage - 1);
         int oldMax = Math.min(oldMin + slotsPerPage, totalSlots);
-        menu.moveSlotRange(oldMin, oldMax, -2000);
+        handler.moveSlotRange(oldMin, oldMax, -2000);
         int newMin = slotsPerPage * (newPage - 1);
         int newMax = Math.min(newMin + slotsPerPage, totalSlots);
-        menu.moveSlotRange(newMin, newMax, 2000);
+        handler.moveSlotRange(newMin, newMax, 2000);
         this.setPageText();
     }
 
     private void setPageText() {
-        currentPageText = new TranslatableComponent("screen.ninjaphenix_container_lib.page_x_y", page, pages);
+        currentPageText = new TranslatableText("screen.ninjaphenix_container_lib.page_x_y", page, pages);
     }
 
     @Override
-    protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
-        super.renderTooltip(stack, mouseX, mouseY);
-        leftPageButton.renderTooltip(stack, mouseX, mouseY);
-        rightPageButton.renderTooltip(stack, mouseX, mouseY);
+    protected void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
+        super.drawMouseoverTooltip(stack, mouseX, mouseY);
+        leftPageButton.renderButtonTooltip(stack, mouseX, mouseY);
+        rightPageButton.renderButtonTooltip(stack, mouseX, mouseY);
     }
 
     @Override
-    public void resize(Minecraft client, int width, int height) {
+    public void resize(MinecraftClient client, int width, int height) {
         int currentPage = page;
         if (currentPage != 1) {
-            menu.resetSlotPositions(false, menuWidth, menuHeight);
+            handler.resetSlotPositions(false, menuWidth, menuHeight);
             super.resize(client, width, height);
             blankArea.clear();
             this.setPage(1, currentPage);
@@ -169,11 +170,11 @@ public final class PageScreen extends AbstractScreen {
     }
 
     @Override
-    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-        font.draw(stack, title, 8, 6, 0x404040);
-        font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 0x404040);
+    protected void drawForeground(MatrixStack stack, int mouseX, int mouseY) {
+        textRenderer.draw(stack, title, 8, 6, 0x404040);
+        textRenderer.draw(stack, playerInventoryTitle, 8, backgroundHeight - 96 + 2, 0x404040);
         if (currentPageText != null) {
-            font.draw(stack, currentPageText.getVisualOrderText(), pageTextX - leftPos, imageHeight - 94, 0x404040);
+            textRenderer.draw(stack, currentPageText.asOrderedText(), pageTextX - x, backgroundHeight - 94, 0x404040);
         }
     }
 
@@ -195,17 +196,17 @@ public final class PageScreen extends AbstractScreen {
 
     public void addPageButtons() {
         int width = 54;
-        int x = leftPos + imageWidth - 61;
+        int x = this.x + backgroundWidth - 61;
         int originalX = x;
-        int y = topPos + imageHeight - 96;
-        List<AbstractWidget> renderableChildren = new ArrayList<>();
+        int y = this.y + backgroundHeight - 96;
+        List<ClickableWidget> renderableChildren = new ArrayList<>();
         for (var child : this.children()) {
-            if (child instanceof AbstractWidget widget) {
+            if (child instanceof ClickableWidget widget) {
                 renderableChildren.add(widget);
             }
         }
         renderableChildren.sort(Comparator.comparingInt(a -> -a.x));
-        for (AbstractWidget widget : renderableChildren) {
+        for (ClickableWidget widget : renderableChildren) {
             if (PageScreen.regionIntersects(widget, x, y, width, 12)) {
                 x = widget.x - width - 2;
             }
@@ -217,18 +218,18 @@ public final class PageScreen extends AbstractScreen {
             x -= 14;
         }
         leftPageButton = new PageButton(x, y, 0,
-                new TranslatableComponent("screen.ninjaphenix_container_lib.prev_page"), button -> this.setPage(page, page - 1),
+                new TranslatableText("screen.ninjaphenix_container_lib.prev_page"), button -> this.setPage(page, page - 1),
                 this::renderButtonTooltip);
         leftPageButton.active = false;
-        this.addRenderableWidget(leftPageButton);
+        this.addDrawableChild(leftPageButton);
         rightPageButton = new PageButton(x + 42, y, 1,
-                new TranslatableComponent("screen.ninjaphenix_container_lib.next_page"), button -> this.setPage(page, page + 1),
+                new TranslatableText("screen.ninjaphenix_container_lib.next_page"), button -> this.setPage(page, page + 1),
                 this::renderButtonTooltip);
-        this.addRenderableWidget(rightPageButton);
+        this.addDrawableChild(rightPageButton);
         pageTextX = (1 + leftPageButton.x + rightPageButton.x - rightPageButton.getWidth() / 2F) / 2F;
     }
 
-    private void renderButtonTooltip(AbstractButton button, PoseStack stack, int x, int y) {
+    private void renderButtonTooltip(PressableWidget button, MatrixStack stack, int x, int y) {
         this.renderTooltip(stack, button.getMessage(), x, y);
     }
 }

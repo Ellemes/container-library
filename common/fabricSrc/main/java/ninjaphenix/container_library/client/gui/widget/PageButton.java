@@ -2,18 +2,18 @@ package ninjaphenix.container_library.client.gui.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import ninjaphenix.container_library.Utils;
 
-public final class PageButton extends Button {
-    private static final ResourceLocation TEXTURE = Utils.resloc("textures/gui/page_buttons.png");
+public final class PageButton extends ButtonWidget {
+    private static final Identifier TEXTURE = Utils.resloc("textures/gui/page_buttons.png");
     private final int textureOffset;
 
-    public PageButton(int x, int y, int textureOffset, Component text, OnPress onPress, OnTooltip onTooltip) {
+    public PageButton(int x, int y, int textureOffset, Text text, PressAction onPress, TooltipSupplier onTooltip) {
         super(x, y, 12, 12, text, onPress, onTooltip);
         this.textureOffset = textureOffset;
     }
@@ -26,21 +26,21 @@ public final class PageButton extends Button {
     }
 
     @Override
-    public void renderButton(PoseStack stack, int mouseX, int mouseY, float delta) {
+    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderTexture(0, PageButton.TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GuiComponent.blit(stack, x, y, textureOffset * 12, this.getYImage(this.isHovered()) * 12, width, height, 32, 48);
+        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+        DrawableHelper.drawTexture(stack, x, y, textureOffset * 12, this.getYImage(this.isHovered()) * 12, width, height, 32, 48);
     }
 
-    public void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
+    public void renderButtonTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if (active) {
-            if (isHovered) {
-                this.renderToolTip(stack, mouseX, mouseY);
+            if (hovered) {
+                this.renderTooltip(stack, mouseX, mouseY);
             } else if (this.isFocused()) {
-                this.renderToolTip(stack, x, y);
+                this.renderTooltip(stack, x, y);
             }
         }
     }

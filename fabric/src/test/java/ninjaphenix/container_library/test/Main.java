@@ -10,14 +10,14 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
@@ -31,7 +31,7 @@ import java.nio.file.Files;
 public class Main {
     private static final RuntimeResourcePack RESOURCE_PACK = RuntimeResourcePack.create("test:test");
     private static BlockEntityType<InventoryTestBlockEntity> blockEntityType;
-    private static CreativeModeTab creativeTab;
+    private static ItemGroup creativeTab;
 
     public static BlockEntityType<InventoryTestBlockEntity> getBlockEntityType() {
         return blockEntityType;
@@ -40,16 +40,16 @@ public class Main {
     // Called by fabric loader.
     @SuppressWarnings("unused")
     public static void initialize() {
-        creativeTab = FabricItemGroupBuilder.create(new ResourceLocation("test", "test")).build();
-        JLang lang = JLang.lang().itemGroup(new ResourceLocation("test", "test"), "Test Inventory Blocks");
+        creativeTab = FabricItemGroupBuilder.create(new Identifier("test", "test")).build();
+        JLang lang = JLang.lang().itemGroup(new Identifier("test", "test"), "Test Inventory Blocks");
         InventoryTestBlock[] blocks = new ListBuilder<>(i -> Main.register(i, lang)).range(27, 540, 27)
                                                                                     .range(24, 540, 27)
                                                                                     .range(30, 540, 27)
                                                                                     .build()
                                                                                     .toArray(InventoryTestBlock[]::new);
-        RESOURCE_PACK.addLang(new ResourceLocation("test", "en_us"), lang);
+        RESOURCE_PACK.addLang(new Identifier("test", "en_us"), lang);
         blockEntityType = FabricBlockEntityTypeBuilder.create((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state), blocks).build();
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation("test", "block_entity_type"), blockEntityType);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("test", "block_entity_type"), blockEntityType);
 
         RRPCallback.AFTER_VANILLA.register(resources -> resources.add(RESOURCE_PACK));
 
@@ -59,23 +59,23 @@ public class Main {
     }
 
     private static InventoryTestBlock register(Integer inventorySize, JLang lang) {
-        ResourceLocation id = new ResourceLocation("test", "block" + inventorySize);
-        InventoryTestBlock block = new InventoryTestBlock(BlockBehaviour.Properties.of(Material.BAMBOO), inventorySize);
+        Identifier id = new Identifier("test", "block" + inventorySize);
+        InventoryTestBlock block = new InventoryTestBlock(AbstractBlock.Settings.of(Material.BAMBOO), inventorySize);
         Registry.register(Registry.BLOCK, id, block);
         lang.blockRespect(block, "Inventory " + inventorySize);
 
-        RESOURCE_PACK.addBlockState(JState.state(JState.variant(JState.model(new ResourceLocation(id.getNamespace(), "block/" + id.getPath())))), id);
+        RESOURCE_PACK.addBlockState(JState.state(JState.variant(JState.model(new Identifier(id.getNamespace(), "block/" + id.getPath())))), id);
         RESOURCE_PACK.addModel(JModel.model("minecraft:block/orientable")
                                      .textures(JModel.textures()
                                                      .var("top", "test:block/blockn")
                                                      .var("front", "test:block/block" + inventorySize)
                                                      .var("side", "test:block/block" + inventorySize)),
-                new ResourceLocation(id.getNamespace(), "block/" + id.getPath()));
+                new Identifier(id.getNamespace(), "block/" + id.getPath()));
 
-        RESOURCE_PACK.addModel(JModel.model(id.getNamespace() + ":block/" + id.getPath()), new ResourceLocation(id.getNamespace(), "item/" + id.getPath()));
-        RESOURCE_PACK.addTexture(new ResourceLocation("test", "block/block" + inventorySize), Main.generateTexture(inventorySize));
+        RESOURCE_PACK.addModel(JModel.model(id.getNamespace() + ":block/" + id.getPath()), new Identifier(id.getNamespace(), "item/" + id.getPath()));
+        RESOURCE_PACK.addTexture(new Identifier("test", "block/block" + inventorySize), Main.generateTexture(inventorySize));
 
-        BlockItem item = new BlockItem(block, new Item.Properties().tab(creativeTab));
+        BlockItem item = new BlockItem(block, new Item.Settings().group(creativeTab));
         Registry.register(Registry.ITEM, id, item);
         return block;
     }

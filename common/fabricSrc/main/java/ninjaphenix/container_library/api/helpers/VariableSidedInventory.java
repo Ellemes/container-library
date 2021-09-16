@@ -1,12 +1,6 @@
 package ninjaphenix.container_library.api.helpers;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import net.minecraft.core.Direction;
-import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import ninjaphenix.container_library.inventory.InventorySlotAccessor;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,26 +8,32 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Direction;
 
-public final class VariableSidedInventory implements WorldlyContainer {
-    private final WorldlyContainer[] parts;
+public final class VariableSidedInventory implements SidedInventory {
+    private final SidedInventory[] parts;
     private final int size;
     private final int maxStackSize;
     private final Map<Direction, int[]> slotsAccessibleThroughFace = new HashMap<>();
 
-    private VariableSidedInventory(WorldlyContainer... parts) {
+    private VariableSidedInventory(SidedInventory... parts) {
         for (int i = 0; i < parts.length; i++) {
             assert parts[i] != null : "part at index " + i + " must not be null";
         }
         this.parts = parts;
-        this.size = Arrays.stream(parts).mapToInt(Container::getContainerSize).sum();
-        this.maxStackSize = parts[0].getMaxStackSize();
-        for (Container part : parts) {
-            assert part.getMaxStackSize() == maxStackSize : "all parts must have equal max stack sizes.";
+        this.size = Arrays.stream(parts).mapToInt(Inventory::size).sum();
+        this.maxStackSize = parts[0].getMaxCountPerStack();
+        for (Inventory part : parts) {
+            assert part.getMaxCountPerStack() == maxStackSize : "all parts must have equal max stack sizes.";
         }
     }
 
-    public static WorldlyContainer of(WorldlyContainer... parts) {
+    public static SidedInventory of(SidedInventory... parts) {
         assert parts.length > 0 : "parts must contain at least 1 inventory";
         if (parts.length == 1) {
             return parts[0];
@@ -43,13 +43,13 @@ public final class VariableSidedInventory implements WorldlyContainer {
     }
 
     @Override
-    public int getContainerSize() {
+    public int size() {
         return size;
     }
 
     @Override
     public boolean isEmpty() {
-        for (Container part : parts) {
+        for (Inventory part : parts) {
             if (!part.isEmpty()) {
                 return false;
             }
@@ -58,45 +58,45 @@ public final class VariableSidedInventory implements WorldlyContainer {
     }
 
     @Override
-    public ItemStack getItem(int slot) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::getItem);
+    public ItemStack getStack(int slot) {
+        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        return this.getPartAccessor(slot).apply(Inventory::getStack);
     }
 
     @Override
-    public ItemStack removeItem(int slot, int amount) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.removeItem(rSlot, amount));
+    public ItemStack removeStack(int slot, int amount) {
+        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        return this.getPartAccessor(slot).apply((part, rSlot) -> part.removeStack(rSlot, amount));
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int slot) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::removeItemNoUpdate);
+    public ItemStack removeStack(int slot) {
+        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        return this.getPartAccessor(slot).apply(Inventory::removeStack);
     }
 
     @Override
-    public void setItem(int slot, ItemStack stack) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
-        this.getPartAccessor(slot).consume((part, rSlot) -> part.setItem(rSlot, stack));
+    public void setStack(int slot, ItemStack stack) {
+        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        this.getPartAccessor(slot).consume((part, rSlot) -> part.setStack(rSlot, stack));
     }
 
     @Override
-    public int getMaxStackSize() {
+    public int getMaxCountPerStack() {
         return maxStackSize;
     }
 
     @Override
-    public void setChanged() {
-        for (Container part : parts) {
-            part.setChanged();
+    public void markDirty() {
+        for (Inventory part : parts) {
+            part.markDirty();
         }
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        for (Container part : parts) {
-            if (!part.stillValid(player)) {
+    public boolean canPlayerUse(PlayerEntity player) {
+        for (Inventory part : parts) {
+            if (!part.canPlayerUse(player)) {
                 return false;
             }
         }
@@ -104,38 +104,38 @@ public final class VariableSidedInventory implements WorldlyContainer {
     }
 
     @Override
-    public void startOpen(Player player) {
-        for (Container part : parts) {
-            part.startOpen(player);
+    public void onOpen(PlayerEntity player) {
+        for (Inventory part : parts) {
+            part.onOpen(player);
         }
     }
 
     @Override
-    public void stopOpen(Player player) {
-        for (Container part : parts) {
-            part.stopOpen(player);
+    public void onClose(PlayerEntity player) {
+        for (Inventory part : parts) {
+            part.onClose(player);
         }
     }
 
     @Override
-    public boolean canPlaceItem(int slot, ItemStack stack) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canPlaceItem(rSlot, stack));
+    public boolean isValid(int slot, ItemStack stack) {
+        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        return this.getPartAccessor(slot).apply((part, rSlot) -> part.isValid(rSlot, stack));
     }
 
     @Override
-    public int countItem(Item item) {
+    public int count(Item item) {
         int count = 0;
-        for (Container part : parts) {
-            count += part.countItem(item);
+        for (Inventory part : parts) {
+            count += part.count(item);
         }
         return count;
     }
 
     @Override
-    public boolean hasAnyOf(Set<Item> set) {
-        for (Container part : parts) {
-            if (part.hasAnyOf(set)) {
+    public boolean containsAny(Set<Item> set) {
+        for (Inventory part : parts) {
+            if (part.containsAny(set)) {
                 return true;
             }
         }
@@ -143,15 +143,15 @@ public final class VariableSidedInventory implements WorldlyContainer {
     }
 
     @Override
-    public void clearContent() {
-        for (Container part : parts) {
-            part.clearContent();
+    public void clear() {
+        for (Inventory part : parts) {
+            part.clear();
         }
     }
 
-    private InventorySlotAccessor<WorldlyContainer> getPartAccessor(int slot) {
-        for (WorldlyContainer part : parts) {
-            int inventorySize = part.getContainerSize();
+    private InventorySlotAccessor<SidedInventory> getPartAccessor(int slot) {
+        for (SidedInventory part : parts) {
+            int inventorySize = part.size();
             if (slot > inventorySize) {
                 slot -= inventorySize;
             } else {
@@ -162,29 +162,29 @@ public final class VariableSidedInventory implements WorldlyContainer {
     }
 
     @Override
-    public int[] getSlotsForFace(Direction direction) {
+    public int[] getAvailableSlots(Direction direction) {
         return slotsAccessibleThroughFace.computeIfAbsent(direction, (dir) -> {
             int previousSize = 0;
             IntArrayList list = new IntArrayList();
-            for (WorldlyContainer part : parts) {
-                for (int i : part.getSlotsForFace(dir)) {
+            for (SidedInventory part : parts) {
+                for (int i : part.getAvailableSlots(dir)) {
                     list.add(i + previousSize);
                 }
-                previousSize += part.getContainerSize();
+                previousSize += part.size();
             }
             return list.toIntArray();
         });
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canPlaceItemThroughFace(rSlot, stack, direction));
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction direction) {
+        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canInsert(rSlot, stack, direction));
     }
 
     @Override
-    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canTakeItemThroughFace(rSlot, stack, direction));
+    public boolean canExtract(int slot, ItemStack stack, Direction direction) {
+        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canExtract(rSlot, stack, direction));
     }
 }

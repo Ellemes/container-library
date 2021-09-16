@@ -1,29 +1,29 @@
 package ninjaphenix.container_library.api.helpers;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Player;
 import ninjaphenix.container_library.api.OpenableBlockEntity;
 
 import java.util.Arrays;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 /**
  * Helper to wrap blocks which consist of multiple inventories into one e.g. chests.
  */
 public final class OpenableBlockEntities implements OpenableBlockEntity {
     private final OpenableBlockEntity[] parts;
-    private final Container inventory;
-    private final Component inventoryName;
+    private final Inventory inventory;
+    private final Text inventoryName;
 
-    public OpenableBlockEntities(Component inventoryName, OpenableBlockEntity... parts) {
+    public OpenableBlockEntities(Text inventoryName, OpenableBlockEntity... parts) {
         this.parts = parts;
-        this.inventory = VariableInventory.of(Arrays.stream(parts).map(OpenableBlockEntity::getInventory).toArray(Container[]::new));
+        this.inventory = VariableInventory.of(Arrays.stream(parts).map(OpenableBlockEntity::getInventory).toArray(Inventory[]::new));
         this.inventoryName = inventoryName;
     }
 
     @Override
-    public boolean canBeUsedBy(ServerPlayer player) {
+    public boolean canBeUsedBy(ServerPlayerEntity player) {
         for (OpenableBlockEntity part : parts) {
             if (!part.canBeUsedBy(player)) {
                 return false;
@@ -33,7 +33,7 @@ public final class OpenableBlockEntities implements OpenableBlockEntity {
     }
 
     @Override
-    public boolean canContinueUse(Player player) {
+    public boolean canContinueUse(PlayerEntity player) {
         for (OpenableBlockEntity part : parts) {
             if (!part.canContinueUse(player)) {
                 return false;
@@ -43,12 +43,12 @@ public final class OpenableBlockEntities implements OpenableBlockEntity {
     }
 
     @Override
-    public Container getInventory() {
+    public Inventory getInventory() {
         return inventory;
     }
 
     @Override
-    public Component getInventoryName() {
+    public Text getInventoryName() {
         return inventoryName;
     }
 }

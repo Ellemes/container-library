@@ -1,13 +1,13 @@
 package ninjaphenix.container_library.config;
 
-import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.util.Identifier;
 
 public class ConfigV0 implements Config {
-    private ResourceLocation screenType;
+    private Identifier screenType;
     private boolean restrictiveScrolling;
     private boolean preferSmallerScreens;
 
@@ -15,17 +15,17 @@ public class ConfigV0 implements Config {
         this(Utils.UNSET_SCREEN_TYPE, false, true);
     }
 
-    public ConfigV0(ResourceLocation screenType, boolean restrictiveScrolling, boolean preferSmallerScreens) {
+    public ConfigV0(Identifier screenType, boolean restrictiveScrolling, boolean preferSmallerScreens) {
         this.screenType = screenType == null ? Utils.UNSET_SCREEN_TYPE : screenType;
         this.restrictiveScrolling = restrictiveScrolling;
         this.preferSmallerScreens = preferSmallerScreens;
     }
 
-    public ResourceLocation getScreenType() {
+    public Identifier getScreenType() {
         return screenType;
     }
 
-    public void setScreenType(ResourceLocation screenType) {
+    public void setScreenType(Identifier screenType) {
         this.screenType = screenType;
     }
 
@@ -62,7 +62,7 @@ public class ConfigV0 implements Config {
                 if (source.containsKey("prefer_smaller_screens") && source.get("prefer_smaller_screens") instanceof Boolean bool) {
                     preferSmallerScreens = bool;
                 }
-                return new ConfigV0(ResourceLocation.tryParse(screenType), restrictiveScrolling, preferSmallerScreens);
+                return new ConfigV0(Identifier.tryParse(screenType), restrictiveScrolling, preferSmallerScreens);
             }
             return null;
         }

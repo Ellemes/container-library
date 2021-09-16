@@ -1,7 +1,7 @@
 package ninjaphenix.container_library.api.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.util.math.MatrixStack;
 
 @SuppressWarnings("ClassCanBeRecord")
 public final class TexturedRect {
@@ -18,7 +18,7 @@ public final class TexturedRect {
         this.textureHeight = textureHeight;
     }
 
-    public void render(PoseStack stack) {
-        GuiComponent.blit(stack, x, y, textureX, textureY, width, height, textureWidth, textureHeight);
+    public void render(MatrixStack stack) {
+        DrawableHelper.drawTexture(stack, x, y, textureX, textureY, width, height, textureWidth, textureHeight);
     }
 }

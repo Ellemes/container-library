@@ -1,6 +1,6 @@
 package ninjaphenix.container_library.api.client.function;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 
 @SuppressWarnings("ClassCanBeRecord")
 public final class ScreenSize {
@@ -16,7 +16,7 @@ public final class ScreenSize {
     }
 
     public static ScreenSize current() {
-        return new ScreenSize(Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
+        return new ScreenSize(MinecraftClient.getInstance().getWindow().getScaledWidth(), MinecraftClient.getInstance().getWindow().getScaledHeight());
     }
 
     public int getWidth() {

@@ -1,9 +1,9 @@
 package ninjaphenix.container_library.inventory;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
 
-public interface ClientMenuFactory<T extends AbstractContainerMenu> {
-    T create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer);
+public interface ClientMenuFactory<T extends ScreenHandler> {
+    T create(int windowId, PlayerInventory playerInventory, PacketByteBuf buffer);
 }

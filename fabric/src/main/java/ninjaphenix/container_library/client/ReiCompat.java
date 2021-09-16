@@ -4,7 +4,7 @@ import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.common.util.CollectionUtils;
-import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.util.math.Rect2i;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 
 public class ReiCompat implements REIClientPlugin {

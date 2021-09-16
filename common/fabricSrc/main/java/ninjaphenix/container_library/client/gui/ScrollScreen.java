@@ -1,16 +1,6 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -22,21 +12,31 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Rect2i;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 public final class ScrollScreen extends AbstractScreen {
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
     private final int textureWidth, textureHeight, totalRows;
     private final boolean scrollingUnrestricted;
     private boolean isDragging, blankAreaVisible;
     private int topRow;
     private @Nullable TexturedRect blankArea;
 
-    public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title, ScreenSize screenSize) {
+    public ScrollScreen(AbstractMenu menu, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
         super(menu, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
 
-        textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
+        textureLocation = new Identifier("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
         textureWidth = switch (menuWidth) {
             case 9 -> 208;
             case 12 -> 256;
@@ -51,28 +51,28 @@ public final class ScrollScreen extends AbstractScreen {
             default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
         };
 
-        totalRows = Mth.ceil(((double) totalSlots) / menuWidth);
-        imageWidth = 14 + 18 * menuWidth;
-        imageHeight = 17 + 97 + 18 * menuHeight;
+        totalRows = MathHelper.ceil(((double) totalSlots) / menuWidth);
+        backgroundWidth = 14 + 18 * menuWidth;
+        backgroundHeight = 17 + 97 + 18 * menuHeight;
         scrollingUnrestricted = ConfigWrapper.getInstance().isScrollingUnrestricted();
     }
 
-    private void initializeSlots(Inventory playerInventory) {
+    private void initializeSlots(PlayerInventory playerInventory) {
         for (int i = 0; i < totalSlots; i++) {
             int slotXPos = i % menuWidth;
-            int slotYPos = Mth.ceil((((double) (i - slotXPos)) / menuWidth));
+            int slotYPos = MathHelper.ceil((((double) (i - slotXPos)) / menuWidth));
             int realYPos = slotYPos >= menuHeight ? -2000 : slotYPos * Utils.SLOT_SIZE + Utils.SLOT_SIZE;
-            menu.addClientSlot(new Slot(menu.getInventory(), i, slotXPos * Utils.SLOT_SIZE + 8, realYPos));
+            handler.addClientSlot(new Slot(handler.getInventory(), i, slotXPos * Utils.SLOT_SIZE + 8, realYPos));
         }
         int left = (menuWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
         int top = Utils.SLOT_SIZE + 14 + (menuHeight * Utils.SLOT_SIZE);
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 3; y++) {
-                menu.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, left + Utils.SLOT_SIZE * x, top + y * Utils.SLOT_SIZE));
+                handler.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, left + Utils.SLOT_SIZE * x, top + y * Utils.SLOT_SIZE));
             }
         }
         for (int x = 0; x < 9; x++) {
-            menu.addClientSlot(new Slot(playerInventory, x, left + Utils.SLOT_SIZE * x, top + 58));
+            handler.addClientSlot(new Slot(playerInventory, x, left + Utils.SLOT_SIZE * x, top + 58));
         }
     }
 
@@ -85,44 +85,44 @@ public final class ScrollScreen extends AbstractScreen {
         int remainderSlots = (totalSlots % menuWidth);
         if (remainderSlots > 0) {
             int blankSlots = menuWidth - remainderSlots;
-            int xRight = leftPos + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
-            int y = topPos + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
+            int xRight = x + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
+            int y = this.y + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
             int width = blankSlots * Utils.SLOT_SIZE;
-            blankArea = new TexturedRect(xRight - width, y, width, Utils.SLOT_SIZE, Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight);
+            blankArea = new TexturedRect(xRight - width, y, width, Utils.SLOT_SIZE, Utils.CONTAINER_PADDING_WIDTH, backgroundHeight, textureWidth, textureHeight);
             blankAreaVisible = false;
         }
     }
 
     @Override
-    protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
+    protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
         RenderSystem.setShaderTexture(0, textureLocation);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
+        DrawableHelper.drawTexture(stack, x, y, 0, 0, backgroundWidth, backgroundHeight, textureWidth, textureHeight);
         int containerSlotsHeight = menuHeight * 18;
         int scrollbarHeight = containerSlotsHeight + (menuWidth > 9 ? 34 : 24);
-        GuiComponent.blit(stack, leftPos + imageWidth - 4, topPos, imageWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
-        int yOffset = Mth.floor((containerSlotsHeight - 17) * (((double) topRow) / (totalRows - menuHeight)));
-        GuiComponent.blit(stack, leftPos + imageWidth - 2, topPos + yOffset + 18, imageWidth, scrollbarHeight, 12, 15, textureWidth, textureHeight);
+        DrawableHelper.drawTexture(stack, x + backgroundWidth - 4, y, backgroundWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
+        int yOffset = MathHelper.floor((containerSlotsHeight - 17) * (((double) topRow) / (totalRows - menuHeight)));
+        DrawableHelper.drawTexture(stack, x + backgroundWidth - 2, y + yOffset + 18, backgroundWidth, scrollbarHeight, 12, 15, textureWidth, textureHeight);
         if (blankArea != null && blankAreaVisible) {
             blankArea.render(stack);
         }
     }
 
     @Override
-    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-        font.draw(stack, title, 8, 6, 0x404040);
-        font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 0x404040);
+    protected void drawForeground(MatrixStack stack, int mouseX, int mouseY) {
+        textRenderer.draw(stack, title, 8, 6, 0x404040);
+        textRenderer.draw(stack, playerInventoryTitle, 8, backgroundHeight - 96 + 2, 0x404040);
     }
 
     private boolean isMouseOverScrollbar(double mouseX, double mouseY) {
-        int scrollbarTopPos = topPos + 18;
-        int scrollbarLeftPos = leftPos + imageWidth - 2;
+        int scrollbarTopPos = y + 18;
+        int scrollbarLeftPos = x + backgroundWidth - 2;
         return mouseX >= scrollbarLeftPos && mouseY >= scrollbarTopPos && mouseX < scrollbarLeftPos + 12 && mouseY < scrollbarTopPos + menuHeight * 18;
     }
 
     @Override
-    protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
-        return super.hasClickedOutside(mouseX, mouseY, left, top, button) && !this.isMouseOverScrollbar(mouseX, mouseY);
+    protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
+        return super.isClickOutsideBounds(mouseX, mouseY, left, top, button) && !this.isMouseOverScrollbar(mouseX, mouseY);
     }
 
     @Override
@@ -167,7 +167,7 @@ public final class ScrollScreen extends AbstractScreen {
     }
 
     private void updateTopRow(double mouseY) {
-        this.setTopRow(topRow, Mth.floor(Mth.clampedLerp(0, totalRows - menuHeight, (mouseY - (topPos + 18)) / (menuHeight * 18))));
+        this.setTopRow(topRow, MathHelper.floor(MathHelper.clampedLerp(0, totalRows - menuHeight, (mouseY - (y + 18)) / (menuHeight * 18))));
     }
 
     @Override
@@ -200,30 +200,30 @@ public final class ScrollScreen extends AbstractScreen {
                 int setOutBegin = oldTopRow * menuWidth;
                 int movableBegin = newTopRow * menuWidth;
                 int setInBegin = movableBegin + movableAmount;
-                menu.setSlotRange(setOutBegin, setOutBegin + setAmount, index -> -2000);
-                menu.moveSlotRange(movableBegin, setInBegin, -18 * rows);
-                menu.setSlotRange(setInBegin, Math.min(setInBegin + setAmount, totalSlots),
-                        index -> 18 * Mth.intFloorDiv(index - movableBegin + menuWidth, menuWidth));
+                handler.setSlotRange(setOutBegin, setOutBegin + setAmount, index -> -2000);
+                handler.moveSlotRange(movableBegin, setInBegin, -18 * rows);
+                handler.setSlotRange(setInBegin, Math.min(setInBegin + setAmount, totalSlots),
+                        index -> 18 * MathHelper.floorDiv(index - movableBegin + menuWidth, menuWidth));
             } else {
                 int setInBegin = newTopRow * menuWidth;
                 int movableBegin = oldTopRow * menuWidth;
                 int setOutBegin = movableBegin + movableAmount;
-                menu.setSlotRange(setInBegin, setInBegin + setAmount,
-                        index -> 18 * Mth.intFloorDiv(index - setInBegin + menuWidth, menuWidth));
-                menu.moveSlotRange(movableBegin, setOutBegin, 18 * rows);
-                menu.setSlotRange(setOutBegin, Math.min(setOutBegin + setAmount, totalSlots), index -> -2000);
+                handler.setSlotRange(setInBegin, setInBegin + setAmount,
+                        index -> 18 * MathHelper.floorDiv(index - setInBegin + menuWidth, menuWidth));
+                handler.moveSlotRange(movableBegin, setOutBegin, 18 * rows);
+                handler.setSlotRange(setOutBegin, Math.min(setOutBegin + setAmount, totalSlots), index -> -2000);
             }
         } else {
             int oldMin = oldTopRow * menuWidth;
-            menu.setSlotRange(oldMin, Math.min(oldMin + menuWidth * menuHeight, totalSlots), index -> -2000);
+            handler.setSlotRange(oldMin, Math.min(oldMin + menuWidth * menuHeight, totalSlots), index -> -2000);
             int newMin = newTopRow * menuWidth;
-            menu.setSlotRange(newMin, newMin + menuWidth * menuHeight,
-                    index -> 18 + 18 * Mth.intFloorDiv(index - newMin, menuWidth));
+            handler.setSlotRange(newMin, newMin + menuWidth * menuHeight,
+                    index -> 18 + 18 * MathHelper.floorDiv(index - newMin, menuWidth));
         }
     }
 
     @Override
-    public void resize(Minecraft client, int width, int height) {
+    public void resize(MinecraftClient client, int width, int height) {
         int row = topRow;
         super.resize(client, width, height);
         this.setTopRow(topRow, row);
@@ -240,6 +240,6 @@ public final class ScrollScreen extends AbstractScreen {
 
     public List<Rect2i> getExclusionZones() {
         int height = menuHeight * 18 + (menuWidth > 9 ? 34 : 24);
-        return Collections.singletonList(new Rect2i(leftPos + imageWidth - 4, topPos, 22, height));
+        return Collections.singletonList(new Rect2i(x + backgroundWidth - 4, y, 22, height));
     }
 }

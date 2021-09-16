@@ -62,7 +62,7 @@ val excludeFabric: (ExternalModuleDependency) -> Unit = {
 
 dependencies {
     minecraft(libs.minecraft.fabric)
-    mappings(loom.layered(nputils::applySilentMojangMappings))
+    mappings("net.fabricmc:yarn:1.17.1+build.61")
 
     modImplementation(libs.fabric.loader)
     modApi(libs.fabric.api)

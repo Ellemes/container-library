@@ -1,4 +1,4 @@
 accessWidener v1 named
-mutable field net/minecraft/world/inventory/Slot y I
-accessible field net/minecraft/world/inventory/AbstractContainerMenu lastSlots Lnet/minecraft/core/NonNullList;
-accessible field net/minecraft/world/inventory/AbstractContainerMenu remoteSlots Lnet/minecraft/core/NonNullList;
+mutable field net/minecraft/screen/slot/Slot y I
+accessible field net/minecraft/screen/ScreenHandler previousTrackedStacks Lnet/minecraft/util/collection/DefaultedList;
+accessible field net/minecraft/screen/ScreenHandler trackedStacks Lnet/minecraft/util/collection/DefaultedList;

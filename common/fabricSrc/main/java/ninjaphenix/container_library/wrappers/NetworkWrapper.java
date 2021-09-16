@@ -1,14 +1,14 @@
 package ninjaphenix.container_library.wrappers;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 import ninjaphenix.container_library.api.OpenableBlockEntity;
 import ninjaphenix.container_library.api.OpenableBlockEntityProvider;
 import ninjaphenix.container_library.api.inventory.AbstractMenu;
@@ -28,19 +28,19 @@ public abstract class NetworkWrapper {
 
     public abstract void c_openInventoryAt(BlockPos pos);
 
-    protected final void openMenuIfAllowed(BlockPos pos, ServerPlayer player) {
-        ServerLevel world = player.getLevel();
+    protected final void openMenuIfAllowed(BlockPos pos, ServerPlayerEntity player) {
+        ServerWorld world = player.getServerWorld();
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof OpenableBlockEntityProvider block) {
             OpenableBlockEntity inventory = block.getOpenableBlockEntity(world, state, pos);
             if (inventory != null) {
-                Component title = inventory.getInventoryName();
-                if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
+                Text title = inventory.getInventoryName();
+                if (player.currentScreenHandler == null || player.currentScreenHandler == player.playerScreenHandler) {
                     if (inventory.canBeUsedBy(player)) {
                         block.onInitialOpen(player);
                     } else {
-                        player.displayClientMessage(new TranslatableComponent("container.isLocked", title), true);
-                        player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        player.sendMessage(new TranslatableText("container.isLocked", title), true);
+                        player.playSound(SoundEvents.BLOCK_CHEST_LOCKED, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         return;
                     }
                 }
@@ -52,7 +52,7 @@ public abstract class NetworkWrapper {
         }
     }
 
-    protected abstract void openMenu(ServerPlayer player, BlockPos pos, Container inventory, ServerMenuFactory factory, Component title);
+    protected abstract void openMenu(ServerPlayerEntity player, BlockPos pos, Inventory inventory, ServerMenuFactory factory, Text title);
 
     public final NetworkWrapperImpl toInternal() {
         return (NetworkWrapperImpl) this;

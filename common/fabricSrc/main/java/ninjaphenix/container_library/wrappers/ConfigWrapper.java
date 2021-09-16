@@ -1,8 +1,6 @@
 package ninjaphenix.container_library.wrappers;
 
 import com.google.gson.JsonParseException;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -19,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 public abstract class ConfigWrapper {
     private static ConfigWrapper INSTANCE;
@@ -47,11 +47,11 @@ public abstract class ConfigWrapper {
         return config.preferSmallerScreens();
     }
 
-    public final ResourceLocation getPreferredScreenType() {
+    public final Identifier getPreferredScreenType() {
         return config.getScreenType();
     }
 
-    public final void setPreferredScreenType(ResourceLocation type) {
+    public final void setPreferredScreenType(Identifier type) {
         //noinspection deprecation
         if (AbstractScreen.isScreenTypeDeclared(type) && type != config.getScreenType()) {
             config.setScreenType(type);
@@ -119,7 +119,7 @@ public abstract class ConfigWrapper {
         try {
             Map<String, Object> configMap = Utils.GSON.fromJson(lines, Utils.MAP_TYPE);
             // Do not edit, gson returns a double, we want an int.
-            int configVersion = Mth.floor((Double) configMap.getOrDefault("config_version", -1.0D));
+            int configVersion = MathHelper.floor((Double) configMap.getOrDefault("config_version", -1.0D));
             return this.convert(configMap, configVersion, converter);
         } catch (JsonParseException e) {
             String configFileName = configPath.getFileName().toString();
