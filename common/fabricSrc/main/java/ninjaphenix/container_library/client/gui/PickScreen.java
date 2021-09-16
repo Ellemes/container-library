@@ -3,6 +3,7 @@ package ninjaphenix.container_library.client.gui;
 import com.google.common.collect.ImmutableSortedSet;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
+import ninjaphenix.container_library.client.PickButton;
 import ninjaphenix.container_library.client.gui.widget.ScreenPickButton;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.jetbrains.annotations.ApiStatus;
@@ -35,10 +36,6 @@ public final class PickScreen extends Screen {
     private final @Nullable Runnable onOptionPicked;
     private int topPadding;
 
-    private record PickButton(Identifier texture, Text title, ScreenSizePredicate warnTest, List<Text> warningText) {
-
-    }
-
     public PickScreen(Supplier<Screen> returnToScreen, @Nullable Runnable onOptionPicked) {
         super(new TranslatableText("screen.ninjaphenix_container_lib.screen_picker_title"));
         this.options = ImmutableSortedSet.copyOf(PickScreen.BUTTON_SETTINGS.keySet());
@@ -50,8 +47,8 @@ public final class PickScreen extends Screen {
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
-    public static void declareButtonSettings(Identifier screenType, Identifier texture, Text title, ScreenSizePredicate warnTest, List<Text> warningText) {
-        PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, new PickButton(texture, title, warnTest, warningText));
+    public static void declareButtonSettings(Identifier screenType, Identifier texture, Text title, ScreenSizePredicate warningTest, List<Text> warningText) {
+        PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, new PickButton(texture, title, warningTest, warningText));
     }
 
     @Override
@@ -80,7 +77,7 @@ public final class PickScreen extends Screen {
         optionWidgets.clear();
         for (Identifier option : options) {
             PickButton settings = PickScreen.BUTTON_SETTINGS.get(option);
-            boolean isWarn = settings.warnTest().test(width, height);
+            boolean isWarn = settings.getWarningTest().test(width, height);
             boolean isSelected = option.equals(currentOption);
             ButtonWidget.TooltipSupplier tooltip = new ButtonWidget.TooltipSupplier() {
                 private static final Text CURRENT_OPTION_TEXT = Utils.translation("screen.ninjaphenix_container_lib.current_option_notice").formatted(Formatting.GOLD);
@@ -93,7 +90,7 @@ public final class PickScreen extends Screen {
                         tooltip.add(CURRENT_OPTION_TEXT);
                     }
                     if (isWarn) {
-                        tooltip.addAll(settings.warningText());
+                        tooltip.addAll(settings.getWarningText());
                     }
                     PickScreen.this.renderTooltip(stack, tooltip, Optional.empty(), x, y);
                 }
@@ -105,7 +102,7 @@ public final class PickScreen extends Screen {
                     }
                     if (isWarn) {
                         var text = new LiteralText("");
-                        for (Text component : settings.warningText()) {
+                        for (Text component : settings.getWarningText()) {
                             text.append(component);
                         }
                         consumer.accept(text);
@@ -113,7 +110,7 @@ public final class PickScreen extends Screen {
                 }
             };
             optionWidgets.add(this.addDrawableChild(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
-                    settings.texture(), settings.title(), isWarn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
+                    settings.getTexture(), settings.getTitle(), isWarn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
             x++;
         }
     }
