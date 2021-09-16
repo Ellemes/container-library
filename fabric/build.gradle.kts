@@ -115,9 +115,9 @@ afterEvaluate {
         dependsOn(remapJarTask)
     }
 
+    // will likely remove this obfuscation when we switch back to yarn
     val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
         input.set(minifyJarTask.get().outputs.files.singleFile)
-        archiveFileName
         from(rootDir.resolve("LICENSE"))
         dependsOn(minifyJarTask)
     }
@@ -133,8 +133,8 @@ afterEvaluate {
                 groupId = "ninjaphenix.container_library"
                 artifactId = "fabric-${properties["minecraft_version"]}"
                 version = properties["mod_version"] as String
-                artifact(remapJarTask) {
-                    builtBy(remapJarTask)
+                artifact(releaseJarTask) {
+                    builtBy(releaseJarTask)
                 }
                 //artifact(sourcesJar) {
                 //    builtBy remapSourcesJar

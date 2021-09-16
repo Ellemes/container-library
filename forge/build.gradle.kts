@@ -113,6 +113,7 @@ val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     dependsOn(jarTask)
 }
 
+// will likely remove this obfuscation when we switch back to yarn
 val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
     input.set(minifyJarTask.get().outputs.files.singleFile)
     from(rootDir.resolve("LICENSE"))
@@ -130,8 +131,8 @@ publishing {
             groupId = "ninjaphenix.container_library"
             artifactId = "forge-${properties["minecraft_version"]}"
             version = properties["mod_version"] as String
-            artifact(jarTask) {
-                builtBy(jarTask)
+            artifact(releaseJarTask) {
+                builtBy(releaseJarTask)
             }
             //artifact(sourcesJar) {
             //    builtBy remapSourcesJar
