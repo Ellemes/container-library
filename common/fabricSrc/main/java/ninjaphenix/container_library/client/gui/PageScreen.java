@@ -1,24 +1,8 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.client.function.ScreenSize;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.api.client.gui.TexturedRect;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
-import ninjaphenix.container_library.client.gui.widget.PageButton;
-import ninjaphenix.container_library.wrappers.PlatformUtils;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableWidget;
@@ -30,6 +14,21 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.api.client.function.ScreenSize;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.client.gui.TexturedRect;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
+import ninjaphenix.container_library.client.gui.widget.PageButton;
+import ninjaphenix.container_library.wrappers.PlatformUtils;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class PageScreen extends AbstractScreen {
     private final Identifier textureLocation;
@@ -41,8 +40,8 @@ public final class PageScreen extends AbstractScreen {
     private TranslatableText currentPageText;
     private float pageTextX;
 
-    public PageScreen(AbstractMenu menu, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
-        super(menu, playerInventory, title, screenSize);
+    public PageScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
+        super(handler, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
 

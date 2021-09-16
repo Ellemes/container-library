@@ -9,14 +9,14 @@ import ninjaphenix.container_library.Utils;
 import org.lwjgl.glfw.GLFW;
 
 public final class AmecsKeyHandler implements KeyHandler {
-    private final KeyBinding key;
+    private final KeyBinding keybind;
 
     public AmecsKeyHandler() {
-        key = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.resloc("config"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_W, "key.categories.inventory", new KeyModifiers().setShift(true)));
+        keybind = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.resloc("config"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_W, "key.categories.inventory", new KeyModifiers().setShift(true)));
     }
 
     @Override
     public boolean isKeyPressed(int keyCode, int scanCode, int modifiers) {
-        return key.matchesKey(keyCode, scanCode);
+        return keybind.matchesKey(keyCode, scanCode);
     }
 }

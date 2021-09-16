@@ -1,10 +1,10 @@
 package ninjaphenix.container_library.config;
 
+import net.minecraft.util.Identifier;
 import ninjaphenix.container_library.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.util.Identifier;
 
 public class ConfigV0 implements Config {
     private Identifier screenType;

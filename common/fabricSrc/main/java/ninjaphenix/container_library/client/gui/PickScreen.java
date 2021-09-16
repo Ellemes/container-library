@@ -1,6 +1,17 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.google.common.collect.ImmutableSortedSet;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.client.PickButton;
@@ -17,16 +28,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 public final class PickScreen extends Screen {
     private static final Map<Identifier, PickButton> BUTTON_SETTINGS = new HashMap<>();
@@ -101,7 +102,7 @@ public final class PickScreen extends Screen {
                         consumer.accept(CURRENT_OPTION_TEXT);
                     }
                     if (isWarn) {
-                        var text = new LiteralText("");
+                        MutableText text = new LiteralText("");
                         for (Text component : settings.getWarningText()) {
                             text.append(component);
                         }

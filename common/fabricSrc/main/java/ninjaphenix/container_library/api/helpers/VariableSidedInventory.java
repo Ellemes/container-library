@@ -1,6 +1,12 @@
 package ninjaphenix.container_library.api.helpers;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Direction;
 import ninjaphenix.container_library.inventory.InventorySlotAccessor;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,12 +14,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Direction;
 
 public final class VariableSidedInventory implements SidedInventory {
     private final SidedInventory[] parts;

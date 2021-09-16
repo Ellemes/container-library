@@ -5,5 +5,5 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.ScreenHandler;
 
 public interface ServerMenuFactory {
-    ScreenHandler create(int windowId, Inventory container, PlayerInventory playerInventory);
+    ScreenHandler create(int syncId, Inventory inventory, PlayerInventory playerInventory);
 }

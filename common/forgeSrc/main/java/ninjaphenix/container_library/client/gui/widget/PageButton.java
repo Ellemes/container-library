@@ -13,8 +13,8 @@ public final class PageButton extends Button {
     private static final ResourceLocation TEXTURE = Utils.resloc("textures/gui/page_buttons.png");
     private final int textureOffset;
 
-    public PageButton(int x, int y, int textureOffset, Component text, OnPress onPress, OnTooltip onTooltip) {
-        super(x, y, 12, 12, text, onPress, onTooltip);
+    public PageButton(int x, int y, int textureOffset, Component message, OnPress onPress, OnTooltip onTooltip) {
+        super(x, y, 12, 12, message, onPress, onTooltip);
         this.textureOffset = textureOffset;
     }
 

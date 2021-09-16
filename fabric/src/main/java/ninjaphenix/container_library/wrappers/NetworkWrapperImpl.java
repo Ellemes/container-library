@@ -28,10 +28,10 @@ final class NetworkWrapperImpl extends NetworkWrapper {
 
     public void initialise() {
         // Register Server Receivers
-        ServerPlayConnectionEvents.INIT.register((listener, server) -> ServerPlayNetworking.registerReceiver(listener, NetworkWrapperImpl.OPEN_INVENTORY, this::s_handleOpenInventory));
+        ServerPlayConnectionEvents.INIT.register((handler, server) -> ServerPlayNetworking.registerReceiver(handler, NetworkWrapperImpl.OPEN_INVENTORY, this::s_handleOpenInventory));
     }
 
-    private void s_handleOpenInventory(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler listener, PacketByteBuf buffer, PacketSender sender) {
+    private void s_handleOpenInventory(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buffer, PacketSender sender) {
         BlockPos pos = buffer.readBlockPos();
         server.execute(() -> this.openMenuIfAllowed(pos, player));
     }
@@ -56,8 +56,8 @@ final class NetworkWrapperImpl extends NetworkWrapper {
 
             @Nullable
             @Override
-            public ScreenHandler createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-                return factory.create(windowId, inventory, playerInventory);
+            public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+                return factory.create(syncId, inventory, playerInventory);
             }
         });
     }

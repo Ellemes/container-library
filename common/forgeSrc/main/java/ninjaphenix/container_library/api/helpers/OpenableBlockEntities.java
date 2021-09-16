@@ -14,12 +14,12 @@ import net.minecraft.world.entity.player.Player;
 public final class OpenableBlockEntities implements OpenableBlockEntity {
     private final OpenableBlockEntity[] parts;
     private final Container inventory;
-    private final Component inventoryName;
+    private final Component inventoryTitle;
 
-    public OpenableBlockEntities(Component inventoryName, OpenableBlockEntity... parts) {
+    public OpenableBlockEntities(Component inventoryTitle, OpenableBlockEntity... parts) {
         this.parts = parts;
         this.inventory = VariableInventory.of(Arrays.stream(parts).map(OpenableBlockEntity::getInventory).toArray(Container[]::new));
-        this.inventoryName = inventoryName;
+        this.inventoryTitle = inventoryTitle;
     }
 
     @Override
@@ -48,7 +48,7 @@ public final class OpenableBlockEntities implements OpenableBlockEntity {
     }
 
     @Override
-    public Component getInventoryName() {
-        return inventoryName;
+    public Component getInventoryTitle() {
+        return inventoryTitle;
     }
 }

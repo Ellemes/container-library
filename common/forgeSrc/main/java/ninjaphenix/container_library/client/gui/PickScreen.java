@@ -23,6 +23,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -101,7 +102,7 @@ public final class PickScreen extends Screen {
                         consumer.accept(CURRENT_OPTION_TEXT);
                     }
                     if (isWarn) {
-                        var text = new TextComponent("");
+                        MutableComponent text = new TextComponent("");
                         for (Component component : settings.getWarningText()) {
                             text.append(component);
                         }

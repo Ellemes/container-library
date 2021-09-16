@@ -1,10 +1,14 @@
 package ninjaphenix.container_library;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import ninjaphenix.container_library.api.client.NCL_ClientApi;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.ScrollScreen;
 import ninjaphenix.container_library.client.gui.SingleScreen;
@@ -20,20 +24,16 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 public final class CommonMain {
     public static final Logger LOGGER = LogManager.getLogger(Utils.MOD_ID);
-    private static ScreenHandlerType<AbstractMenu> menuType;
+    private static ScreenHandlerType<AbstractHandler> screenHandlerType;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void initialize(BiFunction<Identifier, ClientMenuFactory, ScreenHandlerType> menuTypeFunction,
+    public static void initialize(BiFunction<Identifier, ClientMenuFactory, ScreenHandlerType> handlerTypeFunction,
                                   Path configPath,
                                   Path oldConfigPath) {
-        menuType = menuTypeFunction.apply(Utils.MENU_TYPE_ID, AbstractMenu::createClientMenu);
+        screenHandlerType = handlerTypeFunction.apply(Utils.MENU_TYPE_ID, AbstractHandler::createClientMenu);
 
         if (PlatformUtils.isClient()) {
             ConfigWrapper.getInstance().initialise(configPath, oldConfigPath);
@@ -152,7 +152,7 @@ public final class CommonMain {
         CommonMain.LOGGER.warn(new FormattedMessage(message, values, throwable));
     }
 
-    public static ScreenHandlerType<AbstractMenu> getMenuType() {
-        return menuType;
+    public static ScreenHandlerType<AbstractHandler> getScreenHandlerType() {
+        return screenHandlerType;
     }
 }

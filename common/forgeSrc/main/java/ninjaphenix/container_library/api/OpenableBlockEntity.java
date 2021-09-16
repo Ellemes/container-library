@@ -23,7 +23,7 @@ public interface OpenableBlockEntity {
         return (Container) this;
     }
 
-    default Component getInventoryName() {
+    default Component getInventoryTitle() {
         return ((Nameable) this).getDisplayName();
     }
 }

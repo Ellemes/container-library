@@ -11,7 +11,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.level.block.state.BlockState;
 import ninjaphenix.container_library.api.OpenableBlockEntity;
 import ninjaphenix.container_library.api.OpenableBlockEntityProvider;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.inventory.ServerMenuFactory;
 
 public abstract class NetworkWrapper {
@@ -34,7 +34,7 @@ public abstract class NetworkWrapper {
         if (state.getBlock() instanceof OpenableBlockEntityProvider block) {
             OpenableBlockEntity inventory = block.getOpenableBlockEntity(world, state, pos);
             if (inventory != null) {
-                Component title = inventory.getInventoryName();
+                Component title = inventory.getInventoryTitle();
                 if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
                     if (inventory.canBeUsedBy(player)) {
                         block.onInitialOpen(player);
@@ -47,7 +47,7 @@ public abstract class NetworkWrapper {
                 if (!inventory.canContinueUse(player)) {
                     return;
                 }
-                this.openMenu(player, pos, inventory.getInventory(), AbstractMenu::new, title);
+                this.openMenu(player, pos, inventory.getInventory(), AbstractHandler::new, title);
             }
         }
     }

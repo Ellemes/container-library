@@ -1,16 +1,6 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.client.function.ScreenSize;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.api.client.gui.TexturedRect;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Rect2i;
@@ -19,14 +9,24 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.api.client.function.ScreenSize;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.client.gui.TexturedRect;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class SingleScreen extends AbstractScreen {
     private final Set<TexturedRect> blankArea = new HashSet<>();
     private final Identifier textureLocation;
     private final int textureWidth, textureHeight, blankSlots;
 
-    public SingleScreen(AbstractMenu menu, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
-        super(menu, playerInventory, title, screenSize);
+    public SingleScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
+        super(handler, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
 

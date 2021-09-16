@@ -1,17 +1,6 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.client.function.ScreenSize;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.api.client.gui.TexturedRect;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
-import ninjaphenix.container_library.wrappers.ConfigWrapper;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.Collections;
-import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -22,6 +11,17 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.api.client.function.ScreenSize;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.client.gui.TexturedRect;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
+import ninjaphenix.container_library.wrappers.ConfigWrapper;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.Collections;
+import java.util.List;
 
 public final class ScrollScreen extends AbstractScreen {
     private final Identifier textureLocation;
@@ -31,8 +31,8 @@ public final class ScrollScreen extends AbstractScreen {
     private int topRow;
     private @Nullable TexturedRect blankArea;
 
-    public ScrollScreen(AbstractMenu menu, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
-        super(menu, playerInventory, title, screenSize);
+    public ScrollScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
+        super(handler, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
 

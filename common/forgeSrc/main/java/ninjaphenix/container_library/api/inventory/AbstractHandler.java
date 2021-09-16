@@ -4,26 +4,26 @@ import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 
 import java.util.function.IntUnaryOperator;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
-public final class AbstractMenu extends ScreenHandler {
-    private final Inventory inventory;
+public final class AbstractHandler extends AbstractContainerMenu {
+    private final Container inventory;
 
-    public AbstractMenu(int windowId, Inventory inventory, PlayerInventory playerInventory) {
-        super(CommonMain.getMenuType(), windowId);
+    public AbstractHandler(int syncId, Container inventory, Inventory playerInventory) {
+        super(CommonMain.getScreenHandlerType(), syncId);
         this.inventory = inventory;
-        inventory.onOpen(playerInventory.player);
-        if (playerInventory.player instanceof ServerPlayerEntity) {
-            for (int i = 0; i < inventory.size(); i++) {
+        inventory.startOpen(playerInventory.player);
+        if (playerInventory.player instanceof ServerPlayer) {
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
                 this.addSlot(new Slot(inventory, i, i * Utils.SLOT_SIZE, 0));
             }
             for (int i = 0; i < 27; i++) {
@@ -36,44 +36,44 @@ public final class AbstractMenu extends ScreenHandler {
     }
 
     // Client only
-    public static AbstractMenu createClientMenu(int windowId, PlayerInventory playerInventory, PacketByteBuf buffer) {
-        return new AbstractMenu(windowId, new SimpleInventory(buffer.readInt()), playerInventory);
+    public static AbstractHandler createClientMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buffer) {
+        return new AbstractHandler(syncId, new SimpleContainer(buffer.readInt()), playerInventory);
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return inventory.canPlayerUse(player);
+    public boolean stillValid(Player player) {
+        return inventory.stillValid(player);
     }
 
     @Override
-    public void close(PlayerEntity player) {
-        super.close(player);
-        inventory.onClose(player);
+    public void removed(Player player) {
+        super.removed(player);
+        inventory.stopOpen(player);
     }
 
     // Public API, required for mods to check if blocks should be considered open
-    public Inventory getInventory() {
+    public Container getInventory() {
         return inventory;
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack originalStack = ItemStack.EMPTY;
         Slot slot = slots.get(index);
-        if (slot.hasStack()) {
-            ItemStack newStack = slot.getStack();
+        if (slot.hasItem()) {
+            ItemStack newStack = slot.getItem();
             originalStack = newStack.copy();
-            if (index < inventory.size()) {
-                if (!this.insertItem(newStack, inventory.size(), inventory.size() + 36, true)) {
+            if (index < inventory.getContainerSize()) {
+                if (!this.moveItemStackTo(newStack, inventory.getContainerSize(), inventory.getContainerSize() + 36, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(newStack, 0, inventory.size(), false)) {
+            } else if (!this.moveItemStackTo(newStack, 0, inventory.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
             if (newStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.markDirty();
+                slot.setChanged();
             }
         }
         return originalStack;
@@ -81,9 +81,9 @@ public final class AbstractMenu extends ScreenHandler {
 
     // Below are client only methods
     public void resetSlotPositions(boolean createSlots, int menuWidth, int menuHeight) {
-        for (int i = 0; i < inventory.size(); i++) {
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
             int slotXPos = i % menuWidth;
-            int slotYPos = MathHelper.ceil((((double) (i - slotXPos)) / menuWidth));
+            int slotYPos = Mth.ceil((((double) (i - slotXPos)) / menuWidth));
             int realYPos = slotYPos >= menuHeight ? (Utils.SLOT_SIZE * (slotYPos % menuHeight)) - 2000 : slotYPos * Utils.SLOT_SIZE;
             if (createSlots) {
                 this.addSlot(new Slot(inventory, i, slotXPos * Utils.SLOT_SIZE + 8, realYPos + Utils.SLOT_SIZE));
@@ -107,8 +107,8 @@ public final class AbstractMenu extends ScreenHandler {
 
     public void clearSlots() {
         this.slots.clear();
-        this.previousTrackedStacks.clear();
-        this.trackedStacks.clear();
+        this.remoteSlots.clear();
+        this.lastSlots.clear();
     }
 
     public void addClientSlot(Slot slot) {

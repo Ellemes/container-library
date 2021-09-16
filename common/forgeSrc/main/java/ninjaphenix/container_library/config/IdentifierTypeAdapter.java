@@ -4,16 +4,16 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
-public final class ResourceLocationTypeAdapter extends TypeAdapter<Identifier> {
+public final class IdentifierTypeAdapter extends TypeAdapter<ResourceLocation> {
     @Override
-    public void write(JsonWriter writer, Identifier value) throws IOException {
+    public void write(JsonWriter writer, ResourceLocation value) throws IOException {
         writer.value(value.toString());
     }
 
     @Override // never used.
-    public Identifier read(JsonReader reader) {
+    public ResourceLocation read(JsonReader reader) {
         return null;
     }
 }

@@ -6,7 +6,7 @@ import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -31,8 +31,8 @@ public final class ScrollScreen extends AbstractScreen {
     private int topRow;
     private @Nullable TexturedRect blankArea;
 
-    public ScrollScreen(AbstractMenu menu, Inventory playerInventory, Component title, ScreenSize screenSize) {
-        super(menu, playerInventory, title, screenSize);
+    public ScrollScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
+        super(handler, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
 

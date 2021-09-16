@@ -5,14 +5,14 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import ninjaphenix.container_library.config.ResourceLocationTypeAdapter;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
+import ninjaphenix.container_library.config.IdentifierTypeAdapter;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 
 public class Utils {
     public static final String MOD_ID = "ninjaphenix_container_lib";
@@ -30,7 +30,7 @@ public class Utils {
     public static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
     // todo: look into possibility of replacing with GsonHelper?
-    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(Identifier.class, new ResourceLocationTypeAdapter())
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(Identifier.class, new IdentifierTypeAdapter())
                                                      .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                                                      .setPrettyPrinting()
                                                      .setLenient()

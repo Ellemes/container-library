@@ -5,5 +5,5 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public interface ServerMenuFactory {
-    AbstractContainerMenu create(int windowId, Container container, Inventory playerInventory);
+    AbstractContainerMenu create(int syncId, Container inventory, Inventory playerInventory);
 }

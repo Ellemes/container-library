@@ -1,12 +1,12 @@
 package ninjaphenix.container_library.api.helpers;
 
-import ninjaphenix.container_library.api.OpenableBlockEntity;
-
-import java.util.Arrays;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import ninjaphenix.container_library.api.OpenableBlockEntity;
+
+import java.util.Arrays;
 
 /**
  * Helper to wrap blocks which consist of multiple inventories into one e.g. chests.
@@ -14,12 +14,12 @@ import net.minecraft.text.Text;
 public final class OpenableBlockEntities implements OpenableBlockEntity {
     private final OpenableBlockEntity[] parts;
     private final Inventory inventory;
-    private final Text inventoryName;
+    private final Text inventoryTitle;
 
-    public OpenableBlockEntities(Text inventoryName, OpenableBlockEntity... parts) {
+    public OpenableBlockEntities(Text inventoryTitle, OpenableBlockEntity... parts) {
         this.parts = parts;
         this.inventory = VariableInventory.of(Arrays.stream(parts).map(OpenableBlockEntity::getInventory).toArray(Inventory[]::new));
-        this.inventoryName = inventoryName;
+        this.inventoryTitle = inventoryTitle;
     }
 
     @Override
@@ -48,7 +48,7 @@ public final class OpenableBlockEntities implements OpenableBlockEntity {
     }
 
     @Override
-    public Text getInventoryName() {
-        return inventoryName;
+    public Text getInventoryTitle() {
+        return inventoryTitle;
     }
 }

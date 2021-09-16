@@ -1,6 +1,8 @@
 package ninjaphenix.container_library.wrappers;
 
 import com.google.gson.JsonParseException;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -17,8 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 public abstract class ConfigWrapper {
     private static ConfigWrapper INSTANCE;
@@ -67,7 +67,6 @@ public abstract class ConfigWrapper {
     // protected final
     private ConfigV0 getConfig() {
         boolean triedLoadingOldConfig = false;
-        Path newPath = configPath;
         boolean triedLoadingNewConfig = false;
         ConfigV0 config = null;
         if (Files.exists(configPath)) {

@@ -36,10 +36,10 @@ public final class Main {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addGenericListener(MenuType.class, (RegistryEvent.Register<MenuType<?>> event) -> {
             IForgeRegistry<MenuType<?>> registry = event.getRegistry();
-            registry.registerAll(CommonMain.getMenuType());
+            registry.registerAll(CommonMain.getScreenHandlerType());
         });
         //noinspection deprecation
-        modEventBus.addListener((FMLClientSetupEvent event) -> MenuScreens.register(CommonMain.getMenuType(), AbstractScreen::createScreen));
+        modEventBus.addListener((FMLClientSetupEvent event) -> MenuScreens.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen));
         if (PlatformUtils.isClient()) {
             this.registerConfigGuiHandler();
             MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (GuiScreenEvent.InitGuiEvent.Post event) -> {

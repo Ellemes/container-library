@@ -13,8 +13,8 @@ public final class PageButton extends ButtonWidget {
     private static final Identifier TEXTURE = Utils.resloc("textures/gui/page_buttons.png");
     private final int textureOffset;
 
-    public PageButton(int x, int y, int textureOffset, Text text, PressAction onPress, TooltipSupplier onTooltip) {
-        super(x, y, 12, 12, text, onPress, onTooltip);
+    public PageButton(int x, int y, int textureOffset, Text message, PressAction onPress, TooltipSupplier onTooltip) {
+        super(x, y, 12, 12, message, onPress, onTooltip);
         this.textureOffset = textureOffset;
     }
 

@@ -5,7 +5,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import ninjaphenix.container_library.config.ResourceLocationTypeAdapter;
+import ninjaphenix.container_library.config.IdentifierTypeAdapter;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class Utils {
     public static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
     // todo: look into possibility of replacing with GsonHelper?
-    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter())
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new IdentifierTypeAdapter())
                                                      .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                                                      .setPrettyPrinting()
                                                      .setLenient()

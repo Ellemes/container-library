@@ -6,7 +6,7 @@ import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,8 +25,8 @@ public final class SingleScreen extends AbstractScreen {
     private final ResourceLocation textureLocation;
     private final int textureWidth, textureHeight, blankSlots;
 
-    public SingleScreen(AbstractMenu menu, Inventory playerInventory, Component title, ScreenSize screenSize) {
-        super(menu, playerInventory, title, screenSize);
+    public SingleScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
+        super(handler, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
 

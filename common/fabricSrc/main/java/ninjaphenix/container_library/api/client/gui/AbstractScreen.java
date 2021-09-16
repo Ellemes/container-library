@@ -1,10 +1,18 @@
 package ninjaphenix.container_library.api.client.gui;
 
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Rect2i;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.annotation.Debug;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.ScreenConstructor;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
@@ -14,16 +22,8 @@ import org.lwjgl.glfw.GLFW;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Rect2i;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.annotation.Debug;
 
-public abstract class AbstractScreen extends HandledScreen<AbstractMenu> {
+public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
     private static final Map<Identifier, ScreenConstructor<?>> SCREEN_CONSTRUCTORS = new HashMap<>();
     private static final Map<Identifier, ScreenSizeRetriever> SIZE_RETRIEVERS = new HashMap<>();
     @Debug
@@ -31,9 +31,9 @@ public abstract class AbstractScreen extends HandledScreen<AbstractMenu> {
 
     protected final int menuWidth, menuHeight, totalSlots;
 
-    protected AbstractScreen(AbstractMenu menu, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
-        super(menu, playerInventory, title);
-        totalSlots = menu.getInventory().size();
+    protected AbstractScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
+        super(handler, playerInventory, title);
+        totalSlots = handler.getInventory().size();
         menuWidth = screenSize.getWidth();
         menuHeight = screenSize.getHeight();
     }
@@ -41,10 +41,10 @@ public abstract class AbstractScreen extends HandledScreen<AbstractMenu> {
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
-    public static AbstractScreen createScreen(AbstractMenu menu, PlayerInventory inventory, Text title) {
+    public static AbstractScreen createScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title) {
         Identifier preference = ConfigWrapper.getInstance().getPreferredScreenType();
         ScreenSize screenSize = ScreenSize.current();
-        int slots = menu.getInventory().size();
+        int slots = handler.getInventory().size();
         // todo: expose this kind of functionality as api
         //  this should support showing screens up to what the single screen can show given the screen size can support it.
         {
@@ -53,7 +53,7 @@ public abstract class AbstractScreen extends HandledScreen<AbstractMenu> {
                 preference = Utils.SINGLE_SCREEN_TYPE;
             }
         }
-        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(menu, inventory, title, SIZE_RETRIEVERS.get(preference).get(slots, screenSize.getWidth(), screenSize.getHeight()));
+        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, SIZE_RETRIEVERS.get(preference).get(slots, screenSize.getWidth(), screenSize.getHeight()));
     }
 
     @Deprecated

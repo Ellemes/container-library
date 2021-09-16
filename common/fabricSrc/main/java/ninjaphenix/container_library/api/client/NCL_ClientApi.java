@@ -1,5 +1,8 @@
 package ninjaphenix.container_library.api.client;
 
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -8,9 +11,6 @@ import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 import java.util.List;
 import java.util.Objects;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 
 public final class NCL_ClientApi {
     private NCL_ClientApi() {

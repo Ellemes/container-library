@@ -4,7 +4,7 @@ import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.ScreenConstructor;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
@@ -22,7 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.entity.player.Inventory;
 
-public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMenu> {
+public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHandler> {
     private static final Map<ResourceLocation, ScreenConstructor<?>> SCREEN_CONSTRUCTORS = new HashMap<>();
     private static final Map<ResourceLocation, ScreenSizeRetriever> SIZE_RETRIEVERS = new HashMap<>();
     @VisibleForDebug
@@ -30,9 +30,9 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
 
     protected final int menuWidth, menuHeight, totalSlots;
 
-    protected AbstractScreen(AbstractMenu menu, Inventory playerInventory, Component title, ScreenSize screenSize) {
-        super(menu, playerInventory, title);
-        totalSlots = menu.getInventory().getContainerSize();
+    protected AbstractScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
+        super(handler, playerInventory, title);
+        totalSlots = handler.getInventory().getContainerSize();
         menuWidth = screenSize.getWidth();
         menuHeight = screenSize.getHeight();
     }
@@ -40,10 +40,10 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
-    public static AbstractScreen createScreen(AbstractMenu menu, Inventory inventory, Component title) {
+    public static AbstractScreen createScreen(AbstractHandler handler, Inventory playerInventory, Component title) {
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
         ScreenSize screenSize = ScreenSize.current();
-        int slots = menu.getInventory().getContainerSize();
+        int slots = handler.getInventory().getContainerSize();
         // todo: expose this kind of functionality as api
         //  this should support showing screens up to what the single screen can show given the screen size can support it.
         {
@@ -52,7 +52,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractMen
                 preference = Utils.SINGLE_SCREEN_TYPE;
             }
         }
-        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(menu, inventory, title, SIZE_RETRIEVERS.get(preference).get(slots, screenSize.getWidth(), screenSize.getHeight()));
+        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, SIZE_RETRIEVERS.get(preference).get(slots, screenSize.getWidth(), screenSize.getHeight()));
     }
 
     @Deprecated

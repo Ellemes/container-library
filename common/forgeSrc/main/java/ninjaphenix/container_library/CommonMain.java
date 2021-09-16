@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import ninjaphenix.container_library.api.client.NCL_ClientApi;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
-import ninjaphenix.container_library.api.inventory.AbstractMenu;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.ScrollScreen;
 import ninjaphenix.container_library.client.gui.SingleScreen;
@@ -27,13 +27,13 @@ import net.minecraft.world.inventory.MenuType;
 
 public final class CommonMain {
     public static final Logger LOGGER = LogManager.getLogger(Utils.MOD_ID);
-    private static MenuType<AbstractMenu> menuType;
+    private static MenuType<AbstractHandler> screenHandlerType;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> menuTypeFunction,
+    public static void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> handlerTypeFunction,
                                   Path configPath,
                                   Path oldConfigPath) {
-        menuType = menuTypeFunction.apply(Utils.MENU_TYPE_ID, AbstractMenu::createClientMenu);
+        screenHandlerType = handlerTypeFunction.apply(Utils.MENU_TYPE_ID, AbstractHandler::createClientMenu);
 
         if (PlatformUtils.isClient()) {
             ConfigWrapper.getInstance().initialise(configPath, oldConfigPath);
@@ -152,7 +152,7 @@ public final class CommonMain {
         CommonMain.LOGGER.warn(new FormattedMessage(message, values, throwable));
     }
 
-    public static MenuType<AbstractMenu> getMenuType() {
-        return menuType;
+    public static MenuType<AbstractHandler> getScreenHandlerType() {
+        return screenHandlerType;
     }
 }

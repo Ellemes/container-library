@@ -67,7 +67,6 @@ public abstract class ConfigWrapper {
     // protected final
     private ConfigV0 getConfig() {
         boolean triedLoadingOldConfig = false;
-        Path newPath = configPath;
         boolean triedLoadingNewConfig = false;
         ConfigV0 config = null;
         if (Files.exists(configPath)) {
