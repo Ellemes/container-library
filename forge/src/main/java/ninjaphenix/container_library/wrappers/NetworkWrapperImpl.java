@@ -23,15 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public final class NetworkWrapperImpl extends NetworkWrapper {
-    private static NetworkWrapperImpl INSTANCE;
     private SimpleChannel channel;
-
-    public static NetworkWrapperImpl getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new NetworkWrapperImpl();
-        }
-        return INSTANCE;
-    }
 
     public void initialise() {
         String channelVersion = "4";
@@ -70,8 +62,8 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
                 Minecraft.getInstance().setScreen(new PickScreen(null, () -> Client.openInventoryAt(pos)));
             } else {
                 ClientPacketListener listener = Minecraft.getInstance().getConnection();
-                if (listener != null && NetworkWrapperImpl.INSTANCE.channel.isRemotePresent(listener.getConnection())) {
-                    NetworkWrapperImpl.INSTANCE.channel.sendToServer(new OpenInventoryMessage(pos));
+                if (listener != null && NetworkWrapper.getInstance().toInternal().channel.isRemotePresent(listener.getConnection())) {
+                    NetworkWrapper.getInstance().toInternal().channel.sendToServer(new OpenInventoryMessage(pos));
                 }
             }
         }

@@ -28,7 +28,7 @@ public abstract class ConfigWrapper {
 
     public static ConfigWrapper getInstance() {
         if (ConfigWrapper.INSTANCE == null) {
-            ConfigWrapper.INSTANCE = ConfigWrapperImpl.getInternalInstance();
+            ConfigWrapper.INSTANCE = new ConfigWrapperImpl();
         }
         return ConfigWrapper.INSTANCE;
     }

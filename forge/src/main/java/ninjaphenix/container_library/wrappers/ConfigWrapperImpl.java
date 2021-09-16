@@ -9,10 +9,6 @@ import java.io.StringReader;
 import java.nio.file.Path;
 
 final class ConfigWrapperImpl extends ConfigWrapper {
-    static ConfigWrapper getInternalInstance() {
-        return new ConfigWrapperImpl();
-    }
-
     @Override
     protected ConfigV0 readOldConfig(String configLines, Path oldConfigPath) {
         CommentedConfig tomlConfig = TomlFormat.instance().createParser().parse(new StringReader(configLines));

@@ -6,10 +6,6 @@ import ninjaphenix.container_library.config.LegacyFactory;
 import java.nio.file.Path;
 
 final class ConfigWrapperImpl extends ConfigWrapper {
-    static ConfigWrapper getInternalInstance() {
-        return new ConfigWrapperImpl();
-    }
-
     @Override
     protected ConfigV0 readOldConfig(String configLines, Path oldConfigPath) {
         return this.convertToConfig(configLines, LegacyFactory.INSTANCE, oldConfigPath);

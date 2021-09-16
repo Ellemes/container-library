@@ -25,14 +25,6 @@ import org.jetbrains.annotations.Nullable;
 
 final class NetworkWrapperImpl extends NetworkWrapper {
     private static final ResourceLocation OPEN_INVENTORY = Utils.resloc("open_inventory");
-    private static NetworkWrapperImpl INSTANCE;
-
-    public static NetworkWrapper getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new NetworkWrapperImpl();
-        }
-        return INSTANCE;
-    }
 
     public void initialise() {
         // Register Server Receivers

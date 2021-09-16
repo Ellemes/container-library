@@ -3,7 +3,7 @@ package ninjaphenix.container_library.network;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import ninjaphenix.container_library.wrappers.NetworkWrapperImpl;
+import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 import java.util.function.Supplier;
 
@@ -26,7 +26,7 @@ public final class OpenInventoryMessage {
 
     public static void handle(OpenInventoryMessage message, Supplier<NetworkEvent.Context> wrappedContext) {
         NetworkEvent.Context context = wrappedContext.get();
-        context.enqueueWork(() -> NetworkWrapperImpl.getInstance().handleOpenInventory(message.pos, context.getSender()));
+        context.enqueueWork(() -> NetworkWrapper.getInstance().toInternal().handleOpenInventory(message.pos, context.getSender()));
         context.setPacketHandled(true);
     }
 }

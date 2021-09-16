@@ -15,8 +15,13 @@ import ninjaphenix.container_library.api.inventory.AbstractMenu;
 import ninjaphenix.container_library.inventory.ServerMenuFactory;
 
 public abstract class NetworkWrapper {
+    private static NetworkWrapper INSTANCE;
+
     public static NetworkWrapper getInstance() {
-        return NetworkWrapperImpl.getInstance();
+        if (NetworkWrapper.INSTANCE == null) {
+            NetworkWrapper.INSTANCE = new NetworkWrapperImpl();
+        }
+        return NetworkWrapper.INSTANCE;
     }
 
     public abstract void initialise();
@@ -48,4 +53,8 @@ public abstract class NetworkWrapper {
     }
 
     protected abstract void openMenu(ServerPlayer player, BlockPos pos, Container inventory, ServerMenuFactory factory, Component title);
+
+    public final NetworkWrapperImpl toInternal() {
+        return (NetworkWrapperImpl) this;
+    }
 }
