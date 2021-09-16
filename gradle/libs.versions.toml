@@ -22,4 +22,4 @@ gradleUtils = { id = "com.gitlab.ninjaphenix.gradle-utils", version = "0.1.0-bet
 # Forge Plugins
 forgeGradle = { id = "net.minecraftforge.gradle", version = "5.1.18" }
 # Fabric Plugins
-fabricLoom = { id = "fabric-loom", version = "0.9.50" }
+fabricLoom = { id = "ninja-loom", version = "0.9.local" }

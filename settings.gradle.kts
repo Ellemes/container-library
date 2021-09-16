@@ -23,7 +23,6 @@ pluginManagement {
                     url = uri("https://jitpack.io")
                     name = "JitPack"
                 }
-                //mavenLocal()
             }
             filter {
                 includeGroup("com.gitlab.ninjaphenix")
@@ -31,6 +30,7 @@ pluginManagement {
             }
         }
         gradlePluginPortal()
+        mavenLocal()
     }
 }
 

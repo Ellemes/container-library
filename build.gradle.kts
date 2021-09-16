@@ -29,8 +29,6 @@ subprojects {
                         rootDir.resolve("common/src/main/resources")
                 ))
             }
-            //compileClasspath += sourceSets["api"].output
-            //runtimeClasspath += sourceSets["api"].output
         }
 
         test {
