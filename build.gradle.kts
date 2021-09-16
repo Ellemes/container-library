@@ -15,29 +15,18 @@ subprojects {
         targetCompatibility = JavaVersion.toVersion(properties["mod_java_version"] as String)
     }
 
-    // todo: produce an api jar somehow
     sourceSets {
-        //create("api") {
-        //    java {
-        //        setSrcDirs(listOf(rootDir.resolve("common/${project.name}Src/api/java")))
-        //    }
-        //    resources {
-        //        setSrcDirs(listOf<File>())
-        //    }
-        //}
-
         main {
             java {
                 setSrcDirs(listOf(
                         "src/main/java",
-                        rootDir.resolve("common/${project.name}Src/main/java"),
-                        rootDir.resolve("common/${project.name}Src/api/java")
+                        rootDir.resolve("common/${project.name}Src/main/java")
                 ))
             }
             resources {
                 setSrcDirs(listOf(
                         "src/main/resources",
-                        rootDir.resolve("common/${project.name}Src/main/resources")
+                        rootDir.resolve("common/src/main/resources")
                 ))
             }
             //compileClasspath += sourceSets["api"].output
@@ -47,14 +36,12 @@ subprojects {
         test {
             java {
                 setSrcDirs(listOf(
-                        "src/test/java",
-                        rootDir.resolve("common/${project.name}Src/test/java")
+                        "src/test/java"
                 ))
             }
             resources {
                 setSrcDirs(listOf(
-                        "src/test/resources",
-                        rootDir.resolve("common/${project.name}Src/test/resources")
+                        "src/test/resources"
                 ))
             }
             compileClasspath += this@sourceSets["main"].compileClasspath

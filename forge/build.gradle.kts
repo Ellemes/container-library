@@ -10,11 +10,6 @@ plugins {
     `maven-publish`
 }
 
-//configurations {
-//    this["apiImplementation"].extendsFrom(this["implementation"])
-//    this["apiRuntimeOnly"].extendsFrom(this["runtimeOnly"])
-//}
-
 minecraft {
     mappings("official", "1.17.1")
 
@@ -26,7 +21,6 @@ minecraft {
             mods {
                 create("ninjaphenix-container-library") {
                     source(sourceSets.main.get())
-                    //source(sourceSets["api"])
                 }
             }
             // "SCAN": For mods scan.
@@ -45,7 +39,6 @@ minecraft {
             mods {
                 create("ninjaphenix-container-library") {
                     source(sourceSets.main.get())
-                    //source(sourceSets["api"])
                 }
             }
             // "SCAN": For mods scan.
@@ -133,13 +126,6 @@ publishing {
             artifact(releaseJarTask) {
                 builtBy(releaseJarTask)
             }
-            //artifact(sourcesJar) {
-            //    builtBy remapSourcesJar
-            //}
         }
-    }
-
-    repositories {
-
     }
 }

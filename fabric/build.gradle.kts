@@ -30,14 +30,6 @@ loom {
     accessWidenerPath.set(file("src/main/resources/ninjaphenix_container_lib.accessWidener"))
 }
 
-//configurations.getByName(sourceSets["api"].compileClasspathConfigurationName) {
-//    this.extendsFrom(configurations["minecraftNamed"])
-//}
-//
-//configurations.getByName(sourceSets["api"].runtimeClasspathConfigurationName) {
-//    this.extendsFrom(configurations["minecraftNamed"])
-//}
-
 repositories {
     maven {
         name = "Shedaniel"
@@ -111,7 +103,6 @@ afterEvaluate {
 
     val remapJarTask : RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
         archiveClassifier.set("fat")
-        //archiveFileName.set("${properties["archives_base_name"]}-${properties["version"]}-fat.jar")
         dependsOn(jarTask)
     }
 
@@ -141,14 +132,7 @@ afterEvaluate {
                 artifact(releaseJarTask) {
                     builtBy(releaseJarTask)
                 }
-                //artifact(sourcesJar) {
-                //    builtBy remapSourcesJar
-                //}
             }
-        }
-
-        repositories {
-
         }
     }
 }
