@@ -97,6 +97,12 @@ tasks.withType<ProcessResources> {
     }
 }
 
+val updateForgeSources = tasks.register<net.fabricmc.loom.task.MigrateMappingsTask>("updateForgeSources") {
+    this.setInputDir(rootDir.toPath().resolve("common/fabricSrc").toString())
+    this.setOutputDir(rootDir.toPath().resolve("common/forgeSrc").toString())
+    this.setMappings("net.minecraft:mappings:${properties["minecraft_version"]}")
+}
+
 afterEvaluate {
 
     val jarTask : Jar = tasks.getByName<Jar>("jar") {
