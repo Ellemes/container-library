@@ -9,7 +9,7 @@ minecraft-forge = { group = "net.minecraftforge", name = "forge", version = "1.1
 jei-api = { group = "mezz.jei", name = "jei-1.17.1", version = "8.0.0.10:api" }
 # Fabric Deps
 minecraft-fabric = { group = "com.mojang", name = "minecraft", version = "1.17.1" }
-fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version = "0.11.3" }
+fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version = "0.11.6" }
 fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version = "0.36.1+1.17" }
 rei = { group = "me.shedaniel", name = "RoughlyEnoughItems-fabric", version.ref = "rei" }
 rei-api = { group = "me.shedaniel", name = "RoughlyEnoughItems-api-fabric", version.ref = "rei" }
@@ -22,4 +22,4 @@ gradleUtils = { id = "com.gitlab.ninjaphenix.gradle-utils", version = "0.1.0-bet
 # Forge Plugins
 forgeGradle = { id = "net.minecraftforge.gradle", version = "5.1.18" }
 # Fabric Plugins
-fabricLoom = { id = "ninja-loom", version = "0.9.local" }
+fabricLoom = { id = "ninja-loom", version = "0.10.local" }

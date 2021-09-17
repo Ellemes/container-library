@@ -15,34 +15,22 @@ subprojects {
         targetCompatibility = JavaVersion.toVersion(properties["mod_java_version"] as String)
     }
 
-    sourceSets {
-        main {
-            java {
-                setSrcDirs(listOf(
-                        "src/main/java",
-                        rootDir.resolve("common/${project.name}Src/main/java")
-                ))
+    if (project.name == "fabric" || project.name == "forge") {
+        sourceSets {
+            main {
+                java {
+                    setSrcDirs(listOf(
+                            "src/main/java",
+                            rootDir.resolve("common/${project.name}Src/main/java")
+                    ))
+                }
+                resources {
+                    setSrcDirs(listOf(
+                            "src/main/resources",
+                            rootDir.resolve("common/src/main/resources")
+                    ))
+                }
             }
-            resources {
-                setSrcDirs(listOf(
-                        "src/main/resources",
-                        rootDir.resolve("common/src/main/resources")
-                ))
-            }
-        }
-
-        test {
-            java {
-                setSrcDirs(listOf(
-                        "src/test/java"
-                ))
-            }
-            resources {
-                setSrcDirs(listOf(
-                        "src/test/resources"
-                ))
-            }
-            compileClasspath += this@sourceSets["main"].compileClasspath
         }
     }
 

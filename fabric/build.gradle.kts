@@ -17,14 +17,6 @@ loom {
             ideConfigGenerated(false)
             serverWithGui()
         }
-        create("testClient") {
-            inherit(this@runs["client"])
-            source("test")
-        }
-        create("testServer") {
-            inherit(this@runs["server"])
-            source("test")
-        }
     }
 
     accessWidenerPath.set(file("src/main/resources/ninjaphenix_container_lib.accessWidener"))
@@ -50,14 +42,11 @@ repositories {
         name = "Siphalor's Maven"
         url = uri("https://maven.siphalor.de/")
     }
-    maven {
-        name = "Devan Maven"
-        url = uri("https://storage.googleapis.com/devan-maven/")
-    }
 }
 
-val excludeFabric: (ExternalModuleDependency) -> Unit = {
+val excludeFabric: (ModuleDependency) -> Unit = {
     it.exclude("net.fabricmc")
+    it.exclude("net.fabricmc.fabric-api")
 }
 
 dependencies {
@@ -71,22 +60,14 @@ dependencies {
             "fabric-screen-handler-api-v1",
             "fabric-key-binding-api-v1"
     ).forEach {
-        modApi(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
+        modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
     }
 
     modCompileOnly(libs.rei.api, excludeFabric)
-    modRuntime(libs.rei)
-    modRuntime(libs.fabric.api)
 
     modCompileOnly(libs.modmenu, excludeFabric)
-    modRuntime(libs.modmenu)
-
 
     modCompileOnly(libs.amecs.api, excludeFabric)
-
-    // Used for tests only, added to main class path as loom doesn't have a test source set equivalent
-    modCompileOnly(libs.arrp, excludeFabric)
-    modRuntime(libs.arrp)
 }
 
 tasks.withType<ProcessResources> {
@@ -105,11 +86,11 @@ val updateForgeSources = tasks.register<net.fabricmc.loom.task.MigrateMappingsTa
 
 afterEvaluate {
 
-    val jarTask : Jar = tasks.getByName<Jar>("jar") {
-    archiveClassifier.set("dev")
+    val jarTask: Jar = tasks.getByName<Jar>("jar") {
+        archiveClassifier.set("dev")
     }
 
-    val remapJarTask : RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
+    val remapJarTask: RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
         archiveClassifier.set("fat")
         dependsOn(jarTask)
     }
