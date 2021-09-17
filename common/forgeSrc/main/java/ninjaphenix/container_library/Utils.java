@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import ninjaphenix.container_library.config.IdentifierTypeAdapter;
+import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -41,6 +42,8 @@ public class Utils {
     public static final ResourceLocation SCROLL_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "scroll");
     public static final ResourceLocation SINGLE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "single");
     public static final ResourceLocation PAGE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "page");
+    // Key bind key
+    public static final int KEY_BIND_KEY = GLFW.GLFW_KEY_Z;
 
     public static ResourceLocation resloc(String path) {
         return new ResourceLocation(Utils.MOD_ID, path);

@@ -6,13 +6,12 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import ninjaphenix.container_library.Utils;
-import org.lwjgl.glfw.GLFW;
 
 public final class AmecsKeyHandler implements KeyHandler {
     private final KeyBinding keybind;
 
     public AmecsKeyHandler() {
-        keybind = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.resloc("config"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_W, "key.categories.inventory", new KeyModifiers().setShift(true)));
+        keybind = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.resloc("config"), InputUtil.Type.KEYSYM, Utils.KEY_BIND_KEY, "key.categories.inventory", new KeyModifiers().setShift(true)));
     }
 
     @Override
