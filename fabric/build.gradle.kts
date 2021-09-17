@@ -65,16 +65,26 @@ dependencies {
     mappings("net.fabricmc:yarn:1.17.1+build.61:v2")
 
     modImplementation(libs.fabric.loader)
-    modApi(libs.fabric.api)
+
+    fabricApi {
+        listOf(
+                "fabric-networking-api-v1",
+                "fabric-screen-handler-api-v1",
+                "fabric-key-binding-api-v1"
+        ).forEach {
+            this@dependencies.modApi(this.module(it, libs.fabric.api.get().versionConstraint.displayName))
+        }
+    }
 
     modCompileOnly(libs.rei.api, excludeFabric)
     modRuntime(libs.rei)
+    modRuntime(libs.fabric.api)
 
     modCompileOnly(libs.modmenu, excludeFabric)
     modRuntime(libs.modmenu)
 
 
-    modCompileOnly(libs.amecs.api)
+    modCompileOnly(libs.amecs.api, excludeFabric)
 
     // Used for tests only, added to main class path as loom doesn't have a test source set equivalent
     modCompileOnly(libs.arrp, excludeFabric)

@@ -38,6 +38,7 @@ public class Main {
     }
 
     // Called by fabric loader.
+    // todo: print out warning if dependency version in fabric.mod.json is outdated.
     @SuppressWarnings("unused")
     public static void initialize() {
         creativeTab = FabricItemGroupBuilder.create(new Identifier("test", "test")).build();
