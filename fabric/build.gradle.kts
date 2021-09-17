@@ -83,9 +83,24 @@ tasks.withType<ProcessResources> {
 }
 
 val updateForgeSources = tasks.register<net.fabricmc.loom.task.MigrateMappingsTask>("updateForgeSources") {
-    this.setInputDir(rootDir.toPath().resolve("common/fabricSrc/main/java").toString())
-    this.setOutputDir(rootDir.toPath().resolve("common/forgeSrc/main/java").toString())
-    this.setMappings("net.minecraft:mappings:${properties["minecraft_version"]}")
+    setInputDir(rootDir.toPath().resolve("common/fabricSrc/main/java").toString())
+    setOutputDir(rootDir.toPath().resolve("common/forgeSrc/main/java").toString())
+    setMappings("net.minecraft:mappings:${properties["minecraft_version"]}")
+}
+if (hasProperty("yv")) {
+    val updateCommonSources = tasks.register<net.fabricmc.loom.task.MigrateMappingsTask>("updateCommonSources") {
+        setInputDir(rootDir.toPath().resolve("common/fabricSrc/main/java").toString())
+        setOutputDir(rootDir.toPath().resolve("common/fabricSrc/main/java").toString())
+        setMappings("net.fabricmc:yarn:" + findProperty("yv") as String)
+    }
+
+    val updateFabricSources = tasks.register<net.fabricmc.loom.task.MigrateMappingsTask>("updateFabricSources") {
+        dependsOn(updateCommonSources)
+
+        setInputDir(rootDir.toPath().resolve("fabric/src/main/java").toString())
+        setOutputDir(rootDir.toPath().resolve("fabric/src/main/java").toString())
+        setMappings("net.fabricmc:yarn:" + findProperty("yv") as String)
+    }
 }
 
 afterEvaluate {
