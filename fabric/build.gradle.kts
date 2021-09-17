@@ -19,6 +19,10 @@ loom {
         }
     }
 
+    mixin {
+        useLegacyMixinAp.set(true)
+    }
+
     accessWidenerPath.set(file("src/main/resources/ninjaphenix_container_lib.accessWidener"))
 }
 

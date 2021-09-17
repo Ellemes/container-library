@@ -2,6 +2,10 @@ plugins {
     java
 }
 
+fun isMainSubProject(name: String): Boolean {
+    return name == "forge" || name == "fabric"
+}
+
 subprojects {
     apply(plugin = "java")
 
@@ -15,7 +19,7 @@ subprojects {
         targetCompatibility = JavaVersion.toVersion(properties["mod_java_version"] as String)
     }
 
-    if (project.name == "fabric" || project.name == "forge") {
+    if (isMainSubProject(project.name)) {
         sourceSets {
             main {
                 java {
@@ -41,12 +45,16 @@ subprojects {
 
 tasks.register("buildMod") {
     subprojects.forEach {
-        dependsOn(it.tasks["build"])
+        if (isMainSubProject(it.name)) {
+            dependsOn(it.tasks["build"])
+        }
     }
 }
 
 tasks.register("publishToMavenLocal") {
     subprojects.forEach {
-        dependsOn(it.tasks["publishToMavenLocal"])
+        if (isMainSubProject(it.name)) {
+            dependsOn(it.tasks["publishToMavenLocal"])
+        }
     }
 }
