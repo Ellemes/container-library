@@ -66,14 +66,12 @@ dependencies {
 
     modImplementation(libs.fabric.loader)
 
-    fabricApi {
-        listOf(
-                "fabric-networking-api-v1",
-                "fabric-screen-handler-api-v1",
-                "fabric-key-binding-api-v1"
-        ).forEach {
-            this@dependencies.modApi(this.module(it, libs.fabric.api.get().versionConstraint.displayName))
-        }
+    listOf(
+            "fabric-networking-api-v1",
+            "fabric-screen-handler-api-v1",
+            "fabric-key-binding-api-v1"
+    ).forEach {
+        modApi(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
     }
 
     modCompileOnly(libs.rei.api, excludeFabric)
