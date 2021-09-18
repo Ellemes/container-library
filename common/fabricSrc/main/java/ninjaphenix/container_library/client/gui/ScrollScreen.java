@@ -24,12 +24,14 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ScrollScreen extends AbstractScreen {
-    private static final int SCROLL_RECT_WIDTH = 12, SCROLL_RECT_HEIGHT = 15;
+    private static final int THUMB_WIDTH = 12, THUMB_HEIGHT = 15;
     private final Identifier textureLocation;
     private final int textureWidth, textureHeight, totalRows, backgroundRenderWidth;
     private final boolean scrollingUnrestricted;
     private boolean isDragging, blankAreaVisible;
-    private int topRow, scrollBarY, scrollXOffset, scrollYOffset;
+    private int topRow;
+    // todo: consider making these ints
+    private double scrollYOffset, thumbY;
     private @Nullable TexturedRect blankArea;
 
     public ScrollScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
@@ -90,7 +92,7 @@ public final class ScrollScreen extends AbstractScreen {
         int scrollbarHeight = containerSlotsHeight + (menuWidth > 9 ? 34 : 24);
         DrawableHelper.drawTexture(stack, x + backgroundRenderWidth - 4, y, backgroundRenderWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
 
-        DrawableHelper.drawTexture(stack, x + backgroundRenderWidth - 2, y + Utils.CONTAINER_HEADER_HEIGHT + 1 + scrollBarY, backgroundRenderWidth, scrollbarHeight, ScrollScreen.SCROLL_RECT_WIDTH, ScrollScreen.SCROLL_RECT_HEIGHT, textureWidth, textureHeight);
+        DrawableHelper.drawTexture(stack, x + backgroundRenderWidth - 2, y + Utils.CONTAINER_HEADER_HEIGHT + 1 + (int) thumbY, backgroundRenderWidth, scrollbarHeight, ScrollScreen.THUMB_WIDTH, ScrollScreen.THUMB_HEIGHT, textureWidth, textureHeight);
 
         if (blankArea != null && blankAreaVisible) {
             blankArea.render(stack);
@@ -109,6 +111,12 @@ public final class ScrollScreen extends AbstractScreen {
         return mouseX >= scrollbarLeftPos && mouseY >= scrollbarTopPos && mouseX < scrollbarLeftPos + 12 && mouseY < scrollbarTopPos + menuHeight * 18;
     }
 
+    private boolean isMouseOverThumb(double mouseX, double mouseY) {
+        boolean xCheck = x + backgroundWidth - 20 <= mouseX && mouseX <= x + backgroundWidth - 8;
+        double correctedThumbY = y + Utils.CONTAINER_HEADER_HEIGHT + 1 + thumbY;
+        return xCheck && correctedThumbY <= mouseY && mouseY <= correctedThumbY + ScrollScreen.THUMB_HEIGHT;
+    }
+
     @Override
     protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
         return super.isClickOutsideBounds(mouseX, mouseY, left, top, button); // || this.isMouseOverEmptyRegionUnderScrollbar(mouseX, mouseY, left, top, button);
@@ -119,18 +127,18 @@ public final class ScrollScreen extends AbstractScreen {
         if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
             if (topRow != totalRows - menuHeight) {
                 if (Screen.hasShiftDown()) {
-                    this.setTopRow(topRow, Math.min(topRow + menuHeight, totalRows - menuHeight));
+                    this.setTopRowAndMoveThumb(topRow, Math.min(topRow + menuHeight, totalRows - menuHeight));
                 } else {
-                    this.setTopRow(topRow, topRow + 1);
+                    this.setTopRowAndMoveThumb(topRow, topRow + 1);
                 }
             }
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_PAGE_UP) {
             if (topRow != 0) {
                 if (Screen.hasShiftDown()) {
-                    this.setTopRow(topRow, Math.max(topRow - menuHeight, 0));
+                    this.setTopRowAndMoveThumb(topRow, Math.max(topRow - menuHeight, 0));
                 } else {
-                    this.setTopRow(topRow, topRow - 1);
+                    this.setTopRowAndMoveThumb(topRow, topRow - 1);
                 }
             }
             return true;
@@ -140,91 +148,96 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        //if (this.isMouseOverThumb(mouseX, mouseY) && button == 0) {
-        //    isDragging = true;
-        //    this.moveThumb(mouseY);
-        //} else if (this.isMouseOverTrack(mouseX, mouseY) && button == 0) {
-        //    this.moveThumb(mouseY);
-        //}
+        if (this.isMouseOverThumb(mouseX, mouseY) && button == 0) {
+            scrollYOffset = mouseY - thumbY;
+            isDragging = true;
+        } else if (this.isMouseOverTrack(mouseX, mouseY) && button == 0) {
+            //this.moveThumb(mouseY);
+        }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (isDragging) {
-            this.updateTopRow(mouseY);
+            this.updateThumbPosition(mouseY);
+            return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
-    private void updateTopRow(double mouseY) {
-        this.setTopRow(topRow, MathHelper.floor(MathHelper.clampedLerp(0, totalRows - menuHeight, (mouseY - (y + 18)) / (menuHeight * 18))));
+    private void updateThumbPosition(double mouseY) {
+        thumbY = Math.min(Math.max(mouseY - scrollYOffset, 0), menuHeight * Utils.SLOT_SIZE - 2 - ScrollScreen.THUMB_HEIGHT);
+        //this.setTopRow(topRow, MathHelper.floor(MathHelper.clampedLerp(0, totalRows - menuHeight, (mouseY - (y + 18)) / (menuHeight * 18))));
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (scrollingUnrestricted || this.isMouseOverTrack(mouseX, mouseY)) {
-            int newTop;
-            if (delta < 0) {
-                newTop = Math.min(topRow + (Screen.hasShiftDown() ? menuHeight : 1), totalRows - menuHeight);
-            } else {
-                newTop = Math.max(topRow - (Screen.hasShiftDown() ? menuHeight : 1), 0);
-            }
-            this.setTopRow(topRow, newTop);
-            return true;
-        }
+        //if (scrollingUnrestricted || this.isMouseOverTrack(mouseX, mouseY)) {
+        //    int newTop;
+        //    if (delta < 0) {
+        //        newTop = Math.min(topRow + (Screen.hasShiftDown() ? menuHeight : 1), totalRows - menuHeight);
+        //    } else {
+        //        newTop = Math.max(topRow - (Screen.hasShiftDown() ? menuHeight : 1), 0);
+        //    }
+        //    this.setTopRow(topRow, newTop);
+        //    return true;
+        //}
         return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
+    private void setTopRowAndMoveThumb(int oldTopRow, int newTopRow) {
+
+    }
+
     private void setTopRow(int oldTopRow, int newTopRow) {
-        if (oldTopRow == newTopRow) {
-            return;
-        }
-        topRow = newTopRow;
-        blankAreaVisible = topRow == (totalRows - menuHeight);
-        int delta = newTopRow - oldTopRow;
-        int rows = Math.abs(delta);
-        if (rows < menuHeight) {
-            int setAmount = rows * menuWidth;
-            int movableAmount = (menuHeight - rows) * menuWidth;
-            if (delta > 0) {
-                int setOutBegin = oldTopRow * menuWidth;
-                int movableBegin = newTopRow * menuWidth;
-                int setInBegin = movableBegin + movableAmount;
-                handler.setSlotRange(setOutBegin, setOutBegin + setAmount, index -> -2000);
-                handler.moveSlotRange(movableBegin, setInBegin, -18 * rows);
-                handler.setSlotRange(setInBegin, Math.min(setInBegin + setAmount, totalSlots),
-                        index -> 18 * MathHelper.floorDiv(index - movableBegin + menuWidth, menuWidth));
-            } else {
-                int setInBegin = newTopRow * menuWidth;
-                int movableBegin = oldTopRow * menuWidth;
-                int setOutBegin = movableBegin + movableAmount;
-                handler.setSlotRange(setInBegin, setInBegin + setAmount,
-                        index -> 18 * MathHelper.floorDiv(index - setInBegin + menuWidth, menuWidth));
-                handler.moveSlotRange(movableBegin, setOutBegin, 18 * rows);
-                handler.setSlotRange(setOutBegin, Math.min(setOutBegin + setAmount, totalSlots), index -> -2000);
-            }
-        } else {
-            int oldMin = oldTopRow * menuWidth;
-            handler.setSlotRange(oldMin, Math.min(oldMin + menuWidth * menuHeight, totalSlots), index -> -2000);
-            int newMin = newTopRow * menuWidth;
-            handler.setSlotRange(newMin, newMin + menuWidth * menuHeight,
-                    index -> 18 + 18 * MathHelper.floorDiv(index - newMin, menuWidth));
-        }
+        //if (oldTopRow == newTopRow) {
+        //    return;
+        //}
+        //topRow = newTopRow;
+        //blankAreaVisible = topRow == (totalRows - menuHeight);
+        //int delta = newTopRow - oldTopRow;
+        //int rows = Math.abs(delta);
+        //if (rows < menuHeight) {
+        //    int setAmount = rows * menuWidth;
+        //    int movableAmount = (menuHeight - rows) * menuWidth;
+        //    if (delta > 0) {
+        //        int setOutBegin = oldTopRow * menuWidth;
+        //        int movableBegin = newTopRow * menuWidth;
+        //        int setInBegin = movableBegin + movableAmount;
+        //        handler.setSlotRange(setOutBegin, setOutBegin + setAmount, index -> -2000);
+        //        handler.moveSlotRange(movableBegin, setInBegin, -18 * rows);
+        //        handler.setSlotRange(setInBegin, Math.min(setInBegin + setAmount, totalSlots),
+        //                index -> 18 * MathHelper.floorDiv(index - movableBegin + menuWidth, menuWidth));
+        //    } else {
+        //        int setInBegin = newTopRow * menuWidth;
+        //        int movableBegin = oldTopRow * menuWidth;
+        //        int setOutBegin = movableBegin + movableAmount;
+        //        handler.setSlotRange(setInBegin, setInBegin + setAmount,
+        //                index -> 18 * MathHelper.floorDiv(index - setInBegin + menuWidth, menuWidth));
+        //        handler.moveSlotRange(movableBegin, setOutBegin, 18 * rows);
+        //        handler.setSlotRange(setOutBegin, Math.min(setOutBegin + setAmount, totalSlots), index -> -2000);
+        //    }
+        //} else {
+        //    int oldMin = oldTopRow * menuWidth;
+        //    handler.setSlotRange(oldMin, Math.min(oldMin + menuWidth * menuHeight, totalSlots), index -> -2000);
+        //    int newMin = newTopRow * menuWidth;
+        //    handler.setSlotRange(newMin, newMin + menuWidth * menuHeight,
+        //            index -> 18 + 18 * MathHelper.floorDiv(index - newMin, menuWidth));
+        //}
     }
 
     @Override
     public void resize(MinecraftClient client, int width, int height) {
         int row = topRow;
         super.resize(client, width, height);
-        this.setTopRow(topRow, row);
+        this.setTopRowAndMoveThumb(topRow, row);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (isDragging) {
             isDragging = false;
-            // this.snapThumbToGradation()
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);

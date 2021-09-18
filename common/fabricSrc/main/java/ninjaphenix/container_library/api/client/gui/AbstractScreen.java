@@ -95,8 +95,9 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
         super.render(stack, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
         if (AbstractScreen.DEBUG_RENDER && client.options.debugEnabled) {
-            this.renderTooltip(stack, new LiteralText("width: " + width), 5, 20);
-            this.renderTooltip(stack, new LiteralText("height: " + height), 5, 40);
+            this.renderTooltip(stack, new LiteralText("w: " + width + ", h: " + height), 5, 20);
+            this.renderTooltip(stack, new LiteralText("x: " + mouseX + ", y: " + mouseY), 5, 40);
+            this.renderTooltip(stack, new LiteralText("bW: " + backgroundWidth + ", bH: " + backgroundHeight), 5, 60);
         }
     }
 
