@@ -2,21 +2,18 @@ package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.widget.PageButton;
+import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -66,8 +63,8 @@ public final class PageScreen extends AbstractScreen {
         int lastPageSlots = totalSlots - (pages - 1) * slotsPerPage;
         blankSlots = slotsPerPage - lastPageSlots;
 
-        imageWidth = 14 + 18 * menuWidth;
-        imageHeight = 17 + 97 + 18 * menuHeight;
+        imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * menuWidth + Utils.CONTAINER_PADDING_LDR;
+        imageHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * menuHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
     }
 
     private static boolean regionIntersects(AbstractWidget widget, int x, int y, int width, int height) {
@@ -109,17 +106,17 @@ public final class PageScreen extends AbstractScreen {
                     int rows = Mth.intFloorDiv(blankSlots, menuWidth);
                     int remainder = (blankSlots - menuWidth * rows);
                     int yTop = topPos + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
-                    int xLeft = leftPos + Utils.CONTAINER_PADDING_WIDTH;
+                    int xLeft = leftPos + Utils.CONTAINER_PADDING_LDR;
                     for (int i = 0; i < rows; i++) {
                         blankArea.add(new TexturedRect(xLeft, yTop, menuWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
-                                Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
+                                Utils.CONTAINER_PADDING_LDR, imageHeight, textureWidth, textureHeight));
                         yTop -= Utils.SLOT_SIZE;
                     }
                     if (remainder > 0) {
-                        int xRight = leftPos + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
+                        int xRight = leftPos + Utils.CONTAINER_PADDING_LDR + menuWidth * Utils.SLOT_SIZE;
                         int width = remainder * Utils.SLOT_SIZE;
                         blankArea.add(new TexturedRect(xRight - width, yTop, width, Utils.SLOT_SIZE,
-                                Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
+                                Utils.CONTAINER_PADDING_LDR, imageHeight, textureWidth, textureHeight));
                     }
                 }
             }
@@ -231,5 +228,38 @@ public final class PageScreen extends AbstractScreen {
 
     private void renderButtonTooltip(AbstractButton button, PoseStack stack, int x, int y) {
         this.renderTooltip(stack, button.getMessage(), x, y);
+    }
+
+    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
+        ArrayList<Pair<ScreenSize, ScreenSize>> options = new ArrayList<>();
+        PageScreen.addEntry(options, slots, 9, 3);
+        PageScreen.addEntry(options, slots, 9, 6);
+        if (scaledHeight >= 276 && slots > 54) {
+            PageScreen.addEntry(options, slots, 9, 9);
+        }
+        Pair<ScreenSize, ScreenSize> picked = null;
+        for (Pair<ScreenSize, ScreenSize> option : options) {
+            if (picked == null) {
+                picked = option;
+            } else {
+                ScreenSize pickedMeta = picked.getSecond();
+                ScreenSize iterMeta = option.getSecond();
+                ScreenSize iterDim = option.getFirst();
+                if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
+                    picked = option;
+                } else if (ConfigWrapper.getInstance().preferSmallerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+
+                } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+                    picked = option;
+                }
+            }
+        }
+        return picked.getFirst();
+    }
+
+    private static void addEntry(ArrayList<Pair<ScreenSize, ScreenSize>> options, int slots, int width, int height) {
+        int pages = Mth.ceil((double) slots / (width * height));
+        int blanked = slots - pages * width * height;
+        options.add(new Pair<>(ScreenSize.of(width, height), ScreenSize.of(pages, blanked)));
     }
 }

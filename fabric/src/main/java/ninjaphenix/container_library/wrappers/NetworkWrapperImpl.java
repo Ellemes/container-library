@@ -20,7 +20,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.inventory.ServerMenuFactory;
+import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
 import org.jetbrains.annotations.Nullable;
 
 final class NetworkWrapperImpl extends NetworkWrapper {
@@ -33,7 +33,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
 
     private void s_handleOpenInventory(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buffer, PacketSender sender) {
         BlockPos pos = buffer.readBlockPos();
-        server.execute(() -> this.openMenuIfAllowed(pos, player));
+        server.execute(() -> this.openScreenHandlerIfAllowed(pos, player));
     }
 
     @Override
@@ -42,7 +42,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    protected void openMenu(ServerPlayerEntity player, BlockPos pos, Inventory inventory, ServerMenuFactory factory, Text title) {
+    protected void openScreenHandler(ServerPlayerEntity player, BlockPos pos, Inventory inventory, ServerScreenHandlerFactory factory, Text title) {
         player.openHandledScreen(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buffer) {

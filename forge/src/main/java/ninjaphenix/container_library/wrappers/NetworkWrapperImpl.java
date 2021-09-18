@@ -16,7 +16,7 @@ import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.inventory.ServerMenuFactory;
+import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
 import ninjaphenix.container_library.network.OpenInventoryMessage;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +26,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     private SimpleChannel channel;
 
     public void initialise() {
-        String channelVersion = "4";
+        String channelVersion = "1";
         channel = NetworkRegistry.newSimpleChannel(Utils.resloc("channel"), () -> channelVersion, channelVersion::equals, channelVersion::equals);
 
         channel.registerMessage(0, OpenInventoryMessage.class, OpenInventoryMessage::encode, OpenInventoryMessage::decode, OpenInventoryMessage::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
@@ -37,7 +37,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    protected void openMenu(ServerPlayer player, BlockPos pos, Container inventory, ServerMenuFactory factory, Component displayName) {
+    protected void openScreenHandler(ServerPlayer player, BlockPos pos, Container inventory, ServerScreenHandlerFactory factory, Component displayName) {
         NetworkHooks.openGui(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {
@@ -53,7 +53,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     public void handleOpenInventory(BlockPos pos, ServerPlayer player) {
-        this.openMenuIfAllowed(pos, player);
+        this.openScreenHandlerIfAllowed(pos, player);
     }
 
     private static class Client {

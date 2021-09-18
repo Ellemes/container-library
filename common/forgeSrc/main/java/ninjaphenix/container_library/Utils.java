@@ -1,6 +1,5 @@
 package ninjaphenix.container_library;
 
-import com.google.common.collect.ImmutableSortedSet;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,7 +9,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.Set;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -20,9 +18,9 @@ public class Utils {
     // Gui Element Sizes
     public static final int SLOT_SIZE = 18;
     public static final int CONTAINER_HEADER_HEIGHT = 17;
-    public static final int CONTAINER_PADDING_WIDTH = 7;
-    // Menu Type ID
-    public static final ResourceLocation MENU_TYPE_ID = Utils.resloc("menu_type");
+    public static final int CONTAINER_PADDING_LDR = 7;
+    // Handler Type ID
+    public static final ResourceLocation HANDLER_TYPE_ID = Utils.resloc("handler_type");
     // Config Paths
     public static final String FABRIC_LEGACY_CONFIG_PATH = "ninjaphenix-container-library.json";
     public static final String FORGE_LEGACY_CONFIG_PATH = "expandedstorage-client.toml";
@@ -30,7 +28,7 @@ public class Utils {
     // Config Related
     public static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
-    // todo: look into possibility of replacing with GsonHelper?
+    // todo: look into possibility of replacing, might be worth exposing obj->json to configs.
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new IdentifierTypeAdapter())
                                                      .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                                                      .setPrettyPrinting()
@@ -51,9 +49,5 @@ public class Utils {
 
     public static MutableComponent translation(String key, Object... values) {
         return new TranslatableComponent(key, values);
-    }
-
-    public static <T> Set<T> sortedSetOf(Set<T> set) {
-        return ImmutableSortedSet.copyOf(set);
     }
 }

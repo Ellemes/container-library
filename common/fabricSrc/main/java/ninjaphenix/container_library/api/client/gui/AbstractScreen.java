@@ -53,14 +53,43 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
             preference = Utils.SINGLE_SCREEN_TYPE;
         }
 
-        return AbstractScreen.SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, AbstractScreen.SIZE_RETRIEVERS.get(preference).get(slots, scaledWidth, scaledHeight));
+        ScreenSize screenSize = AbstractScreen.SIZE_RETRIEVERS.get(preference).get(slots, scaledWidth, scaledHeight);
+        if (screenSize == null) {
+            return null;
+        }
+        return AbstractScreen.SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, screenSize);
     }
 
     private static boolean shouldPreferSingleScreen(Identifier preference) {
         return AbstractScreen.PREFERS_SINGLE_SCREEN.contains(preference);
     }
 
-    private static boolean canSingleScreenDisplay(int slots, int width, int height) {
+    private static boolean canSingleScreenDisplay(int slots, int scaledWidth, int scaledHeight) {
+        if (slots <= 54) {
+            return true;
+        }
+        if (scaledHeight >= 276) {
+            if (slots <= 81) {
+                return true;
+            }
+            if (scaledWidth >= 230 && slots <= 108) {
+                return true;
+            }
+            if (scaledWidth >= 284 && slots <= 135) {
+                return true;
+            }
+            if (scaledWidth >= 338 && slots <= 162) {
+                return true;
+            }
+        }
+        if (scaledWidth >= 338) {
+            if (scaledHeight >= 330 && slots <= 216) {
+                return true;
+            }
+            if (scaledHeight >= 384 && slots <= 270) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -94,6 +123,7 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
+        //noinspection ConstantConditions
         if (AbstractScreen.DEBUG_RENDER && client.options.debugEnabled) {
             this.renderTooltip(stack, new LiteralText("w: " + width + ", h: " + height), 5, 20);
             this.renderTooltip(stack, new LiteralText("x: " + mouseX + ", y: " + mouseY), 5, 40);

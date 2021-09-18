@@ -1,14 +1,11 @@
 package ninjaphenix.container_library;
 
-import com.mojang.datafixers.util.Pair;
 import ninjaphenix.container_library.api.client.NCL_ClientApi;
-import ninjaphenix.container_library.api.client.function.ScreenSize;
-import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.ScrollScreen;
 import ninjaphenix.container_library.client.gui.SingleScreen;
-import ninjaphenix.container_library.inventory.ClientMenuFactory;
+import ninjaphenix.container_library.inventory.ClientScreenHandlerFactory;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
@@ -17,12 +14,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.MenuType;
 
 public final class CommonMain {
@@ -30,10 +25,8 @@ public final class CommonMain {
     private static MenuType<AbstractHandler> screenHandlerType;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void initialize(BiFunction<ResourceLocation, ClientMenuFactory, MenuType> handlerTypeFunction,
-                                  Path configPath,
-                                  Path oldConfigPath) {
-        screenHandlerType = handlerTypeFunction.apply(Utils.MENU_TYPE_ID, AbstractHandler::createClientMenu);
+    public static void initialize(BiFunction<ResourceLocation, ClientScreenHandlerFactory, MenuType> handlerTypeFunction, Path configPath, Path oldConfigPath) {
+        screenHandlerType = handlerTypeFunction.apply(Utils.HANDLER_TYPE_ID, AbstractHandler::createClientMenu);
 
         if (PlatformUtils.isClient()) {
             ConfigWrapper.getInstance().initialise(configPath, oldConfigPath);
@@ -56,96 +49,15 @@ public final class CommonMain {
             NCL_ClientApi.registerScreenType(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::new);
             NCL_ClientApi.registerScreenType(Utils.SINGLE_SCREEN_TYPE, SingleScreen::new);
 
-            // todo: these settings leave no room for rei/jei should we take those into consideration for minimum screen width / height
-            ScreenSizeRetriever pageRetriever = (slots, scaledWidth, scaledHeight) -> {
-                ArrayList<Pair<ScreenSize, ScreenSize>> options = new ArrayList<>();
-                CommonMain.addEntry(options, slots, 9, 3);
-                CommonMain.addEntry(options, slots, 9, 6);
-                if (scaledHeight >= 276) {
-                    CommonMain.addEntry(options, slots, 9, 9);
-                }
-                Pair<ScreenSize, ScreenSize> picked = null;
-                for (Pair<ScreenSize, ScreenSize> option : options) {
-                    if (picked == null) {
-                        picked = option;
-                    } else {
-                        ScreenSize pickedMeta = picked.getSecond();
-                        ScreenSize iterMeta = option.getSecond();
-                        ScreenSize iterDim = option.getFirst();
-                        if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
-                            picked = option;
-                        } else if (ConfigWrapper.getInstance().preferSmallerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+            // todo: these settings leave no room for rei/jei should we take those into consideration for minimum screen width
+            NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, PageScreen::retrieveScreenSize);
+            NCL_ClientApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::retrieveScreenSize);
+            NCL_ClientApi.registerDefaultScreenSize(Utils.SINGLE_SCREEN_TYPE, SingleScreen::retrieveScreenSize);
 
-                        } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
-                            picked = option;
-                        }
-                    }
-                }
-                return picked.getFirst();
-            };
-
-            ScreenSizeRetriever scrollRetriever = (slots, scaledWidth, scaledHeight) -> {
-                int width = 9;
-                int height = 6;
-                if (slots <= 27) {
-                    height = 3;
-                } else if (scaledHeight >= 276) {
-                    if (slots > 54) {
-                        height = 9;
-                        //if (scaledWidth >= 338 && slots > 135) {
-                        //    width = 18;
-                        //} else if (slots > 108) {
-                        //    width = 15;
-                        //} else if (slots > 81) {
-                        //    width = 12;
-                        //}
-                    }
-                }
-                return ScreenSize.of(width, height);
-            };
-
-            NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, pageRetriever);
-            NCL_ClientApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, scrollRetriever);
-
-            NCL_ClientApi.registerDefaultScreenSize(Utils.SINGLE_SCREEN_TYPE, (slots, scaledWidth, scaledHeight) -> {
-                int width;
-
-                if (slots <= 81) {
-                    width = 9;
-                } else if (slots <= 108) {
-                    width = 12;
-                } else if (slots <= 135) {
-                    width = 15;
-                } else if (slots <= 270) {
-                    width = 18;
-                } else {
-                    throw new IllegalStateException("Cannot display single screen of size " + slots);
-                }
-
-                int height;
-
-                if (slots <= 27) {
-                    height = 3;
-                } else if (slots <= 54) {
-                    height = 6;
-                } else if (slots <= 162) {
-                    height = 9;
-                } else if (slots <= 216) {
-                    height = 12;
-                } else /* if (slots <= 270) */ {
-                    height = 15;
-                } // slots is guaranteed to be 270 or below when getting width.
-
-                return ScreenSize.of(width, height);
-            });
+            NCL_ClientApi.setPrefersSingleScreen(Utils.PAGE_SCREEN_TYPE);
+            NCL_ClientApi.setPrefersSingleScreen(Utils.SCROLL_SCREEN_TYPE);
         }
         NetworkWrapper.getInstance().initialise();
-    }
-
-    private static void addEntry(ArrayList<Pair<ScreenSize, ScreenSize>> options, int slots, int width, int height) {
-        int pages = Mth.ceil((double) slots / (width * height));
-        int blanked = slots - pages * width * height;
-        options.add(new Pair<>(ScreenSize.of(width, height), ScreenSize.of(pages, blanked)));
     }
 
     public static void warnThrowableMessage(String message, Throwable throwable, Object... values) {

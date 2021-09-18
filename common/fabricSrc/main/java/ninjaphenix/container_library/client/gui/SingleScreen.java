@@ -111,4 +111,36 @@ public final class SingleScreen extends AbstractScreen {
     public List<Rect2i> getExclusionZones() {
         return Collections.emptyList();
     }
+
+    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
+        int width;
+
+        if (slots <= 81) {
+            width = 9;
+        } else if (slots <= 108) {
+            width = 12;
+        } else if (slots <= 135) {
+            width = 15;
+        } else if (slots <= 270) {
+            width = 18;
+        } else {
+            return null;
+        }
+
+        int height;
+
+        if (slots <= 27) {
+            height = 3;
+        } else if (slots <= 54) {
+            height = 6;
+        } else if (slots <= 162) {
+            height = 9;
+        } else if (slots <= 216) {
+            height = 12;
+        } else /* if (slots <= 270) */ {
+            height = 15;
+        } // slots is guaranteed to be 270 or below when getting width.
+
+        return ScreenSize.of(width, height);
+    }
 }

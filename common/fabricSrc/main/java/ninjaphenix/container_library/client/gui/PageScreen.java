@@ -1,6 +1,7 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -20,15 +21,11 @@ import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.widget.PageButton;
+import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public final class PageScreen extends AbstractScreen {
     private final Identifier textureLocation;
@@ -230,5 +227,38 @@ public final class PageScreen extends AbstractScreen {
 
     private void renderButtonTooltip(PressableWidget button, MatrixStack stack, int x, int y) {
         this.renderTooltip(stack, button.getMessage(), x, y);
+    }
+
+    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
+        ArrayList<Pair<ScreenSize, ScreenSize>> options = new ArrayList<>();
+        PageScreen.addEntry(options, slots, 9, 3);
+        PageScreen.addEntry(options, slots, 9, 6);
+        if (scaledHeight >= 276 && slots > 54) {
+            PageScreen.addEntry(options, slots, 9, 9);
+        }
+        Pair<ScreenSize, ScreenSize> picked = null;
+        for (Pair<ScreenSize, ScreenSize> option : options) {
+            if (picked == null) {
+                picked = option;
+            } else {
+                ScreenSize pickedMeta = picked.getSecond();
+                ScreenSize iterMeta = option.getSecond();
+                ScreenSize iterDim = option.getFirst();
+                if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
+                    picked = option;
+                } else if (ConfigWrapper.getInstance().preferSmallerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+
+                } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+                    picked = option;
+                }
+            }
+        }
+        return picked.getFirst();
+    }
+
+    private static void addEntry(ArrayList<Pair<ScreenSize, ScreenSize>> options, int slots, int width, int height) {
+        int pages = MathHelper.ceil((double) slots / (width * height));
+        int blanked = slots - pages * width * height;
+        options.add(new Pair<>(ScreenSize.of(width, height), ScreenSize.of(pages, blanked)));
     }
 }

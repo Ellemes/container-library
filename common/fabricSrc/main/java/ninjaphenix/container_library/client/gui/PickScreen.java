@@ -54,8 +54,12 @@ public final class PickScreen extends Screen {
 
     @Override
     public void onClose() {
-        //noinspection ConstantConditions
-        client.setScreen(returnToScreen.get());
+        Screen screen = returnToScreen.get();
+        if (screen == null) {
+            client.player.closeHandledScreen();
+        } else {
+            client.setScreen(screen);
+        }
     }
 
     @Override

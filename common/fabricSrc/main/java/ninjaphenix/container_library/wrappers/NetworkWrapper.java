@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import ninjaphenix.container_library.api.OpenableBlockEntity;
 import ninjaphenix.container_library.api.OpenableBlockEntityProvider;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ninjaphenix.container_library.inventory.ServerMenuFactory;
+import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
 
 public abstract class NetworkWrapper {
     private static NetworkWrapper INSTANCE;
@@ -28,7 +28,7 @@ public abstract class NetworkWrapper {
 
     public abstract void c_openInventoryAt(BlockPos pos);
 
-    protected final void openMenuIfAllowed(BlockPos pos, ServerPlayerEntity player) {
+    protected final void openScreenHandlerIfAllowed(BlockPos pos, ServerPlayerEntity player) {
         ServerWorld world = player.getServerWorld();
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof OpenableBlockEntityProvider block) {
@@ -47,12 +47,12 @@ public abstract class NetworkWrapper {
                 if (!inventory.canContinueUse(player)) {
                     return;
                 }
-                this.openMenu(player, pos, inventory.getInventory(), AbstractHandler::new, title);
+                this.openScreenHandler(player, pos, inventory.getInventory(), AbstractHandler::new, title);
             }
         }
     }
 
-    protected abstract void openMenu(ServerPlayerEntity player, BlockPos pos, Inventory inventory, ServerMenuFactory factory, Text title);
+    protected abstract void openScreenHandler(ServerPlayerEntity player, BlockPos pos, Inventory inventory, ServerScreenHandlerFactory factory, Text title);
 
     public final NetworkWrapperImpl toInternal() {
         return (NetworkWrapperImpl) this;

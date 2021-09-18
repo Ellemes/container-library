@@ -54,8 +54,12 @@ public final class PickScreen extends Screen {
 
     @Override
     public void onClose() {
-        //noinspection ConstantConditions
-        minecraft.setScreen(returnToScreen.get());
+        Screen screen = returnToScreen.get();
+        if (screen == null) {
+            minecraft.player.closeContainer();
+        } else {
+            minecraft.setScreen(screen);
+        }
     }
 
     @Override

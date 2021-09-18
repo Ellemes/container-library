@@ -12,20 +12,22 @@ import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.entity.player.Inventory;
 
 public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHandler> {
     private static final Map<ResourceLocation, ScreenConstructor<?>> SCREEN_CONSTRUCTORS = new HashMap<>();
     private static final Map<ResourceLocation, ScreenSizeRetriever> SIZE_RETRIEVERS = new HashMap<>();
-    @VisibleForDebug
+    private static final Set<ResourceLocation> PREFERS_SINGLE_SCREEN = new HashSet<>();
     public static boolean DEBUG_RENDER = false;
 
     protected final int menuWidth, menuHeight, totalSlots;
@@ -42,38 +44,77 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static AbstractScreen createScreen(AbstractHandler handler, Inventory playerInventory, Component title) {
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
-        ScreenSize screenSize = ScreenSize.current();
+        int scaledWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int scaledHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         int slots = handler.getInventory().getContainerSize();
-        // todo: expose this kind of functionality as api
-        //  this should support showing screens up to what the single screen can show given the screen size can support it.
-        {
-            int screenSlots = screenSize.getHeight() >= 276 ? 81 : 54;
-            if (slots <= screenSlots && (preference.equals(Utils.PAGE_SCREEN_TYPE) || preference.equals(Utils.SCROLL_SCREEN_TYPE))) {
-                preference = Utils.SINGLE_SCREEN_TYPE;
+
+        if (AbstractScreen.canSingleScreenDisplay(slots, scaledWidth, scaledHeight) && AbstractScreen.shouldPreferSingleScreen(preference)) {
+            preference = Utils.SINGLE_SCREEN_TYPE;
+        }
+
+        ScreenSize screenSize = AbstractScreen.SIZE_RETRIEVERS.get(preference).get(slots, scaledWidth, scaledHeight);
+        if (screenSize == null) {
+            return null;
+        }
+        return AbstractScreen.SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, screenSize);
+    }
+
+    private static boolean shouldPreferSingleScreen(ResourceLocation preference) {
+        return AbstractScreen.PREFERS_SINGLE_SCREEN.contains(preference);
+    }
+
+    private static boolean canSingleScreenDisplay(int slots, int scaledWidth, int scaledHeight) {
+        if (slots <= 54) {
+            return true;
+        }
+        if (scaledHeight >= 276) {
+            if (slots <= 81) {
+                return true;
+            }
+            if (scaledWidth >= 230 && slots <= 108) {
+                return true;
+            }
+            if (scaledWidth >= 284 && slots <= 135) {
+                return true;
+            }
+            if (scaledWidth >= 338 && slots <= 162) {
+                return true;
             }
         }
-        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, SIZE_RETRIEVERS.get(preference).get(slots, screenSize.getWidth(), screenSize.getHeight()));
+        if (scaledWidth >= 338) {
+            if (scaledHeight >= 330 && slots <= 216) {
+                return true;
+            }
+            if (scaledHeight >= 384 && slots <= 270) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
-        SCREEN_CONSTRUCTORS.putIfAbsent(type, screenConstructor);
+        AbstractScreen.SCREEN_CONSTRUCTORS.putIfAbsent(type, screenConstructor);
     }
 
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareScreenSizeRetriever(ResourceLocation type, ScreenSizeRetriever retriever) {
-        SIZE_RETRIEVERS.putIfAbsent(type, retriever);
+        AbstractScreen.SIZE_RETRIEVERS.putIfAbsent(type, retriever);
     }
 
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static boolean isScreenTypeDeclared(ResourceLocation type) {
-        return SCREEN_CONSTRUCTORS.containsKey(type);
+        return AbstractScreen.SCREEN_CONSTRUCTORS.containsKey(type);
+    }
+
+    public static void setPrefersSingleScreen(ResourceLocation type) {
+        AbstractScreen.PREFERS_SINGLE_SCREEN.add(type);
     }
 
     @Override
@@ -81,9 +122,11 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, delta);
         this.renderTooltip(stack, mouseX, mouseY);
-        if (AbstractScreen.DEBUG_RENDER) {
-            this.renderTooltip(stack, new TextComponent("width: " + width), 5, 20);
-            this.renderTooltip(stack, new TextComponent("height: " + height), 5, 40);
+        //noinspection ConstantConditions
+        if (AbstractScreen.DEBUG_RENDER && minecraft.options.renderDebug) {
+            this.renderTooltip(stack, new TextComponent("w: " + width + ", h: " + height), 5, 20);
+            this.renderTooltip(stack, new TextComponent("x: " + mouseX + ", y: " + mouseY), 5, 40);
+            this.renderTooltip(stack, new TextComponent("bW: " + imageWidth + ", bH: " + imageHeight), 5, 60);
         }
     }
 

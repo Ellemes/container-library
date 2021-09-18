@@ -20,6 +20,7 @@ import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -247,5 +248,32 @@ public final class ScrollScreen extends AbstractScreen {
     public List<Rect2i> getExclusionZones() {
         int height = Utils.CONTAINER_HEADER_HEIGHT + menuHeight * Utils.SLOT_SIZE + (menuWidth > 9 ? 10 : 0) + Utils.CONTAINER_PADDING_LDR;
         return Collections.singletonList(new Rect2i(x + backgroundRenderWidth, y, 22 - 4, height)); // 22 - 4 is scrollbar width minus overlap
+    }
+
+    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
+        ArrayList<ScreenSize> options = new ArrayList<>();
+        options.add(ScreenSize.of(9, 6));
+        if (scaledHeight >= 276) {
+            if (slots > 54) {
+                options.add(ScreenSize.of(9, 9));
+            }
+            if (scaledWidth >= 248 && slots > 81) {
+                options.add(ScreenSize.of(12, 9));
+            }
+            if (scaledWidth >= 302 && slots > 108) {
+                options.add(ScreenSize.of(15, 9));
+            }
+            if (scaledWidth >= 356 && slots > 135) {
+                options.add(ScreenSize.of(18, 9));
+            }
+        }
+        if (scaledHeight >= 330 && scaledWidth >= 356 && slots > 162) {
+            options.add(ScreenSize.of(18, 12));
+        }
+        if (scaledHeight >= 384 && scaledWidth >= 356 && slots > 216) {
+            options.add(ScreenSize.of(18, 15));
+        }
+
+        return options.get(options.size() - 1);
     }
 }

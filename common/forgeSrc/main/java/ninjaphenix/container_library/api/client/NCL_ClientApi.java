@@ -60,4 +60,10 @@ public final class NCL_ClientApi {
         //noinspection deprecation
         AbstractScreen.declareScreenSizeRetriever(type, retriever);
     }
+
+    // todo: better name? will use single screen over the specified type if a single screen can show the gui.
+    public static void setPrefersSingleScreen(ResourceLocation type) {
+        Objects.requireNonNull(type, "type must not be null");
+        AbstractScreen.setPrefersSingleScreen(type);
+    }
 }

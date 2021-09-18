@@ -32,7 +32,7 @@ public final class SingleScreen extends AbstractScreen {
 
         textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
         textureWidth = switch (menuWidth) {
-            case 9 -> 208;
+            case 9 -> menuHeight == 3 ? 176 : 208;
             case 12 -> 256;
             case 15 -> 320;
             case 18 -> 368;
@@ -49,8 +49,8 @@ public final class SingleScreen extends AbstractScreen {
 
         blankSlots = (menuWidth * menuHeight) - totalSlots;
 
-        imageWidth = 14 + 18 * menuWidth;
-        imageHeight = 17 + 97 + 18 * menuHeight;
+        imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * menuWidth + Utils.CONTAINER_PADDING_LDR;
+        imageHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * menuHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
     }
 
     @Override
@@ -61,17 +61,17 @@ public final class SingleScreen extends AbstractScreen {
             int rows = Mth.intFloorDiv(blankSlots, menuWidth);
             int remainder = (blankSlots - menuWidth * rows);
             int yTop = topPos + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
-            int xLeft = leftPos + Utils.CONTAINER_PADDING_WIDTH;
+            int xLeft = leftPos + Utils.CONTAINER_PADDING_LDR;
             for (int i = 0; i < rows; i++) {
                 blankArea.add(new TexturedRect(xLeft, yTop, menuWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
-                        Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
+                        Utils.CONTAINER_PADDING_LDR, imageHeight, textureWidth, textureHeight));
                 yTop -= Utils.SLOT_SIZE;
             }
             if (remainder > 0) {
-                int xRight = leftPos + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
+                int xRight = leftPos + Utils.CONTAINER_PADDING_LDR + menuWidth * Utils.SLOT_SIZE;
                 int width = remainder * Utils.SLOT_SIZE;
                 blankArea.add(new TexturedRect(xRight - width, yTop, width, Utils.SLOT_SIZE,
-                        Utils.CONTAINER_PADDING_WIDTH, imageHeight, textureWidth, textureHeight));
+                        Utils.CONTAINER_PADDING_LDR, imageHeight, textureWidth, textureHeight));
             }
         }
     }
@@ -110,5 +110,37 @@ public final class SingleScreen extends AbstractScreen {
 
     public List<Rect2i> getExclusionZones() {
         return Collections.emptyList();
+    }
+
+    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
+        int width;
+
+        if (slots <= 81) {
+            width = 9;
+        } else if (slots <= 108) {
+            width = 12;
+        } else if (slots <= 135) {
+            width = 15;
+        } else if (slots <= 270) {
+            width = 18;
+        } else {
+            return null;
+        }
+
+        int height;
+
+        if (slots <= 27) {
+            height = 3;
+        } else if (slots <= 54) {
+            height = 6;
+        } else if (slots <= 162) {
+            height = 9;
+        } else if (slots <= 216) {
+            height = 12;
+        } else /* if (slots <= 270) */ {
+            height = 15;
+        } // slots is guaranteed to be 270 or below when getting width.
+
+        return ScreenSize.of(width, height);
     }
 }
