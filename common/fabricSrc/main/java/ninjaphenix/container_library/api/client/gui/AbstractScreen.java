@@ -1,5 +1,6 @@
 package ninjaphenix.container_library.api.client.gui;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Rect2i;
@@ -7,7 +8,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.annotation.Debug;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.ScreenConstructor;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
@@ -20,13 +20,15 @@ import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
     private static final Map<Identifier, ScreenConstructor<?>> SCREEN_CONSTRUCTORS = new HashMap<>();
     private static final Map<Identifier, ScreenSizeRetriever> SIZE_RETRIEVERS = new HashMap<>();
-    @Debug
+    private static final Set<Identifier> PREFERS_SINGLE_SCREEN = new HashSet<>();
     public static boolean DEBUG_RENDER = false;
 
     protected final int menuWidth, menuHeight, totalSlots;
@@ -43,38 +45,48 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static AbstractScreen createScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title) {
         Identifier preference = ConfigWrapper.getInstance().getPreferredScreenType();
-        ScreenSize screenSize = ScreenSize.current();
+        int scaledWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
+        int scaledHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
         int slots = handler.getInventory().size();
-        // todo: expose this kind of functionality as api
-        //  this should support showing screens up to what the single screen can show given the screen size can support it.
-        {
-            int screenSlots = screenSize.getHeight() >= 276 ? 81 : 54;
-            if (slots <= screenSlots && (preference.equals(Utils.PAGE_SCREEN_TYPE) || preference.equals(Utils.SCROLL_SCREEN_TYPE))) {
-                preference = Utils.SINGLE_SCREEN_TYPE;
-            }
+
+        if (AbstractScreen.canSingleScreenDisplay(slots, scaledWidth, scaledHeight) && AbstractScreen.shouldPreferSingleScreen(preference)) {
+            preference = Utils.SINGLE_SCREEN_TYPE;
         }
-        return SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, SIZE_RETRIEVERS.get(preference).get(slots, screenSize.getWidth(), screenSize.getHeight()));
+
+        return AbstractScreen.SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, AbstractScreen.SIZE_RETRIEVERS.get(preference).get(slots, scaledWidth, scaledHeight));
+    }
+
+    private static boolean shouldPreferSingleScreen(Identifier preference) {
+        return AbstractScreen.PREFERS_SINGLE_SCREEN.contains(preference);
+    }
+
+    private static boolean canSingleScreenDisplay(int slots, int width, int height) {
+        return false;
     }
 
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareScreenType(Identifier type, ScreenConstructor<?> screenConstructor) {
-        SCREEN_CONSTRUCTORS.putIfAbsent(type, screenConstructor);
+        AbstractScreen.SCREEN_CONSTRUCTORS.putIfAbsent(type, screenConstructor);
     }
 
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareScreenSizeRetriever(Identifier type, ScreenSizeRetriever retriever) {
-        SIZE_RETRIEVERS.putIfAbsent(type, retriever);
+        AbstractScreen.SIZE_RETRIEVERS.putIfAbsent(type, retriever);
     }
 
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static boolean isScreenTypeDeclared(Identifier type) {
-        return SCREEN_CONSTRUCTORS.containsKey(type);
+        return AbstractScreen.SCREEN_CONSTRUCTORS.containsKey(type);
+    }
+
+    public static void setPrefersSingleScreen(Identifier type) {
+        AbstractScreen.PREFERS_SINGLE_SCREEN.add(type);
     }
 
     @Override
@@ -82,7 +94,7 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
-        if (AbstractScreen.DEBUG_RENDER) {
+        if (AbstractScreen.DEBUG_RENDER && client.options.debugEnabled) {
             this.renderTooltip(stack, new LiteralText("width: " + width), 5, 20);
             this.renderTooltip(stack, new LiteralText("height: " + height), 5, 40);
         }

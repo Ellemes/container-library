@@ -32,7 +32,7 @@ public final class SingleScreen extends AbstractScreen {
 
         textureLocation = new Identifier("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
         textureWidth = switch (menuWidth) {
-            case 9 -> 208;
+            case 9 -> menuHeight == 3 ? 176 : 208;
             case 12 -> 256;
             case 15 -> 320;
             case 18 -> 368;
@@ -49,8 +49,8 @@ public final class SingleScreen extends AbstractScreen {
 
         blankSlots = (menuWidth * menuHeight) - totalSlots;
 
-        backgroundWidth = 14 + 18 * menuWidth;
-        backgroundHeight = 17 + 97 + 18 * menuHeight;
+        backgroundWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * menuWidth + Utils.CONTAINER_PADDING_LDR;
+        backgroundHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * menuHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
     }
 
     @Override
@@ -61,17 +61,17 @@ public final class SingleScreen extends AbstractScreen {
             int rows = MathHelper.floorDiv(blankSlots, menuWidth);
             int remainder = (blankSlots - menuWidth * rows);
             int yTop = y + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
-            int xLeft = x + Utils.CONTAINER_PADDING_WIDTH;
+            int xLeft = x + Utils.CONTAINER_PADDING_LDR;
             for (int i = 0; i < rows; i++) {
                 blankArea.add(new TexturedRect(xLeft, yTop, menuWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
-                        Utils.CONTAINER_PADDING_WIDTH, backgroundHeight, textureWidth, textureHeight));
+                        Utils.CONTAINER_PADDING_LDR, backgroundHeight, textureWidth, textureHeight));
                 yTop -= Utils.SLOT_SIZE;
             }
             if (remainder > 0) {
-                int xRight = x + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
+                int xRight = x + Utils.CONTAINER_PADDING_LDR + menuWidth * Utils.SLOT_SIZE;
                 int width = remainder * Utils.SLOT_SIZE;
                 blankArea.add(new TexturedRect(xRight - width, yTop, width, Utils.SLOT_SIZE,
-                        Utils.CONTAINER_PADDING_WIDTH, backgroundHeight, textureWidth, textureHeight));
+                        Utils.CONTAINER_PADDING_LDR, backgroundHeight, textureWidth, textureHeight));
             }
         }
     }

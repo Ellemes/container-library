@@ -65,8 +65,8 @@ public final class PageScreen extends AbstractScreen {
         int lastPageSlots = totalSlots - (pages - 1) * slotsPerPage;
         blankSlots = slotsPerPage - lastPageSlots;
 
-        backgroundWidth = 14 + 18 * menuWidth;
-        backgroundHeight = 17 + 97 + 18 * menuHeight;
+        backgroundWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * menuWidth + Utils.CONTAINER_PADDING_LDR;
+        backgroundHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * menuHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
     }
 
     private static boolean regionIntersects(ClickableWidget widget, int x, int y, int width, int height) {
@@ -108,17 +108,17 @@ public final class PageScreen extends AbstractScreen {
                     int rows = MathHelper.floorDiv(blankSlots, menuWidth);
                     int remainder = (blankSlots - menuWidth * rows);
                     int yTop = y + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
-                    int xLeft = x + Utils.CONTAINER_PADDING_WIDTH;
+                    int xLeft = x + Utils.CONTAINER_PADDING_LDR;
                     for (int i = 0; i < rows; i++) {
                         blankArea.add(new TexturedRect(xLeft, yTop, menuWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
-                                Utils.CONTAINER_PADDING_WIDTH, backgroundHeight, textureWidth, textureHeight));
+                                Utils.CONTAINER_PADDING_LDR, backgroundHeight, textureWidth, textureHeight));
                         yTop -= Utils.SLOT_SIZE;
                     }
                     if (remainder > 0) {
-                        int xRight = x + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
+                        int xRight = x + Utils.CONTAINER_PADDING_LDR + menuWidth * Utils.SLOT_SIZE;
                         int width = remainder * Utils.SLOT_SIZE;
                         blankArea.add(new TexturedRect(xRight - width, yTop, width, Utils.SLOT_SIZE,
-                                Utils.CONTAINER_PADDING_WIDTH, backgroundHeight, textureWidth, textureHeight));
+                                Utils.CONTAINER_PADDING_LDR, backgroundHeight, textureWidth, textureHeight));
                     }
                 }
             }

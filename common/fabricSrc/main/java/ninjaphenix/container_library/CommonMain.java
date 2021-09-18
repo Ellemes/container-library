@@ -61,7 +61,7 @@ public final class CommonMain {
                 ArrayList<Pair<ScreenSize, ScreenSize>> options = new ArrayList<>();
                 CommonMain.addEntry(options, slots, 9, 3);
                 CommonMain.addEntry(options, slots, 9, 6);
-                if (scaledHeight >= 276) {
+                if (scaledHeight >= 276 && slots > 54) {
                     CommonMain.addEntry(options, slots, 9, 9);
                 }
                 Pair<ScreenSize, ScreenSize> picked = null;
@@ -85,23 +85,30 @@ public final class CommonMain {
             };
 
             ScreenSizeRetriever scrollRetriever = (slots, scaledWidth, scaledHeight) -> {
-                int width = 9;
-                int height = 6;
-                if (slots <= 27) {
-                    height = 3;
-                } else if (scaledHeight >= 276) {
+                ArrayList<ScreenSize> options = new ArrayList<>();
+                options.add(ScreenSize.of(9, 6));
+                if (scaledHeight >= 276) {
                     if (slots > 54) {
-                        height = 9;
-                        //if (scaledWidth >= 338 && slots > 135) {
-                        //    width = 18;
-                        //} else if (slots > 108) {
-                        //    width = 15;
-                        //} else if (slots > 81) {
-                        //    width = 12;
-                        //}
+                        options.add(ScreenSize.of(9, 9));
+                    }
+                    if (scaledWidth >= 248 && slots > 81) {
+                        options.add(ScreenSize.of(12, 9));
+                    }
+                    if (scaledWidth >= 302 && slots > 108) {
+                        options.add(ScreenSize.of(15, 9));
+                    }
+                    if (scaledWidth >= 356 && slots > 135) {
+                        options.add(ScreenSize.of(18, 9));
                     }
                 }
-                return ScreenSize.of(width, height);
+                if (scaledHeight >= 330 && scaledWidth >= 356 && slots > 162) {
+                    options.add(ScreenSize.of(18, 12));
+                }
+                if (scaledHeight >= 384 && scaledWidth >= 356 && slots > 216) {
+                    options.add(ScreenSize.of(18, 15));
+                }
+
+                return options.get(options.size() - 1);
             };
 
             NCL_ClientApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, pageRetriever);

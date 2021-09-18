@@ -24,11 +24,12 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ScrollScreen extends AbstractScreen {
+    private static final int SCROLL_RECT_WIDTH = 12, SCROLL_RECT_HEIGHT = 15;
     private final Identifier textureLocation;
-    private final int textureWidth, textureHeight, totalRows;
+    private final int textureWidth, textureHeight, totalRows, backgroundRenderWidth;
     private final boolean scrollingUnrestricted;
     private boolean isDragging, blankAreaVisible;
-    private int topRow;
+    private int topRow, scrollBarY, scrollXOffset, scrollYOffset;
     private @Nullable TexturedRect blankArea;
 
     public ScrollScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title, ScreenSize screenSize) {
@@ -48,12 +49,15 @@ public final class ScrollScreen extends AbstractScreen {
             case 3 -> 192;
             case 6 -> 240;
             case 9 -> 304;
+            case 12 -> 352;
+            case 15 -> 416;
             default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
         };
 
         totalRows = MathHelper.ceil(((double) totalSlots) / menuWidth);
-        backgroundWidth = 14 + 18 * menuWidth;
-        backgroundHeight = 17 + 97 + 18 * menuHeight;
+        backgroundWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * menuWidth + Utils.CONTAINER_PADDING_LDR + 22 - 4; // 22 - 4 is scrollbar width - overlap
+        backgroundRenderWidth = backgroundWidth - 22 + 4; // - 22 + 4 is scrollbar width - overlap
+        backgroundHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * menuHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
         scrollingUnrestricted = ConfigWrapper.getInstance().isScrollingUnrestricted();
     }
 
@@ -77,32 +81,17 @@ public final class ScrollScreen extends AbstractScreen {
     }
 
     @Override
-    protected void init() {
-        super.init();
-        isDragging = false;
-        topRow = 0;
-
-        int remainderSlots = (totalSlots % menuWidth);
-        if (remainderSlots > 0) {
-            int blankSlots = menuWidth - remainderSlots;
-            int xRight = x + Utils.CONTAINER_PADDING_WIDTH + menuWidth * Utils.SLOT_SIZE;
-            int y = this.y + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
-            int width = blankSlots * Utils.SLOT_SIZE;
-            blankArea = new TexturedRect(xRight - width, y, width, Utils.SLOT_SIZE, Utils.CONTAINER_PADDING_WIDTH, backgroundHeight, textureWidth, textureHeight);
-            blankAreaVisible = false;
-        }
-    }
-
-    @Override
     protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
         RenderSystem.setShaderTexture(0, textureLocation);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        DrawableHelper.drawTexture(stack, x, y, 0, 0, backgroundWidth, backgroundHeight, textureWidth, textureHeight);
+        DrawableHelper.drawTexture(stack, x, y, 0, 0, backgroundRenderWidth, backgroundHeight, textureWidth, textureHeight);
+
         int containerSlotsHeight = menuHeight * 18;
         int scrollbarHeight = containerSlotsHeight + (menuWidth > 9 ? 34 : 24);
-        DrawableHelper.drawTexture(stack, x + backgroundWidth - 4, y, backgroundWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
-        int yOffset = MathHelper.floor((containerSlotsHeight - 17) * (((double) topRow) / (totalRows - menuHeight)));
-        DrawableHelper.drawTexture(stack, x + backgroundWidth - 2, y + yOffset + 18, backgroundWidth, scrollbarHeight, 12, 15, textureWidth, textureHeight);
+        DrawableHelper.drawTexture(stack, x + backgroundRenderWidth - 4, y, backgroundRenderWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
+
+        DrawableHelper.drawTexture(stack, x + backgroundRenderWidth - 2, y + Utils.CONTAINER_HEADER_HEIGHT + 1 + scrollBarY, backgroundRenderWidth, scrollbarHeight, ScrollScreen.SCROLL_RECT_WIDTH, ScrollScreen.SCROLL_RECT_HEIGHT, textureWidth, textureHeight);
+
         if (blankArea != null && blankAreaVisible) {
             blankArea.render(stack);
         }
@@ -114,7 +103,7 @@ public final class ScrollScreen extends AbstractScreen {
         textRenderer.draw(stack, playerInventoryTitle, 8, backgroundHeight - 96 + 2, 0x404040);
     }
 
-    private boolean isMouseOverScrollbar(double mouseX, double mouseY) {
+    private boolean isMouseOverTrack(double mouseX, double mouseY) {
         int scrollbarTopPos = y + 18;
         int scrollbarLeftPos = x + backgroundWidth - 2;
         return mouseX >= scrollbarLeftPos && mouseY >= scrollbarTopPos && mouseX < scrollbarLeftPos + 12 && mouseY < scrollbarTopPos + menuHeight * 18;
@@ -122,7 +111,7 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
-        return super.isClickOutsideBounds(mouseX, mouseY, left, top, button) && !this.isMouseOverScrollbar(mouseX, mouseY);
+        return super.isClickOutsideBounds(mouseX, mouseY, left, top, button); // || this.isMouseOverEmptyRegionUnderScrollbar(mouseX, mouseY, left, top, button);
     }
 
     @Override
@@ -151,10 +140,12 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isMouseOverScrollbar(mouseX, mouseY) && button == 0) {
-            isDragging = true;
-            this.updateTopRow(mouseY);
-        }
+        //if (this.isMouseOverThumb(mouseX, mouseY) && button == 0) {
+        //    isDragging = true;
+        //    this.moveThumb(mouseY);
+        //} else if (this.isMouseOverTrack(mouseX, mouseY) && button == 0) {
+        //    this.moveThumb(mouseY);
+        //}
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
@@ -172,7 +163,7 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (scrollingUnrestricted || this.isMouseOverScrollbar(mouseX, mouseY)) {
+        if (scrollingUnrestricted || this.isMouseOverTrack(mouseX, mouseY)) {
             int newTop;
             if (delta < 0) {
                 newTop = Math.min(topRow + (Screen.hasShiftDown() ? menuHeight : 1), totalRows - menuHeight);
@@ -233,13 +224,15 @@ public final class ScrollScreen extends AbstractScreen {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (isDragging) {
             isDragging = false;
+            // this.snapThumbToGradation()
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
+    @Override
     public List<Rect2i> getExclusionZones() {
-        int height = menuHeight * 18 + (menuWidth > 9 ? 34 : 24);
-        return Collections.singletonList(new Rect2i(x + backgroundWidth - 4, y, 22, height));
+        int height = Utils.CONTAINER_HEADER_HEIGHT + menuHeight * Utils.SLOT_SIZE + (menuWidth > 9 ? 10 : 0) + Utils.CONTAINER_PADDING_LDR;
+        return Collections.singletonList(new Rect2i(x + backgroundRenderWidth, y, 22 - 4, height)); // 22 - 4 is scrollbar width minus overlap
     }
 }

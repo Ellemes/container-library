@@ -20,7 +20,7 @@ public class Utils {
     // Gui Element Sizes
     public static final int SLOT_SIZE = 18;
     public static final int CONTAINER_HEADER_HEIGHT = 17;
-    public static final int CONTAINER_PADDING_WIDTH = 7;
+    public static final int CONTAINER_PADDING_LDR = 7;
     // Menu Type ID
     public static final Identifier MENU_TYPE_ID = Utils.resloc("menu_type");
     // Config Paths
