@@ -41,7 +41,7 @@ public class Utils {
     public static final Identifier SINGLE_SCREEN_TYPE = new Identifier(LEGACY_MOD_ID, "single");
     public static final Identifier PAGE_SCREEN_TYPE = new Identifier(LEGACY_MOD_ID, "page");
     // Key bind key
-    public static final int KEY_BIND_KEY = GLFW.GLFW_KEY_Z;
+    public static final int KEY_BIND_KEY = GLFW.GLFW_KEY_G;
 
     public static Identifier id(String path) {
         return new Identifier(Utils.MOD_ID, path);

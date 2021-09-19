@@ -41,7 +41,7 @@ public class Utils {
     public static final ResourceLocation SINGLE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "single");
     public static final ResourceLocation PAGE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "page");
     // Key bind key
-    public static final int KEY_BIND_KEY = GLFW.GLFW_KEY_Z;
+    public static final int KEY_BIND_KEY = GLFW.GLFW_KEY_G;
 
     public static ResourceLocation id(String path) {
         return new ResourceLocation(Utils.MOD_ID, path);

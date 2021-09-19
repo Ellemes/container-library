@@ -72,6 +72,7 @@ public final class PickScreen extends Screen {
                 minecraft.player.closeContainer();
                 return;
             }
+            handler.clearSlots();
         }
         minecraft.setScreen(returnToScreen.get());
     }

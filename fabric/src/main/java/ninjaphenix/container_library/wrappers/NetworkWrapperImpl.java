@@ -70,6 +70,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     private static class Client {
         // todo: should try and abstract this too.
         private static void openInventoryAt(BlockPos pos) {
+            // todo: should check if a screen type is declared with this preference.
             if (ConfigWrapper.getInstance().getPreferredScreenType().equals(Utils.UNSET_SCREEN_TYPE)) {
                 MinecraftClient.getInstance().setScreen(new PickScreen(() -> Client.openInventoryAt(pos)));
             } else {
@@ -79,6 +80,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
                     BlockState state = world.getBlockState(pos);
                     if (state.getBlock() instanceof OpenableBlockEntityProvider provider) {
                         int invSize = provider.getOpenableBlockEntity(world, state, pos).getInventory().size();
+                        // todo: move to root of method
                         Identifier preference = ConfigWrapper.getInstance().getPreferredScreenType();
                         if (AbstractScreen.getScreenSize(preference, invSize, MinecraftClient.getInstance().getWindow().getScaledWidth(), MinecraftClient.getInstance().getWindow().getScaledHeight()) != null) {
                             PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());

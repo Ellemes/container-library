@@ -72,6 +72,7 @@ public final class PickScreen extends Screen {
                 client.player.closeHandledScreen();
                 return;
             }
+            handler.clearSlots();
         }
         client.setScreen(returnToScreen.get());
     }
