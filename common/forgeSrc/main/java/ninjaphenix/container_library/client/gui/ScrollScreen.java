@@ -31,7 +31,7 @@ public final class ScrollScreen extends AbstractScreen {
     private final int textureWidth, textureHeight, totalRows, backgroundRenderWidth;
     private final boolean scrollingUnrestricted;
     private boolean isDragging, blankAreaVisible;
-    private int topRow, scrollYOffset, thumbY;
+    private int topRow, scrollYOffset, thumbY, blankSlots;
     private @Nullable TexturedRect blankArea;
 
     public ScrollScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
@@ -90,7 +90,7 @@ public final class ScrollScreen extends AbstractScreen {
 
         int remainderSlots = (totalSlots % menuWidth);
         if (remainderSlots > 0) {
-            int blankSlots = menuWidth - remainderSlots;
+            blankSlots = menuWidth - remainderSlots;
             int xRight = leftPos + Utils.CONTAINER_PADDING_LDR + menuWidth * Utils.SLOT_SIZE;
             int yTop = topPos + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
             int width = blankSlots * Utils.SLOT_SIZE;
@@ -257,7 +257,7 @@ public final class ScrollScreen extends AbstractScreen {
             int oldMin = oldTopRow * menuWidth;
             menu.setSlotRange(oldMin, Math.min(oldMin + menuWidth * menuHeight, totalSlots), index -> -2000);
             int newMin = newTopRow * menuWidth;
-            menu.setSlotRange(newMin, newMin + menuWidth * menuHeight,
+            menu.setSlotRange(newMin, newMin + menuWidth * menuHeight - (blankAreaVisible ? blankSlots : 0),
                     index -> 18 + 18 * Mth.intFloorDiv(index - newMin, menuWidth));
         }
     }

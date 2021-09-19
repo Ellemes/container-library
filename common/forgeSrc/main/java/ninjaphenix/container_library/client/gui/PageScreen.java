@@ -103,6 +103,7 @@ public final class PageScreen extends AbstractScreen {
         if (newPage > oldPage) {
             if (page == pages) {
                 rightPageButton.setActive(false);
+                // todo: calculate blankArea once & add boolean field
                 if (blankSlots > 0) {
                     int rows = Mth.intFloorDiv(blankSlots, menuWidth);
                     int remainder = (blankSlots - menuWidth * rows);
@@ -145,6 +146,7 @@ public final class PageScreen extends AbstractScreen {
 
     private void setPageText() {
         currentPageText = new TranslatableComponent("screen.ninjaphenix_container_lib.page_x_y", page, pages);
+        pageTextX = (leftPageButton.x + leftPageButton.getWidth() + rightPageButton.x) / 2 - font.width(currentPageText) / 2 + 0.5f;
     }
 
     @Override
@@ -211,7 +213,6 @@ public final class PageScreen extends AbstractScreen {
             }
         }
         page = 1;
-        this.setPageText();
         // Honestly this is dumb.
         if (x == originalX && PlatformUtils.isModLoaded("inventoryprofiles")) {
             x -= 14;
@@ -225,7 +226,7 @@ public final class PageScreen extends AbstractScreen {
                 new TranslatableComponent("screen.ninjaphenix_container_lib.next_page"), button -> this.setPage(page, page + 1),
                 this::renderButtonTooltip);
         this.addRenderableWidget(rightPageButton);
-        pageTextX = (1 + leftPageButton.x + rightPageButton.x - rightPageButton.getWidth() / 2F) / 2F;
+        this.setPageText();
     }
 
     private void renderButtonTooltip(AbstractButton button, PoseStack stack, int x, int y) {
