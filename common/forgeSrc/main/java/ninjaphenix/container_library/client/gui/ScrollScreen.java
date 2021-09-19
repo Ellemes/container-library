@@ -8,6 +8,7 @@ import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -244,6 +245,7 @@ public final class ScrollScreen extends AbstractScreen {
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
+    @NotNull
     @Override
     public List<Rect2i> getExclusionZones() {
         int height = Utils.CONTAINER_HEADER_HEIGHT + menuHeight * Utils.SLOT_SIZE + (menuWidth > 9 ? 10 : 0) + Utils.CONTAINER_PADDING_LDR;

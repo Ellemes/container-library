@@ -11,7 +11,7 @@ public final class AmecsKeyHandler implements KeyHandler {
     private final KeyBinding keybind;
 
     public AmecsKeyHandler() {
-        keybind = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.resloc("config"), InputUtil.Type.KEYSYM, Utils.KEY_BIND_KEY, "key.categories.inventory", new KeyModifiers().setShift(true)));
+        keybind = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.id("config"), InputUtil.Type.KEYSYM, Utils.KEY_BIND_KEY, "key.categories.inventory", new KeyModifiers().setShift(true)));
     }
 
     @Override

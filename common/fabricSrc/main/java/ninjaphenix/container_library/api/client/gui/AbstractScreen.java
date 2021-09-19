@@ -17,6 +17,8 @@ import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
@@ -55,9 +57,9 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
 
         ScreenSize screenSize = AbstractScreen.SIZE_RETRIEVERS.get(preference).get(slots, scaledWidth, scaledHeight);
         if (screenSize == null) {
-            return null;
+            throw new IllegalStateException("screenSize should never be null...");
         }
-        return AbstractScreen.SCREEN_CONSTRUCTORS.getOrDefault(preference, ScreenConstructor.NULL).createScreen(handler, playerInventory, title, screenSize);
+        return AbstractScreen.SCREEN_CONSTRUCTORS.get(preference).createScreen(handler, playerInventory, title, screenSize);
     }
 
     private static boolean shouldPreferSingleScreen(Identifier preference) {
@@ -114,8 +116,15 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
         return AbstractScreen.SCREEN_CONSTRUCTORS.containsKey(type);
     }
 
+    @ApiStatus.Internal
     public static void setPrefersSingleScreen(Identifier type) {
         AbstractScreen.PREFERS_SINGLE_SCREEN.add(type);
+    }
+
+    @Nullable
+    @ApiStatus.Internal
+    public static ScreenSize getScreenSize(Identifier type, int slots, int scaledWidth, int scaledHeight) {
+        return AbstractScreen.SIZE_RETRIEVERS.get(type).get(slots, scaledWidth, scaledHeight);
     }
 
     @Override
@@ -137,10 +146,7 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
         if (this.handleKeyPress(keyCode, scanCode, modifiers)) {
             return true;
         } else if (PlatformUtils.isConfigKeyPressed(keyCode, scanCode, modifiers)) {
-            client.setScreen(new PickScreen(() -> {
-                handler.clearSlots(); // Clear slots as each screen position slots differently.
-                return AbstractScreen.createScreen(handler, client.player.getInventory(), title);
-            }, null));
+            client.setScreen(new PickScreen(() -> AbstractScreen.createScreen(handler, client.player.getInventory(), title), handler));
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE || client.options.keyInventory.matchesKey(keyCode, scanCode)) {
             client.player.closeHandledScreen();
@@ -156,5 +162,6 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
         return false;
     }
 
+    @NotNull
     public abstract List<Rect2i> getExclusionZones();
 }

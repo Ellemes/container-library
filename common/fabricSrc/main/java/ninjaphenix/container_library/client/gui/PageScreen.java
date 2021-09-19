@@ -23,6 +23,7 @@ import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.widget.PageButton;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -186,6 +187,7 @@ public final class PageScreen extends AbstractScreen {
         return false;
     }
 
+    @NotNull
     public List<Rect2i> getExclusionZones() {
         return Collections.emptyList();
     }

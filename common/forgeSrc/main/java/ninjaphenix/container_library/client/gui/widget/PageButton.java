@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.Utils;
 
 public final class PageButton extends Button {
-    private static final ResourceLocation TEXTURE = Utils.resloc("textures/gui/page_buttons.png");
+    private static final ResourceLocation TEXTURE = Utils.id("textures/gui/page_buttons.png");
     private final int textureOffset;
 
     public PageButton(int x, int y, int textureOffset, Component message, OnPress onPress, OnTooltip onTooltip) {

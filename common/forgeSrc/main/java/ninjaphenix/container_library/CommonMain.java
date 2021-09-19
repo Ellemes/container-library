@@ -31,15 +31,15 @@ public final class CommonMain {
         if (PlatformUtils.isClient()) {
             ConfigWrapper.getInstance().initialise(configPath, oldConfigPath);
             NCL_ClientApi.registerScreenButton(Utils.PAGE_SCREEN_TYPE,
-                    Utils.resloc("textures/gui/paged_button.png"),
-                    Utils.translation("screen.ninjaphenix_container_lib.paged_screen"));
+                    Utils.id("textures/gui/page_button.png"),
+                    Utils.translation("screen.expandedstorage.page_screen"));
             NCL_ClientApi.registerScreenButton(Utils.SCROLL_SCREEN_TYPE,
-                    Utils.resloc("textures/gui/scrollable_button.png"),
-                    Utils.translation("screen.ninjaphenix_container_lib.scrollable_screen"));
+                    Utils.id("textures/gui/scroll_button.png"),
+                    Utils.translation("screen.expandedstorage.scroll_screen"));
             NCL_ClientApi.registerScreenButton(Utils.SINGLE_SCREEN_TYPE,
-                    Utils.resloc("textures/gui/single_button.png"),
-                    Utils.translation("screen.ninjaphenix_container_lib.single_screen"),
-                    (width, height) -> width < 370 || height < 386, // Smallest possible resolution a double netherite chest fits on.
+                    Utils.id("textures/gui/single_button.png"),
+                    Utils.translation("screen.expandedstorage.single_screen"),
+                    (scaledWidth, scaledHeight) -> scaledWidth < 370 || scaledHeight < 386, // Smallest possible resolution a double netherite chest fits on.
                     List.of(
                             Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY),
                             Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY)

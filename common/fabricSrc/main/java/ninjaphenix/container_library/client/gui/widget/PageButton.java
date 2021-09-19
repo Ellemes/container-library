@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import ninjaphenix.container_library.Utils;
 
 public final class PageButton extends ButtonWidget {
-    private static final Identifier TEXTURE = Utils.resloc("textures/gui/page_buttons.png");
+    private static final Identifier TEXTURE = Utils.id("textures/gui/page_buttons.png");
     private final int textureOffset;
 
     public PageButton(int x, int y, int textureOffset, Text message, PressAction onPress, TooltipSupplier onTooltip) {

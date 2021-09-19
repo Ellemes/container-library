@@ -14,6 +14,7 @@ import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -108,6 +109,7 @@ public final class SingleScreen extends AbstractScreen {
         }
     }
 
+    @NotNull
     public List<Rect2i> getExclusionZones() {
         return Collections.emptyList();
     }

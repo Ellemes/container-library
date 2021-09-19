@@ -23,8 +23,7 @@ public class Main implements ModInitializer {
                 FabricLoader.getInstance().getConfigDir().resolve(Utils.FABRIC_LEGACY_CONFIG_PATH));
 
         if (PlatformUtils.isClient()) {
-            // todo: look into how vanilla handles a screen that fails to open.
-            //  Easy fix might be to close the handled screen before returning a null screen.
+            // todo: add pre-open check to not attempt to open screens which are null
             //noinspection deprecation
             ScreenRegistry.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen);
         }

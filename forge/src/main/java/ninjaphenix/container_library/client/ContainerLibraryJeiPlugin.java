@@ -17,7 +17,7 @@ public class ContainerLibraryJeiPlugin implements IModPlugin {
     @NotNull
     @Override
     public ResourceLocation getPluginUid() {
-        return Utils.resloc("jei_plugin");
+        return Utils.id("jei_plugin");
     }
 
     @Override

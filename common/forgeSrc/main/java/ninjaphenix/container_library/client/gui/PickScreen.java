@@ -4,11 +4,13 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.PickButton;
 import ninjaphenix.container_library.client.gui.widget.ScreenPickButton;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,18 +33,25 @@ import net.minecraft.util.Mth;
 
 public final class PickScreen extends Screen {
     private static final Map<ResourceLocation, PickButton> BUTTON_SETTINGS = new HashMap<>();
-    private final Set<ResourceLocation> options;
+    private final Set<ResourceLocation> options = ImmutableSortedSet.copyOf(PickScreen.BUTTON_SETTINGS.keySet());
     private final Supplier<Screen> returnToScreen;
-    private final List<ScreenPickButton> optionWidgets;
-    private final @Nullable Runnable onOptionPicked;
+    private final List<ScreenPickButton> optionWidgets = new ArrayList<>(options.size());
+    private final @NotNull Runnable onOptionPicked;
+    private final AbstractHandler handler;
     private int topPadding;
 
-    public PickScreen(Supplier<Screen> returnToScreen, @Nullable Runnable onOptionPicked) {
+    public PickScreen(Supplier<Screen> returnToScreen, AbstractHandler handler) {
         super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
-        this.options = ImmutableSortedSet.copyOf(PickScreen.BUTTON_SETTINGS.keySet());
-        this.optionWidgets = new ArrayList<>(options.size());
-        this.onOptionPicked = onOptionPicked;
         this.returnToScreen = returnToScreen;
+        this.handler = handler;
+        this.onOptionPicked = () -> {};
+    }
+
+    public PickScreen(@NotNull Runnable onOptionPicked) {
+        super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
+        this.returnToScreen = () -> null;
+        this.handler = null;
+        this.onOptionPicked = onOptionPicked;
     }
 
     @Deprecated
@@ -53,13 +62,18 @@ public final class PickScreen extends Screen {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void onClose() {
-        Screen screen = returnToScreen.get();
-        if (screen == null) {
-            minecraft.player.closeContainer();
-        } else {
-            minecraft.setScreen(screen);
+        if (handler != null) {
+            ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
+            int invSize = handler.getInventory().getContainerSize();
+            if (AbstractScreen.getScreenSize(preference, invSize, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight()) == null) {
+                minecraft.player.displayClientMessage(Utils.translation("generic.ninjaphenix_container_lib.label").withStyle(ChatFormatting.GOLD).append(Utils.translation("chat.ninjaphenix_container_lib.cannot_display_screen", Utils.translation("screen." + preference.getNamespace() + "." + preference.getPath() + "_screen")).withStyle(ChatFormatting.WHITE)), false);
+                minecraft.player.closeContainer();
+                return;
+            }
         }
+        minecraft.setScreen(returnToScreen.get());
     }
 
     @Override
@@ -122,9 +136,7 @@ public final class PickScreen extends Screen {
 
     private void updatePlayerPreference(ResourceLocation selection) {
         ConfigWrapper.getInstance().setPreferredScreenType(selection);
-        if (onOptionPicked != null) {
-            onOptionPicked.run();
-        }
+        onOptionPicked.run();
         this.onClose();
     }
 

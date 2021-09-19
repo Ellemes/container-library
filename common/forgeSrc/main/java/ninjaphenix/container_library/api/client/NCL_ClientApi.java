@@ -48,15 +48,13 @@ public final class NCL_ClientApi {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(screenConstructor, "screenConstructor must not be null");
         //noinspection deprecation
-        if (screenConstructor == ScreenConstructor.NULL) {
-            throw new IllegalArgumentException("screenConstructor must not be ScreenConstructor.NULL");
-        }
-        //noinspection deprecation
         AbstractScreen.declareScreenType(type, screenConstructor);
     }
 
     // Register default screen sizes, currently hard-coded however it is planned to allow users to override this in the future.
     public static void registerDefaultScreenSize(ResourceLocation type, ScreenSizeRetriever retriever) {
+        Objects.requireNonNull(type, "type must not be null");
+        Objects.requireNonNull(retriever, "retriever must not be null");
         //noinspection deprecation
         AbstractScreen.declareScreenSizeRetriever(type, retriever);
     }

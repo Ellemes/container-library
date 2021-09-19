@@ -20,7 +20,7 @@ public class Utils {
     public static final int CONTAINER_HEADER_HEIGHT = 17;
     public static final int CONTAINER_PADDING_LDR = 7;
     // Handler Type ID
-    public static final Identifier HANDLER_TYPE_ID = Utils.resloc("handler_type");
+    public static final Identifier HANDLER_TYPE_ID = Utils.id("handler_type");
     // Config Paths
     public static final String FABRIC_LEGACY_CONFIG_PATH = "ninjaphenix-container-library.json";
     public static final String FORGE_LEGACY_CONFIG_PATH = "expandedstorage-client.toml";
@@ -43,7 +43,7 @@ public class Utils {
     // Key bind key
     public static final int KEY_BIND_KEY = GLFW.GLFW_KEY_Z;
 
-    public static Identifier resloc(String path) {
+    public static Identifier id(String path) {
         return new Identifier(Utils.MOD_ID, path);
     }
 
