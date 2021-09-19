@@ -21,6 +21,7 @@ public interface OpenableBlockEntityProvider {
 
     /**
      * Call back for running code when an inventory is initially opened, can be used to award opening stats.
+     * Note: more context can be provided if needed, namely ServerWorld, BlockState and BlockPos.
      */
     default void onInitialOpen(ServerPlayer player) {
 

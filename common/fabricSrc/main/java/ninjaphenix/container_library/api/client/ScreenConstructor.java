@@ -9,5 +9,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ScreenConstructor<T extends AbstractScreen> {
     @NotNull
-    T createScreen(@NotNull AbstractHandler handler, @NotNull PlayerInventory playerInventory, @NotNull Text title, @NotNull ScreenSize screenSize);
+    T createScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title, ScreenSize screenSize);
 }

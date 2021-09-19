@@ -18,7 +18,7 @@ import java.util.Set;
 public final class VariableSidedInventory implements SidedInventory {
     private final SidedInventory[] parts;
     private final int size;
-    private final int maxStackSize;
+    private final int maxStackCount;
     private final Map<Direction, int[]> slotsAccessibleThroughFace = new HashMap<>();
 
     private VariableSidedInventory(SidedInventory... parts) {
@@ -27,9 +27,9 @@ public final class VariableSidedInventory implements SidedInventory {
         }
         this.parts = parts;
         this.size = Arrays.stream(parts).mapToInt(Inventory::size).sum();
-        this.maxStackSize = parts[0].getMaxCountPerStack();
+        this.maxStackCount = parts[0].getMaxCountPerStack();
         for (Inventory part : parts) {
-            assert part.getMaxCountPerStack() == maxStackSize : "all parts must have equal max stack sizes.";
+            assert part.getMaxCountPerStack() == maxStackCount : "all parts must have equal max stack counts.";
         }
     }
 
@@ -83,7 +83,7 @@ public final class VariableSidedInventory implements SidedInventory {
 
     @Override
     public int getMaxCountPerStack() {
-        return maxStackSize;
+        return maxStackCount;
     }
 
     @Override

@@ -25,7 +25,10 @@ public final class NCL_ClientApi {
         NetworkWrapper.getInstance().c_openInventoryAt(pos);
     }
 
-    // may be wise to allow width and height to be edited rather than fixed 256x256
+    /**
+     * Register button for screen type pick screen with an optional error message.
+     * Note: texture must be 96 x 288 ( 3 images: normal, hovered, current )
+     */
     public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component title, ScreenSizePredicate warningTest, List<Component> warningText) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
@@ -36,6 +39,10 @@ public final class NCL_ClientApi {
         PickScreen.declareButtonSettings(type, texture, title, warningTest, warningText);
     }
 
+    /**
+     * Register button for screen type pick screen
+     * Note: texture must be 96 x 288 ( 3 images: normal, hovered, current )
+     */
     public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component title) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
@@ -44,6 +51,9 @@ public final class NCL_ClientApi {
         PickScreen.declareButtonSettings(type, texture, title, ScreenSizePredicate::noTest, List.of());
     }
 
+    /**
+     * Register screen constructor.
+     */
     public static void registerScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(screenConstructor, "screenConstructor must not be null");
@@ -51,7 +61,9 @@ public final class NCL_ClientApi {
         AbstractScreen.declareScreenType(type, screenConstructor);
     }
 
-    // Register default screen sizes, currently hard-coded however it is planned to allow users to override this in the future.
+    /**
+     * Register default screen sizes, it is planned to allow players to override the default screen sizes in the future.
+     */
     public static void registerDefaultScreenSize(ResourceLocation type, ScreenSizeRetriever retriever) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(retriever, "retriever must not be null");
@@ -59,7 +71,10 @@ public final class NCL_ClientApi {
         AbstractScreen.declareScreenSizeRetriever(type, retriever);
     }
 
-    // todo: better name? will use single screen over the specified type if a single screen can show the gui.
+    /**
+     * Uses the signle screen type over the specified type if the single screen will visually fit in the game window.
+     * Note: May be renamed in the future.
+     */
     public static void setPrefersSingleScreen(ResourceLocation type) {
         Objects.requireNonNull(type, "type must not be null");
         AbstractScreen.setPrefersSingleScreen(type);

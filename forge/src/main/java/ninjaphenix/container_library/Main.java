@@ -30,7 +30,7 @@ public final class Main {
     public Main() {
         PlatformUtils.initialize(FMLLoader.getDist() == Dist.CLIENT ? new ForgeKeyHandler() : null, ModList.get()::isLoaded);
 
-        CommonMain.initialize((menuType, factory) -> new MenuType<>((IContainerFactory<?>) factory::create).setRegistryName(menuType),
+        CommonMain.initialize((handlerType, factory) -> new MenuType<>((IContainerFactory<?>) factory::create).setRegistryName(handlerType),
                 FMLPaths.CONFIGDIR.get().resolve(Utils.CONFIG_PATH),
                 FMLPaths.CONFIGDIR.get().resolve(Utils.FORGE_LEGACY_CONFIG_PATH));
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -53,7 +53,7 @@ public final class Main {
     @OnlyIn(Dist.CLIENT) // Required unless moved to client only class, tries to class load Screen.
     private void registerConfigGuiHandler() {
         ModLoadingContext.get().getActiveContainer().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-                () -> new ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> new PickScreen(() -> screen, null))
+                () -> new ConfigGuiHandler.ConfigGuiFactory((client, screen) -> new PickScreen(() -> screen, null))
         );
     }
 }

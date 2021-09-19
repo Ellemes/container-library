@@ -1,5 +1,4 @@
 import com.gitlab.ninjaphenix.gradle.api.task.MinifyJsonTask
-import com.gitlab.ninjaphenix.gradle.api.task.ParamLocalObfuscatorTask
 import org.gradle.jvm.tasks.Jar
 import java.text.DateFormat
 import java.util.*
@@ -89,7 +88,7 @@ val jarTask = tasks.getByName<Jar>("jar") {
     manifest.attributes(mapOf(
             "Specification-Title" to "NinjaPhenix's Container Library",
             "Specification-Vendor" to "ninjaphenix",
-            "Specification-Version" to "0.0",
+            "Specification-Version" to "1.0",
             "Implementation-Title" to "ninjaphenix_container_library_forge",
             "Implementation-Version" to "${properties["mod_version"]}",
             "Implementation-Vendor" to "ninjaphenix",
@@ -103,18 +102,12 @@ val jarTask = tasks.getByName<Jar>("jar") {
 val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     input.set(jarTask.outputs.files.singleFile)
     archiveClassifier.set("min")
+    from(rootDir.resolve("LICENSE"))
     dependsOn(jarTask)
 }
 
-// will likely remove this obfuscation when we switch back to yarn
-val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
-    input.set(minifyJarTask.get().outputs.files.singleFile)
-    from(rootDir.resolve("LICENSE"))
-    dependsOn(minifyJarTask)
-}
-
 tasks.getByName("build") {
-    dependsOn(releaseJarTask)
+    dependsOn(minifyJarTask)
 }
 
 // https://docs.gradle.org/current/userguide/publishing_maven.html
@@ -123,8 +116,8 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "ninjaphenix.container_library"
             artifactId = "forge"
-            artifact(releaseJarTask) {
-                builtBy(releaseJarTask)
+            artifact(minifyJarTask) {
+                builtBy(minifyJarTask)
             }
         }
     }

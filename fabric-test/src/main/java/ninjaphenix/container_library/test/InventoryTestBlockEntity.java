@@ -17,9 +17,9 @@ public class InventoryTestBlockEntity extends LootableContainerBlockEntity imple
     private final int inventorySize;
     private DefaultedList<ItemStack> inventory;
 
-    public InventoryTestBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
-        super(blockEntityType, blockPos, blockState);
-        this.inventorySize = ((InventoryTestBlock) blockState.getBlock()).getInventorySize();
+    public InventoryTestBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+        this.inventorySize = ((InventoryTestBlock) state.getBlock()).getInventorySize();
         this.inventory = DefaultedList.ofSize(inventorySize, ItemStack.EMPTY);
     }
 
@@ -40,7 +40,7 @@ public class InventoryTestBlockEntity extends LootableContainerBlockEntity imple
 
     // Not used.
     @Override
-    protected ScreenHandler createScreenHandler(int i, PlayerInventory inventory) {
+    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
         return null;
     }
 

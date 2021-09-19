@@ -31,7 +31,7 @@ import java.nio.file.Files;
 public class Main {
     private static final RuntimeResourcePack RESOURCE_PACK = RuntimeResourcePack.create("test:test");
     private static BlockEntityType<InventoryTestBlockEntity> blockEntityType;
-    private static ItemGroup creativeTab;
+    private static ItemGroup group;
 
     public static BlockEntityType<InventoryTestBlockEntity> getBlockEntityType() {
         return blockEntityType;
@@ -41,7 +41,7 @@ public class Main {
     // todo: print out warning if dependency version in fabric.mod.json is outdated.
     @SuppressWarnings("unused")
     public static void initialize() {
-        creativeTab = FabricItemGroupBuilder.create(new Identifier("test", "test")).build();
+        group = FabricItemGroupBuilder.create(new Identifier("test", "test")).build();
         JLang lang = JLang.lang().itemGroup(new Identifier("test", "test"), "Test Inventory Blocks");
         InventoryTestBlock[] blocks = new ListBuilder<>(i -> Main.register(i, lang)).range(27, 540, 27)
                                                                                     .range(24, 540, 27)
@@ -59,7 +59,7 @@ public class Main {
         }
     }
 
-    private static InventoryTestBlock register(Integer inventorySize, JLang lang) {
+    private static InventoryTestBlock register(int inventorySize, JLang lang) {
         Identifier id = new Identifier("test", "block" + inventorySize);
         InventoryTestBlock block = new InventoryTestBlock(AbstractBlock.Settings.of(Material.BAMBOO), inventorySize);
         Registry.register(Registry.BLOCK, id, block);
@@ -76,12 +76,12 @@ public class Main {
         RESOURCE_PACK.addModel(JModel.model(id.getNamespace() + ":block/" + id.getPath()), new Identifier(id.getNamespace(), "item/" + id.getPath()));
         RESOURCE_PACK.addTexture(new Identifier("test", "block/block" + inventorySize), Main.generateTexture(inventorySize));
 
-        BlockItem item = new BlockItem(block, new Item.Settings().group(creativeTab));
+        BlockItem item = new BlockItem(block, new Item.Settings().group(group));
         Registry.register(Registry.ITEM, id, item);
         return block;
     }
 
-    private static BufferedImage generateTexture(Integer inventorySize) {
+    private static BufferedImage generateTexture(int inventorySize) {
         try {
             //noinspection OptionalGetWithoutIsPresent
             BufferedImage numbers = ImageIO.read(Files.newInputStream(FabricLoader.getInstance().getModContainer("ninjaphenix_container_lib_test").get().getPath("assets/test/textures/gen/numbers.png")));
@@ -89,7 +89,7 @@ public class Main {
             Graphics graphics = image.createGraphics();
             graphics.setColor(Color.WHITE);
             graphics.fillRect(0, 0, 16, 16);
-            String characters = inventorySize.toString();
+            String characters = Integer.toString(inventorySize);
             for (int i = 0; i < characters.length(); i++) {
                 String letter = characters.substring(i, i + 1);
                 BufferedImage number = numbers.getSubimage(1, Main.getNumberOffset(letter.charAt(0)), 3, 5);

@@ -13,7 +13,7 @@ import java.util.Set;
 public final class VariableInventory implements Inventory {
     private final Inventory[] parts;
     private final int size;
-    private final int maxStackSize;
+    private final int maxStackCount;
 
     private VariableInventory(Inventory... parts) {
         for (int i = 0; i < parts.length; i++) {
@@ -21,9 +21,9 @@ public final class VariableInventory implements Inventory {
         }
         this.parts = parts;
         this.size = Arrays.stream(parts).mapToInt(Inventory::size).sum();
-        this.maxStackSize = parts[0].getMaxCountPerStack();
+        this.maxStackCount = parts[0].getMaxCountPerStack();
         for (Inventory part : parts) {
-            assert part.getMaxCountPerStack() == maxStackSize : "all parts must have equal max stack sizes.";
+            assert part.getMaxCountPerStack() == maxStackCount : "all parts must have equal max stack counts.";
         }
     }
 
@@ -77,7 +77,7 @@ public final class VariableInventory implements Inventory {
 
     @Override
     public int getMaxCountPerStack() {
-        return maxStackSize;
+        return maxStackCount;
     }
 
     @Override

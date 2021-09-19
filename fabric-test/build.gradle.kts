@@ -58,7 +58,9 @@ dependencies {
 
     modImplementation(libs.fabric.api)
 
-    modImplementation(this.project(":fabric"), excludeFabric)
+    if (rootDir.resolve("build/fabric/libs/ninjaphenix-container-library-${properties["mod_version"]}+${properties["minecraft_version"]}-fat.jar").exists()) {
+        modImplementation(this.project(":fabric"), excludeFabric)
+    }
 
     modCompileOnly(libs.rei.api, excludeFabric)
     modRuntimeOnly(libs.rei.asProvider(), excludeFabric)

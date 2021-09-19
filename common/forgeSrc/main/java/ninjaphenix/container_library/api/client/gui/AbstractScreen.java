@@ -32,13 +32,13 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     private static final Set<ResourceLocation> PREFERS_SINGLE_SCREEN = new HashSet<>();
     public static boolean DEBUG_RENDER = false;
 
-    protected final int menuWidth, menuHeight, totalSlots;
+    protected final int inventoryWidth, inventoryHeight, totalSlots;
 
     protected AbstractScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
         super(handler, playerInventory, title);
         totalSlots = handler.getInventory().getContainerSize();
-        menuWidth = screenSize.getWidth();
-        menuHeight = screenSize.getHeight();
+        inventoryWidth = screenSize.getWidth();
+        inventoryHeight = screenSize.getHeight();
     }
 
     @Deprecated
@@ -61,8 +61,8 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
         return AbstractScreen.SCREEN_CONSTRUCTORS.get(preference).createScreen(handler, playerInventory, title, screenSize);
     }
 
-    private static boolean shouldPreferSingleScreen(ResourceLocation preference) {
-        return AbstractScreen.PREFERS_SINGLE_SCREEN.contains(preference);
+    private static boolean shouldPreferSingleScreen(ResourceLocation type) {
+        return AbstractScreen.PREFERS_SINGLE_SCREEN.contains(type);
     }
 
     private static boolean canSingleScreenDisplay(int slots, int scaledWidth, int scaledHeight) {

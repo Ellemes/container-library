@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 public class InventoryTestBlock extends Block implements BlockEntityProvider, OpenableBlockEntityProvider {
     private final int inventorySize;
 
-    public InventoryTestBlock(AbstractBlock.Settings properties, int inventorySize) {
-        super(properties);
+    public InventoryTestBlock(AbstractBlock.Settings settings, int inventorySize) {
+        super(settings);
         this.inventorySize = inventorySize;
     }
 

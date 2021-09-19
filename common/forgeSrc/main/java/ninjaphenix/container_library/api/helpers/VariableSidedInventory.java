@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 public final class VariableSidedInventory implements WorldlyContainer {
     private final WorldlyContainer[] parts;
     private final int size;
-    private final int maxStackSize;
+    private final int maxStackCount;
     private final Map<Direction, int[]> slotsAccessibleThroughFace = new HashMap<>();
 
     private VariableSidedInventory(WorldlyContainer... parts) {
@@ -27,9 +27,9 @@ public final class VariableSidedInventory implements WorldlyContainer {
         }
         this.parts = parts;
         this.size = Arrays.stream(parts).mapToInt(Container::getContainerSize).sum();
-        this.maxStackSize = parts[0].getMaxStackSize();
+        this.maxStackCount = parts[0].getMaxStackSize();
         for (Container part : parts) {
-            assert part.getMaxStackSize() == maxStackSize : "all parts must have equal max stack sizes.";
+            assert part.getMaxStackSize() == maxStackCount : "all parts must have equal max stack counts.";
         }
     }
 
@@ -83,7 +83,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
 
     @Override
     public int getMaxStackSize() {
-        return maxStackSize;
+        return maxStackCount;
     }
 
     @Override

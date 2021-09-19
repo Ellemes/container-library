@@ -31,27 +31,27 @@ public final class SingleScreen extends AbstractScreen {
 
         this.initializeSlots(playerInventory);
 
-        textureLocation = new Identifier("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
-        textureWidth = switch (menuWidth) {
-            case 9 -> menuHeight == 3 ? 176 : 208;
+        textureLocation = new Identifier("ninjaphenix_container_lib", "textures/gui/container/shared_" + inventoryWidth + "_" + inventoryHeight + ".png");
+        textureWidth = switch (inventoryWidth) {
+            case 9 -> inventoryHeight == 3 ? 176 : 208;
             case 12 -> 256;
             case 15 -> 320;
             case 18 -> 368;
-            default -> throw new IllegalStateException("Unexpected value: " + menuWidth);
+            default -> throw new IllegalStateException("Unexpected value: " + inventoryWidth);
         };
-        textureHeight = switch (menuHeight) {
+        textureHeight = switch (inventoryHeight) {
             case 3 -> 192;
             case 6 -> 240;
             case 9 -> 304;
             case 12 -> 352;
             case 15 -> 416;
-            default -> throw new IllegalStateException("Unexpected value: " + menuHeight);
+            default -> throw new IllegalStateException("Unexpected value: " + inventoryHeight);
         };
 
-        blankSlots = (menuWidth * menuHeight) - totalSlots;
+        blankSlots = (inventoryWidth * inventoryHeight) - totalSlots;
 
-        backgroundWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * menuWidth + Utils.CONTAINER_PADDING_LDR;
-        backgroundHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * menuHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
+        backgroundWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * inventoryWidth + Utils.CONTAINER_PADDING_LDR;
+        backgroundHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * inventoryHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
     }
 
     @Override
@@ -59,17 +59,17 @@ public final class SingleScreen extends AbstractScreen {
         super.init();
         if (blankSlots > 0) {
             blankArea.clear();
-            int rows = MathHelper.floorDiv(blankSlots, menuWidth);
-            int remainder = (blankSlots - menuWidth * rows);
-            int yTop = y + Utils.CONTAINER_HEADER_HEIGHT + (menuHeight - 1) * Utils.SLOT_SIZE;
+            int rows = MathHelper.floorDiv(blankSlots, inventoryWidth);
+            int remainder = (blankSlots - inventoryWidth * rows);
+            int yTop = y + Utils.CONTAINER_HEADER_HEIGHT + (inventoryHeight - 1) * Utils.SLOT_SIZE;
             int xLeft = x + Utils.CONTAINER_PADDING_LDR;
             for (int i = 0; i < rows; i++) {
-                blankArea.add(new TexturedRect(xLeft, yTop, menuWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
+                blankArea.add(new TexturedRect(xLeft, yTop, inventoryWidth * Utils.SLOT_SIZE, Utils.SLOT_SIZE,
                         Utils.CONTAINER_PADDING_LDR, backgroundHeight, textureWidth, textureHeight));
                 yTop -= Utils.SLOT_SIZE;
             }
             if (remainder > 0) {
-                int xRight = x + Utils.CONTAINER_PADDING_LDR + menuWidth * Utils.SLOT_SIZE;
+                int xRight = x + Utils.CONTAINER_PADDING_LDR + inventoryWidth * Utils.SLOT_SIZE;
                 int width = remainder * Utils.SLOT_SIZE;
                 blankArea.add(new TexturedRect(xRight - width, yTop, width, Utils.SLOT_SIZE,
                         Utils.CONTAINER_PADDING_LDR, backgroundHeight, textureWidth, textureHeight));
@@ -93,12 +93,12 @@ public final class SingleScreen extends AbstractScreen {
 
     private void initializeSlots(PlayerInventory playerInventory) {
         for (int i = 0; i < handler.getInventory().size(); i++) {
-            int x = i % menuWidth;
-            int y = (i - x) / menuWidth;
+            int x = i % inventoryWidth;
+            int y = (i - x) / inventoryWidth;
             handler.addClientSlot(new Slot(handler.getInventory(), i, x * Utils.SLOT_SIZE + 8, y * Utils.SLOT_SIZE + Utils.SLOT_SIZE));
         }
-        int left = (menuWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
-        int top = Utils.SLOT_SIZE + 14 + (menuHeight * Utils.SLOT_SIZE);
+        int left = (inventoryWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
+        int top = Utils.SLOT_SIZE + 14 + (inventoryHeight * Utils.SLOT_SIZE);
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 3; y++) {
                 handler.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, left + Utils.SLOT_SIZE * x, top + y * Utils.SLOT_SIZE));

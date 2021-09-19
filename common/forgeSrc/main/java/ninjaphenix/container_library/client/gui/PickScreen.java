@@ -35,7 +35,7 @@ public final class PickScreen extends Screen {
     private static final Map<ResourceLocation, PickButton> BUTTON_SETTINGS = new HashMap<>();
     private final Set<ResourceLocation> options = ImmutableSortedSet.copyOf(PickScreen.BUTTON_SETTINGS.keySet());
     private final Supplier<Screen> returnToScreen;
-    private final List<ScreenPickButton> optionWidgets = new ArrayList<>(options.size());
+    private final List<ScreenPickButton> optionButtons = new ArrayList<>(options.size());
     private final @NotNull Runnable onOptionPicked;
     private final AbstractHandler handler;
     private int topPadding;
@@ -57,8 +57,8 @@ public final class PickScreen extends Screen {
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
-    public static void declareButtonSettings(ResourceLocation screenType, ResourceLocation texture, Component title, ScreenSizePredicate warningTest, List<Component> warningText) {
-        PickScreen.BUTTON_SETTINGS.putIfAbsent(screenType, new PickButton(texture, title, warningTest, warningText));
+    public static void declareButtonSettings(ResourceLocation type, ResourceLocation texture, Component title, ScreenSizePredicate warningTest, List<Component> warningText) {
+        PickScreen.BUTTON_SETTINGS.putIfAbsent(type, new PickButton(texture, title, warningTest, warningText));
     }
 
     @Override
@@ -86,7 +86,7 @@ public final class PickScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        ResourceLocation currentOption = ConfigWrapper.getInstance().getPreferredScreenType();
+        ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
         int choices = options.size();
         int columns = Math.min(Mth.intFloorDiv(width, 96), choices);
         int innerPadding = Math.min((width - columns * 96) / (columns + 1), 20); // 20 is smallest gap for any screen.
@@ -94,11 +94,11 @@ public final class PickScreen extends Screen {
         int x = 0;
         int topPadding = (height - 96) / 2;
         this.topPadding = topPadding;
-        optionWidgets.clear();
+        optionButtons.clear();
         for (ResourceLocation option : options) {
             PickButton settings = PickScreen.BUTTON_SETTINGS.get(option);
             boolean isWarn = settings.getWarningTest().test(width, height);
-            boolean isSelected = option.equals(currentOption);
+            boolean isCurrent = option.equals(preference);
             Button.OnTooltip tooltip = new Button.OnTooltip() {
                 private static final Component CURRENT_OPTION_TEXT = Utils.translation("screen.ninjaphenix_container_lib.current_option_notice").withStyle(ChatFormatting.GOLD);
 
@@ -106,7 +106,7 @@ public final class PickScreen extends Screen {
                 public void onTooltip(Button button, PoseStack stack, int x, int y) {
                     List<Component> tooltip = new ArrayList<>(4);
                     tooltip.add(button.getMessage());
-                    if (isSelected) {
+                    if (isCurrent) {
                         tooltip.add(CURRENT_OPTION_TEXT);
                     }
                     if (isWarn) {
@@ -117,7 +117,7 @@ public final class PickScreen extends Screen {
 
                 @Override
                 public void narrateTooltip(Consumer<Component> consumer) {
-                    if (isSelected) {
+                    if (isCurrent) {
                         consumer.accept(CURRENT_OPTION_TEXT);
                     }
                     if (isWarn) {
@@ -129,8 +129,8 @@ public final class PickScreen extends Screen {
                     }
                 }
             };
-            optionWidgets.add(this.addRenderableWidget(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
-                    settings.getTexture(), settings.getTitle(), isWarn, option.equals(currentOption), button -> this.updatePlayerPreference(option), tooltip)));
+            optionButtons.add(this.addRenderableWidget(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
+                    settings.getTexture(), settings.getTitle(), isWarn, isCurrent, button -> this.updatePlayerPreference(option), tooltip)));
             x++;
         }
     }
@@ -145,7 +145,7 @@ public final class PickScreen extends Screen {
     public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, delta);
-        optionWidgets.forEach(button -> button.renderButtonTooltip(stack, mouseX, mouseY));
+        optionButtons.forEach(button -> button.renderButtonTooltip(stack, mouseX, mouseY));
         GuiComponent.drawCenteredString(stack, font, title, width / 2, Math.max(topPadding / 2, 0), 0xFFFFFFFF);
     }
 }

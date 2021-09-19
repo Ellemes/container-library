@@ -1,5 +1,4 @@
 import com.gitlab.ninjaphenix.gradle.api.task.MinifyJsonTask
-import com.gitlab.ninjaphenix.gradle.api.task.ParamLocalObfuscatorTask
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
@@ -116,19 +115,13 @@ afterEvaluate {
 
     val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
         input.set(remapJarTask.outputs.files.singleFile)
-        archiveClassifier.set("min")
+        archiveClassifier.set("")
+        from(rootDir.resolve("LICENSE"))
         dependsOn(remapJarTask)
     }
 
-    // will likely remove this obfuscation when we switch back to yarn
-    val releaseJarTask = tasks.register<ParamLocalObfuscatorTask>("releaseJar") {
-        input.set(minifyJarTask.get().outputs.files.singleFile)
-        from(rootDir.resolve("LICENSE"))
-        dependsOn(minifyJarTask)
-    }
-
     tasks.getByName("build") {
-        dependsOn(releaseJarTask)
+        dependsOn(minifyJarTask)
     }
 
     // https://docs.gradle.org/current/userguide/publishing_maven.html
@@ -137,8 +130,8 @@ afterEvaluate {
             create<MavenPublication>("maven") {
                 groupId = "ninjaphenix.container_library"
                 artifactId = "fabric"
-                artifact(releaseJarTask) {
-                    builtBy(releaseJarTask)
+                artifact(minifyJarTask) {
+                    builtBy(minifyJarTask)
                 }
             }
         }

@@ -32,17 +32,17 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    protected void openScreenHandler(ServerPlayer player, BlockPos pos, Container inventory, ServerScreenHandlerFactory factory, Component displayName) {
+    protected void openScreenHandler(ServerPlayer player, BlockPos pos, Container inventory, ServerScreenHandlerFactory factory, Component title) {
         NetworkHooks.openGui(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return displayName;
+                return title;
             }
 
             @Nullable
             @Override
-            public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-                return factory.create(windowId, inventory, playerInventory);
+            public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
+                return factory.create(syncId, inventory, playerInventory);
             }
         }, buffer -> buffer.writeInt(inventory.getContainerSize()));
     }
@@ -59,8 +59,8 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
 
         @Override
         boolean canSendOpenInventoryPacket() {
-            ClientPacketListener listener = Minecraft.getInstance().getConnection();
-            return listener != null && NetworkWrapper.getInstance().toInternal().channel.isRemotePresent(listener.getConnection());
+            ClientPacketListener handler = Minecraft.getInstance().getConnection();
+            return handler != null && NetworkWrapper.getInstance().toInternal().channel.isRemotePresent(handler.getConnection());
         }
     }
 }

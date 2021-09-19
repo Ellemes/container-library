@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 public final class VariableInventory implements Container {
     private final Container[] parts;
     private final int size;
-    private final int maxStackSize;
+    private final int maxStackCount;
 
     private VariableInventory(Container... parts) {
         for (int i = 0; i < parts.length; i++) {
@@ -21,9 +21,9 @@ public final class VariableInventory implements Container {
         }
         this.parts = parts;
         this.size = Arrays.stream(parts).mapToInt(Container::getContainerSize).sum();
-        this.maxStackSize = parts[0].getMaxStackSize();
+        this.maxStackCount = parts[0].getMaxStackSize();
         for (Container part : parts) {
-            assert part.getMaxStackSize() == maxStackSize : "all parts must have equal max stack sizes.";
+            assert part.getMaxStackSize() == maxStackCount : "all parts must have equal max stack counts.";
         }
     }
 
@@ -77,7 +77,7 @@ public final class VariableInventory implements Container {
 
     @Override
     public int getMaxStackSize() {
-        return maxStackSize;
+        return maxStackCount;
     }
 
     @Override

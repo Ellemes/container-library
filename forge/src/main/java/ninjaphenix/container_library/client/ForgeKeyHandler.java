@@ -10,15 +10,15 @@ import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import ninjaphenix.container_library.Utils;
 
 public class ForgeKeyHandler implements KeyHandler {
-    private final KeyMapping key;
+    private final KeyMapping keybind;
 
     public ForgeKeyHandler() {
-        key = new KeyMapping("key.expandedstorage.config", KeyConflictContext.GUI, KeyModifier.SHIFT, InputConstants.Type.KEYSYM, Utils.KEY_BIND_KEY, "key.categories.inventory");
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent event) -> ClientRegistry.registerKeyBinding(key));
+        keybind = new KeyMapping("key.expandedstorage.config", KeyConflictContext.GUI, KeyModifier.SHIFT, InputConstants.Type.KEYSYM, Utils.KEY_BIND_KEY, "key.categories.inventory");
+        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent event) -> ClientRegistry.registerKeyBinding(keybind));
     }
 
     @Override
     public boolean isKeyPressed(int keyCode, int scanCode, int modifiers) {
-        return key.matches(keyCode, scanCode);
+        return keybind.matches(keyCode, scanCode);
     }
 }
