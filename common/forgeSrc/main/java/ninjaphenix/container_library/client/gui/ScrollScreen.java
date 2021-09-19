@@ -32,7 +32,6 @@ public final class ScrollScreen extends AbstractScreen {
     private final boolean scrollingUnrestricted;
     private boolean isDragging, blankAreaVisible;
     private int topRow, scrollYOffset, thumbY;
-    // todo: consider making these ints
     private @Nullable TexturedRect blankArea;
 
     public ScrollScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
@@ -225,7 +224,7 @@ public final class ScrollScreen extends AbstractScreen {
         this.snapThumbToGradation();
     }
 
-    // todo: this code will move slots from the player inventory if there are blanked slots.
+    // todo: this code will move slots from the player inventory if there are blanked slots, oddly this doesn't happen with page type.
     private void setTopRow(int oldTopRow, int newTopRow) {
         if (oldTopRow == newTopRow) {
             return;

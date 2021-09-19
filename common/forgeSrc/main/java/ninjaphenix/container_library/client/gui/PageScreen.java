@@ -46,7 +46,7 @@ public final class PageScreen extends AbstractScreen {
 
         textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_" + menuWidth + "_" + menuHeight + ".png");
         textureWidth = switch (menuWidth) {
-            case 9 -> 208;
+            case 9 -> menuHeight == 3 ? 176 : 208;
             case 12 -> 256;
             case 15 -> 320;
             case 18 -> 368;

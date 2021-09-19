@@ -42,11 +42,6 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    public void c_openInventoryAt(BlockPos pos) {
-        Client.openInventoryAt(pos);
-    }
-
-    @Override
     protected void openScreenHandler(ServerPlayerEntity player, BlockPos pos, Inventory inventory, ServerScreenHandlerFactory factory, Text title) {
         player.openHandledScreen(new ExtendedScreenHandlerFactory() {
             @Override
@@ -67,31 +62,17 @@ final class NetworkWrapperImpl extends NetworkWrapper {
         });
     }
 
-    private static class Client {
-        // todo: should try and abstract this too.
-        private static void openInventoryAt(BlockPos pos) {
-            // todo: should check if a screen type is declared with this preference.
-            if (ConfigWrapper.getInstance().getPreferredScreenType().equals(Utils.UNSET_SCREEN_TYPE)) {
-                MinecraftClient.getInstance().setScreen(new PickScreen(() -> Client.openInventoryAt(pos)));
-            } else {
-                if (ClientPlayNetworking.canSend(NetworkWrapperImpl.OPEN_INVENTORY)) {
-                    PlayerEntity player = MinecraftClient.getInstance().player;
-                    World world = player.getEntityWorld();
-                    BlockState state = world.getBlockState(pos);
-                    if (state.getBlock() instanceof OpenableBlockEntityProvider provider) {
-                        int invSize = provider.getOpenableBlockEntity(world, state, pos).getInventory().size();
-                        // todo: move to root of method
-                        Identifier preference = ConfigWrapper.getInstance().getPreferredScreenType();
-                        if (AbstractScreen.getScreenSize(preference, invSize, MinecraftClient.getInstance().getWindow().getScaledWidth(), MinecraftClient.getInstance().getWindow().getScaledHeight()) != null) {
-                            PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
-                            buffer.writeBlockPos(pos);
-                            ClientPlayNetworking.send(NetworkWrapperImpl.OPEN_INVENTORY, buffer);
-                        } else {
-                            player.sendMessage(Utils.translation("generic.ninjaphenix_container_lib.label").formatted(Formatting.GOLD).append(Utils.translation("chat.ninjaphenix_container_lib.cannot_display_screen", Utils.translation("screen." + preference.getNamespace() + "." + preference.getPath() + "_screen")).formatted(Formatting.WHITE)), false);
-                        }
-                    }
-                }
-            }
+    protected static class Client extends NetworkWrapper.Client {
+        @Override
+        void sendOpenInventoryPacket(BlockPos pos) {
+            PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+            buffer.writeBlockPos(pos);
+            ClientPlayNetworking.send(NetworkWrapperImpl.OPEN_INVENTORY, buffer);
+        }
+
+        @Override
+        boolean canSendOpenInventoryPacket() {
+            return ClientPlayNetworking.canSend(NetworkWrapperImpl.OPEN_INVENTORY);
         }
     }
 }
