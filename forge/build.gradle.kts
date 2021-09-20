@@ -101,7 +101,7 @@ val jarTask = tasks.getByName<Jar>("jar") {
 
 val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     input.set(jarTask.outputs.files.singleFile)
-    archiveClassifier.set("min")
+    archiveClassifier.set("")
     from(rootDir.resolve("LICENSE"))
     dependsOn(jarTask)
 }
