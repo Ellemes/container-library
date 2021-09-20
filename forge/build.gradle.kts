@@ -84,6 +84,17 @@ tasks.withType<ProcessResources> {
 
 val jarTask = tasks.getByName<Jar>("jar") {
     archiveClassifier.set("fat")
+    this.finalizedBy("reobfJar")
+}
+
+val namedJarTask = tasks.register<Jar>("namedJar") {
+    archiveClassifier.set("named")
+    from(sourceSets["main"].output)
+}
+
+val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
+    input.set(jarTask.outputs.files.singleFile)
+    archiveClassifier.set("")
 
     manifest.attributes(mapOf(
             "Specification-Title" to "NinjaPhenix's Container Library",
@@ -96,12 +107,6 @@ val jarTask = tasks.getByName<Jar>("jar") {
             "Automatic-Module-Name" to "ninjaphenix.container_library",
     ))
 
-    this.finalizedBy("reobfJar")
-}
-
-val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
-    input.set(jarTask.outputs.files.singleFile)
-    archiveClassifier.set("")
     from(rootDir.resolve("LICENSE"))
     dependsOn(jarTask)
 }
