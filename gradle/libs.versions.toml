@@ -20,6 +20,6 @@ arrp = { group = "net.devtech", name = "arrp", version = "0.5.1" }
 # Common Plugins
 gradleUtils = { id = "com.gitlab.ninjaphenix.gradle-utils", version = "0.1.0-beta.5" }
 # Forge Plugins
-forgeGradle = { id = "net.minecraftforge.gradle", version = "5.1.18" }
+forgeGradle = { id = "net.minecraftforge.gradle", version = "5.1.22" }
 # Fabric Plugins
 fabricLoom = { id = "ninja-loom", version = "0.10.local" }
