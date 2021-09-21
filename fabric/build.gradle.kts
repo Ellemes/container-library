@@ -7,6 +7,29 @@ plugins {
     `maven-publish`
 }
 
+val isTest = hasProperty("test") || System.getProperties().containsKey("idea.sync.active")
+
+if (isTest) {
+    sourceSets {
+        main {
+            java {
+                setSrcDirs(listOf(
+                        "src/main/java",
+                        "src/test/java",
+                        rootDir.resolve("common/${project.name}Src/main/java")
+                ))
+            }
+            resources {
+                setSrcDirs(listOf(
+                        "src/main/resources",
+                        "src/test/resources",
+                        rootDir.resolve("common/src/main/resources")
+                ))
+            }
+        }
+    }
+}
+
 loom {
     runs {
         named("client") {
@@ -16,10 +39,6 @@ loom {
             ideConfigGenerated(false)
             serverWithGui()
         }
-    }
-
-    mixin {
-        useLegacyMixinAp.set(true)
     }
 
     accessWidenerPath.set(file("src/main/resources/ninjaphenix_container_lib.accessWidener"))
@@ -45,6 +64,10 @@ repositories {
         name = "Siphalor's Maven"
         url = uri("https://maven.siphalor.de/")
     }
+    maven {
+        name = "Devan Maven"
+        url = uri("https://storage.googleapis.com/devan-maven/")
+    }
 }
 
 val excludeFabric: (ModuleDependency) -> Unit = {
@@ -58,12 +81,22 @@ dependencies {
 
     modImplementation(libs.fabric.loader)
 
-    listOf(
-            "fabric-networking-api-v1",
-            "fabric-screen-handler-api-v1",
-            "fabric-key-binding-api-v1"
-    ).forEach {
-        modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
+    if (isTest) {
+        modImplementation(libs.fabric.api)
+
+        modRuntimeOnly(libs.rei.asProvider(), excludeFabric)
+        modRuntimeOnly(libs.modmenu, excludeFabric)
+
+        modCompileOnly(libs.arrp, excludeFabric)
+        modRuntimeOnly(libs.arrp, excludeFabric)
+    } else {
+        listOf(
+                "fabric-networking-api-v1",
+                "fabric-screen-handler-api-v1",
+                "fabric-key-binding-api-v1"
+        ).forEach {
+            modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
+        }
     }
 
     modCompileOnly(libs.rei.api, excludeFabric)

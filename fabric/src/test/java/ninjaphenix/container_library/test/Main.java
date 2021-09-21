@@ -7,6 +7,7 @@ import net.devtech.arrp.json.lang.JLang;
 import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -28,7 +29,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class Main {
+public class Main implements ModInitializer {
     private static final RuntimeResourcePack RESOURCE_PACK = RuntimeResourcePack.create("test:test");
     private static BlockEntityType<InventoryTestBlockEntity> blockEntityType;
     private static ItemGroup group;
@@ -37,10 +38,10 @@ public class Main {
         return blockEntityType;
     }
 
-    // Called by fabric loader.
     // todo: print out warning if dependency version in fabric.mod.json is outdated.
     @SuppressWarnings("unused")
-    public static void initialize() {
+    @Override
+    public void onInitialize() {
         group = FabricItemGroupBuilder.create(new Identifier("test", "test")).build();
         JLang lang = JLang.lang().itemGroup(new Identifier("test", "test"), "Test Inventory Blocks");
         InventoryTestBlock[] blocks = new ListBuilder<>(i -> Main.register(i, lang)).range(27, 540, 27)
@@ -84,7 +85,7 @@ public class Main {
     private static BufferedImage generateTexture(int inventorySize) {
         try {
             //noinspection OptionalGetWithoutIsPresent
-            BufferedImage numbers = ImageIO.read(Files.newInputStream(FabricLoader.getInstance().getModContainer("ninjaphenix_container_lib_test").get().getPath("assets/test/textures/gen/numbers.png")));
+            BufferedImage numbers = ImageIO.read(Files.newInputStream(FabricLoader.getInstance().getModContainer("ninjaphenix_container_lib").get().getPath("assets/test/textures/gen/numbers.png")));
             BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_BYTE_GRAY);
             Graphics graphics = image.createGraphics();
             graphics.setColor(Color.WHITE);

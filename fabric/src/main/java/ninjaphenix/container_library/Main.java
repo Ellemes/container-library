@@ -27,5 +27,11 @@ public class Main implements ModInitializer {
             //noinspection deprecation
             ScreenRegistry.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen);
         }
+
+        try {
+            ((ModInitializer) Class.forName("ninjaphenix.container_library.test.Main").newInstance()).onInitialize();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            // Not an error just weird test set-up
+        }
     }
 }
