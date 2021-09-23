@@ -53,25 +53,25 @@ public final class VariableInventory implements Inventory {
 
     @Override
     public ItemStack getStack(int slot) {
-        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        assert slot >= 0 && slot < this.size() : "slot index out of range";
         return this.getPartAccessor(slot).apply(Inventory::getStack);
     }
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
-        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        assert slot >= 0 && slot < this.size() : "slot index out of range";
         return this.getPartAccessor(slot).apply((part, rSlot) -> part.removeStack(rSlot, amount));
     }
 
     @Override
     public ItemStack removeStack(int slot) {
-        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        assert slot >= 0 && slot < this.size() : "slot index out of range";
         return this.getPartAccessor(slot).apply(Inventory::removeStack);
     }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        assert slot >= 0 && slot < this.size() : "slot index out of range";
         this.getPartAccessor(slot).consume((part, rSlot) -> part.setStack(rSlot, stack));
     }
 
@@ -113,7 +113,7 @@ public final class VariableInventory implements Inventory {
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        assert slot > 0 && slot <= this.getMaxCountPerStack() : "slot index out of range";
+        assert slot >= 0 && slot < this.size() : "slot index out of range";
         return this.getPartAccessor(slot).apply((part, rSlot) -> part.isValid(rSlot, stack));
     }
 
@@ -146,7 +146,7 @@ public final class VariableInventory implements Inventory {
     private InventorySlotAccessor<Inventory> getPartAccessor(int slot) {
         for (Inventory part : parts) {
             int inventorySize = part.size();
-            if (slot > inventorySize) {
+            if (slot >= inventorySize) {
                 slot -= inventorySize;
             } else {
                 return new InventorySlotAccessor<>(part, slot);

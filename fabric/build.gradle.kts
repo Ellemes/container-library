@@ -135,37 +135,30 @@ if (hasProperty("yv")) {
     }
 }
 
-afterEvaluate {
+val remapJarTask: RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
+    archiveClassifier.set("fat")
+    dependsOn(tasks.jar)
+}
 
-    val jarTask: Jar = tasks.getByName<Jar>("jar") {
-        archiveClassifier.set("dev")
-    }
+val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
+    input.set(remapJarTask.outputs.files.singleFile)
+    archiveClassifier.set("")
+    from(rootDir.resolve("LICENSE"))
+    dependsOn(remapJarTask)
+}
 
-    val remapJarTask: RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
-        archiveClassifier.set("fat")
-        dependsOn(jarTask)
-    }
+tasks.getByName("build") {
+    dependsOn(minifyJarTask)
+}
 
-    val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
-        input.set(remapJarTask.outputs.files.singleFile)
-        archiveClassifier.set("")
-        from(rootDir.resolve("LICENSE"))
-        dependsOn(remapJarTask)
-    }
-
-    tasks.getByName("build") {
-        dependsOn(minifyJarTask)
-    }
-
-    // https://docs.gradle.org/current/userguide/publishing_maven.html
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                groupId = "ninjaphenix.container_library"
-                artifactId = "fabric"
-                artifact(minifyJarTask) {
-                    builtBy(minifyJarTask)
-                }
+// https://docs.gradle.org/current/userguide/publishing_maven.html
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "ninjaphenix.container_library"
+            artifactId = "fabric"
+            artifact(minifyJarTask) {
+                builtBy(minifyJarTask)
             }
         }
     }

@@ -53,25 +53,25 @@ public final class VariableInventory implements Container {
 
     @Override
     public ItemStack getItem(int slot) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
+        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
         return this.getPartAccessor(slot).apply(Container::getItem);
     }
 
     @Override
     public ItemStack removeItem(int slot, int amount) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
+        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
         return this.getPartAccessor(slot).apply((part, rSlot) -> part.removeItem(rSlot, amount));
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
+        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
         return this.getPartAccessor(slot).apply(Container::removeItemNoUpdate);
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
+        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
         this.getPartAccessor(slot).consume((part, rSlot) -> part.setItem(rSlot, stack));
     }
 
@@ -113,7 +113,7 @@ public final class VariableInventory implements Container {
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        assert slot > 0 && slot <= this.getMaxStackSize() : "slot index out of range";
+        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
         return this.getPartAccessor(slot).apply((part, rSlot) -> part.canPlaceItem(rSlot, stack));
     }
 
@@ -146,7 +146,7 @@ public final class VariableInventory implements Container {
     private InventorySlotAccessor<Container> getPartAccessor(int slot) {
         for (Container part : parts) {
             int inventorySize = part.getContainerSize();
-            if (slot > inventorySize) {
+            if (slot >= inventorySize) {
                 slot -= inventorySize;
             } else {
                 return new InventorySlotAccessor<>(part, slot);
