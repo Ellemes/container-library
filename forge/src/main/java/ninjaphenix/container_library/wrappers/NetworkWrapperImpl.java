@@ -47,6 +47,11 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
         }, buffer -> buffer.writeInt(inventory.getContainerSize()));
     }
 
+    @Override
+    protected boolean checkUsagePermission(ServerPlayer player, BlockPos pos) {
+        return true;
+    }
+
     public void handleOpenInventory(BlockPos pos, ServerPlayer player) {
         this.openScreenHandlerIfAllowed(pos, player);
     }

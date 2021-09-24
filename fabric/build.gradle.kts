@@ -68,6 +68,10 @@ repositories {
         name = "Devan Maven"
         url = uri("https://storage.googleapis.com/devan-maven/")
     }
+    flatDir {
+        dir(rootDir.resolve("local_dependencies"))
+    }
+    mavenLocal()
 }
 
 val excludeFabric: (ModuleDependency) -> Unit = {
@@ -97,6 +101,13 @@ dependencies {
         ).forEach {
             modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
         }
+    }
+
+    modCompileOnly("local:rtree-3i-lite-fabric:0.3.0") {
+        isTransitive = false
+    }
+    modCompileOnly("com.github.draylar:get-off-my-lawn:1.4.0-beta") {
+        isTransitive = false
     }
 
     modCompileOnly(libs.rei.api, excludeFabric)

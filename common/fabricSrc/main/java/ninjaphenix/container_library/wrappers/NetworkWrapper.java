@@ -57,7 +57,11 @@ public abstract class NetworkWrapper {
                 Text title = inventory.getInventoryTitle();
                 if (player.currentScreenHandler == null || player.currentScreenHandler == player.playerScreenHandler) {
                     if (inventory.canBeUsedBy(player)) {
-                        block.onInitialOpen(player);
+                        if (this.checkUsagePermission(player, pos)) {
+                            block.onInitialOpen(player);
+                        } else {
+                            return;
+                        }
                     } else {
                         player.sendMessage(new TranslatableText("container.isLocked", title), true);
                         player.playSound(SoundEvents.BLOCK_CHEST_LOCKED, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -75,6 +79,8 @@ public abstract class NetworkWrapper {
     public final NetworkWrapperImpl toInternal() {
         return (NetworkWrapperImpl) this;
     }
+
+    protected abstract boolean checkUsagePermission(ServerPlayerEntity player, BlockPos pos);
 
     protected static abstract class Client {
         abstract void sendOpenInventoryPacket(BlockPos pos);
