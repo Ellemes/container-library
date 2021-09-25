@@ -14,11 +14,10 @@ import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import ninjaphenix.container_library.api.OpenableBlockEntityProvider;
-import ninjaphenix.container_library.api.client.NCL_ClientApi;
+import ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2;
 import org.jetbrains.annotations.Nullable;
 
-public class InventoryTestBlock extends Block implements BlockEntityProvider, OpenableBlockEntityProvider {
+public class InventoryTestBlock extends Block implements BlockEntityProvider, OpenableBlockEntityProviderV2 {
     private final int inventorySize;
 
     public InventoryTestBlock(AbstractBlock.Settings settings, int inventorySize) {
@@ -29,10 +28,7 @@ public class InventoryTestBlock extends Block implements BlockEntityProvider, Op
     @Override
     @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient()) {
-            NCL_ClientApi.openInventoryAt(pos);
-        }
-        return ActionResult.SUCCESS;
+        return this.ncl_onBlockUse(world, state, pos, player, hand, hit);
     }
 
     @Override

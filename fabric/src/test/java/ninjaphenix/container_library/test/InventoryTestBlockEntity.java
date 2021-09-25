@@ -11,9 +11,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
-import ninjaphenix.container_library.api.OpenableBlockEntity;
+import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
 
-public class InventoryTestBlockEntity extends LootableContainerBlockEntity implements OpenableBlockEntity {
+public class InventoryTestBlockEntity extends LootableContainerBlockEntity implements OpenableBlockEntityV2 {
     private final int inventorySize;
     private DefaultedList<ItemStack> inventory;
 
