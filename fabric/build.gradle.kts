@@ -84,6 +84,7 @@ dependencies {
     mappings("net.fabricmc:yarn:1.17.1+build.61:v2")
 
     modImplementation(libs.fabric.loader)
+    implementation(libs.jetbrainAnnotations)
 
     if (isTest) {
         modImplementation(libs.fabric.api)

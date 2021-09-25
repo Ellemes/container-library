@@ -39,7 +39,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    protected void openScreenHandler(ServerPlayerEntity player, BlockPos pos, Inventory inventory, ServerScreenHandlerFactory factory, Text title) {
+    protected void openScreenHandler(ServerPlayerEntity player, Inventory inventory, ServerScreenHandlerFactory factory, Text title) {
         player.openHandledScreen(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buffer) {

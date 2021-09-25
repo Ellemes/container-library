@@ -1,5 +1,14 @@
 package ninjaphenix.container_library.wrappers;
 
+import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.api.OpenableBlockEntity;
+import ninjaphenix.container_library.api.OpenableBlockEntityProvider;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
+import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
+import ninjaphenix.container_library.client.gui.PickScreen;
+import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
+import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -14,13 +23,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import ninjaphenix.container_library.Utils;
-import ninjaphenix.container_library.api.OpenableBlockEntity;
-import ninjaphenix.container_library.api.OpenableBlockEntityProvider;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
 
 public abstract class NetworkWrapper {
     private static NetworkWrapper INSTANCE;
@@ -28,7 +30,7 @@ public abstract class NetworkWrapper {
 
     public abstract void initialise();
 
-    protected abstract void openScreenHandler(ServerPlayer player, BlockPos pos, Container inventory, ServerScreenHandlerFactory factory, Component title);
+    protected abstract void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title);
 
     public static NetworkWrapper getInstance() {
         if (NetworkWrapper.INSTANCE == null) {
@@ -55,23 +57,21 @@ public abstract class NetworkWrapper {
             OpenableBlockEntity inventory = block.getOpenableBlockEntity(world, state, pos);
             if (inventory != null) {
                 Component title = inventory.getInventoryTitle();
-                if (player.containerMenu == null || player.containerMenu == player.inventoryMenu) {
-                    if (inventory.canBeUsedBy(player)) {
-                        if (this.checkUsagePermission(player, pos)) {
-                            block.onInitialOpen(player);
-                        } else {
-                            return;
-                        }
+                if (inventory.canBeUsedBy(player)) {
+                    if (this.checkUsagePermission(player, pos)) {
+                        block.onInitialOpen(player);
                     } else {
-                        player.displayClientMessage(new TranslatableComponent("container.isLocked", title), true);
-                        player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
                         return;
                     }
+                } else {
+                    player.displayClientMessage(new TranslatableComponent("container.isLocked", title), true);
+                    player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    return;
                 }
                 if (!inventory.canContinueUse(player)) {
                     return;
                 }
-                this.openScreenHandler(player, pos, inventory.getInventory(), AbstractHandler::new, title);
+                this.openScreenHandler(player, inventory.getInventory(), AbstractHandler::new, title);
             }
         }
     }
@@ -81,6 +81,17 @@ public abstract class NetworkWrapper {
     }
 
     protected abstract boolean checkUsagePermission(ServerPlayer player, BlockPos pos);
+
+    public void s_openInventory(ServerPlayer player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayer> onInitialOpen) {
+        Component title = inventory.getInventoryTitle();
+        if (!inventory.canBeUsedBy(player)) {
+            player.displayClientMessage(new TranslatableComponent("container.isLocked", title), true);
+            player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
+            return;
+        }
+        onInitialOpen.accept(player);
+        this.openScreenHandler(player, inventory.getInventory(), AbstractHandler::new, title);
+    }
 
     protected static abstract class Client {
         abstract void sendOpenInventoryPacket(BlockPos pos);
