@@ -187,4 +187,13 @@ public final class VariableSidedInventory implements SidedInventory {
         assert slot >= 0 && slot < this.size() : "slot index out of range";
         return this.getPartAccessor(slot).apply((part, rSlot) -> part.canExtract(rSlot, stack, direction));
     }
+
+    public boolean containsPart(SidedInventory part) {
+        for (SidedInventory inventory : parts) {
+            if (inventory == part) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
