@@ -1,8 +1,6 @@
 package ninjaphenix.container_library.api.v2;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -10,9 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.wrappers.ConfigWrapper;
+import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 /**
@@ -51,14 +47,8 @@ public interface OpenableBlockEntityProviderV2 {
     }
 
     // Should be protected, only called from within class.
-    default void ncl_cOpenInventory(BlockPos pos, InteractionHand hand, BlockHitResult hitResult) {
-        if (AbstractScreen.isScreenTypeDeclared(ConfigWrapper.getInstance().getPreferredScreenType())) {
-            NetworkWrapper.getInstance().c_openInventoryAt(pos);
-        } else {
-            Minecraft.getInstance().setScreen(new PickScreen(() -> {
-                Minecraft.getInstance().getConnection().send(new ServerboundUseItemOnPacket(hand, hitResult));
-            }));
-        }
+    default void ncl_cOpenInventory(BlockPos pos, InteractionHand hand, BlockHitResult hit) {
+        NCL_ClientApiV2.openInventoryAt(pos, hand, hit);
     }
 
     // Should be protected, only called from within class.

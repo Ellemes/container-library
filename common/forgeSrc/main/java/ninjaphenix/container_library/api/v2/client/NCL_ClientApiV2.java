@@ -5,15 +5,37 @@ import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
+import ninjaphenix.container_library.wrappers.ConfigWrapper;
+import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 import java.util.List;
 import java.util.Objects;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
 
 public final class NCL_ClientApiV2 {
     private NCL_ClientApiV2() {
         throw new IllegalStateException("NCL_ClientApi cannot be instantiated.");
+    }
+
+    /**
+     * Call on client side to attempt to open an inventory, sort of internal, should be accessed through:
+     * {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2}.
+     */
+    public static void openInventoryAt(BlockPos pos, InteractionHand hand, BlockHitResult hit) {
+        Objects.requireNonNull(pos, "pos must not be null");
+        if (AbstractScreen.isScreenTypeDeclared(ConfigWrapper.getInstance().getPreferredScreenType())) {
+            NetworkWrapper.getInstance().c_openInventoryAt(pos);
+        } else {
+            Minecraft.getInstance().setScreen(new PickScreen(() -> {
+                Minecraft.getInstance().getConnection().send(new ServerboundUseItemOnPacket(hand, hit));
+            }));
+        }
     }
 
     /**
