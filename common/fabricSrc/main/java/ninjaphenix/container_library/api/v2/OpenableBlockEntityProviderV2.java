@@ -16,7 +16,7 @@ import ninjaphenix.container_library.wrappers.NetworkWrapper;
  */
 public interface OpenableBlockEntityProviderV2 {
     /**
-     * Return the openable block entity, {@link ninjaphenix.container_library.api.helpers.OpenableBlockEntities} can be used to supply more than one inventory.
+     * Return the openable block entity, {@link ninjaphenix.container_library.api.v2.helpers.OpenableBlockEntitiesV2} can be used to supply more than one inventory.
      */
     default OpenableBlockEntityV2 getOpenableBlockEntity(World world, BlockState state, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof OpenableBlockEntityV2 entity) {
