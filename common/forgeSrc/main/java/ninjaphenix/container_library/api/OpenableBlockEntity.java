@@ -9,6 +9,10 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityV2 }
+ */
+@Deprecated
 public interface OpenableBlockEntity {
     default boolean canBeUsedBy(ServerPlayer player) {
         return ((BaseContainerBlockEntity) this).canOpen(player);

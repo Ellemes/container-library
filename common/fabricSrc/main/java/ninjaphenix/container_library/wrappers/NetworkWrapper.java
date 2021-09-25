@@ -33,6 +33,8 @@ public abstract class NetworkWrapper {
 
     protected abstract void openScreenHandler(ServerPlayerEntity player, Inventory inventory, ServerScreenHandlerFactory factory, Text title);
 
+    protected abstract boolean checkUsagePermission(ServerPlayerEntity player, BlockPos pos);
+
     public static NetworkWrapper getInstance() {
         if (NetworkWrapper.INSTANCE == null) {
             NetworkWrapper.INSTANCE = new NetworkWrapperImpl();
@@ -81,9 +83,7 @@ public abstract class NetworkWrapper {
         return (NetworkWrapperImpl) this;
     }
 
-    protected abstract boolean checkUsagePermission(ServerPlayerEntity player, BlockPos pos);
-
-    public void s_openInventory(ServerPlayerEntity player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayerEntity> onInitialOpen) {
+    public final void s_openInventory(ServerPlayerEntity player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayerEntity> onInitialOpen) {
         Text title = inventory.getInventoryTitle();
         if (!inventory.canBeUsedBy(player)) {
             player.sendMessage(new TranslatableText("container.isLocked", title), true);

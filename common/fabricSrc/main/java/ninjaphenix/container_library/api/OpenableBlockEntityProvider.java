@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * Should be implemented on blocks.
+ * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2 }
  */
 public interface OpenableBlockEntityProvider {
     /**

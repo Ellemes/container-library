@@ -6,7 +6,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Should be implemented on blocks.
+ * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2 }
  */
 public interface OpenableBlockEntityProvider {
     /**

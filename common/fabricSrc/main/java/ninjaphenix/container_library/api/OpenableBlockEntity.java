@@ -9,6 +9,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Nameable;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityV2 }
+ */
+@Deprecated
 public interface OpenableBlockEntity {
     default boolean canBeUsedBy(ServerPlayerEntity player) {
         return ((LockableContainerBlockEntity) this).checkUnlocked(player);

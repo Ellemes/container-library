@@ -32,7 +32,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    protected void openScreenHandler(ServerPlayer player, BlockPos pos, Container inventory, ServerScreenHandlerFactory factory, Component title) {
+    protected void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title) {
         NetworkHooks.openGui(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {

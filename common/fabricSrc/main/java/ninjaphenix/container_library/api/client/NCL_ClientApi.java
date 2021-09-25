@@ -6,12 +6,15 @@ import net.minecraft.util.math.BlockPos;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.client.gui.PickScreen;
+import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2 }
+ */
 public final class NCL_ClientApi {
     private NCL_ClientApi() {
         throw new IllegalStateException("NCL_ClientApi cannot be instantiated.");
@@ -30,13 +33,7 @@ public final class NCL_ClientApi {
      * Note: texture must be 96 x 288 ( 3 images: normal, hovered, current )
      */
     public static void registerScreenButton(Identifier type, Identifier texture, Text title, ScreenSizePredicate warningTest, List<Text> warningText) {
-        Objects.requireNonNull(type, "type must not be null");
-        Objects.requireNonNull(texture, "texture must not be null");
-        Objects.requireNonNull(title, "title must not be null");
-        Objects.requireNonNull(warningTest, "warningTest must not be null");
-        Objects.requireNonNull(warningText, "warningText must not be null");
-        //noinspection deprecation
-        PickScreen.declareButtonSettings(type, texture, title, warningTest, warningText);
+        NCL_ClientApiV2.registerScreenButton(type, texture, title, warningTest, warningText);
     }
 
     /**
@@ -44,35 +41,25 @@ public final class NCL_ClientApi {
      * Note: texture must be 96 x 288 ( 3 images: normal, hovered, current )
      */
     public static void registerScreenButton(Identifier type, Identifier texture, Text title) {
-        Objects.requireNonNull(type, "type must not be null");
-        Objects.requireNonNull(texture, "texture must not be null");
-        Objects.requireNonNull(title, "title must not be null");
-        //noinspection deprecation
-        PickScreen.declareButtonSettings(type, texture, title, ScreenSizePredicate::noTest, List.of());
+        NCL_ClientApiV2.registerScreenButton(type, texture, title);
     }
 
     /**
      * Register screen constructor.
      */
     public static void registerScreenType(Identifier type, ScreenConstructor<?> screenConstructor) {
-        Objects.requireNonNull(type, "type must not be null");
-        Objects.requireNonNull(screenConstructor, "screenConstructor must not be null");
-        //noinspection deprecation
-        AbstractScreen.declareScreenType(type, screenConstructor);
+        NCL_ClientApiV2.registerScreenType(type, screenConstructor);
     }
 
     /**
      * Register default screen sizes, it is planned to allow players to override the default screen sizes in the future.
      */
     public static void registerDefaultScreenSize(Identifier type, ScreenSizeRetriever retriever) {
-        Objects.requireNonNull(type, "type must not be null");
-        Objects.requireNonNull(retriever, "retriever must not be null");
-        //noinspection deprecation
-        AbstractScreen.declareScreenSizeRetriever(type, retriever);
+        NCL_ClientApiV2.registerDefaultScreenSize(type, retriever);
     }
 
     /**
-     * Uses the signle screen type over the specified type if the single screen will visually fit in the game window.
+     * Uses the single screen type over the specified type if the single screen will visually fit in the game window.
      * Note: May be renamed in the future.
      */
     public static void setPrefersSingleScreen(Identifier type) {
