@@ -9,8 +9,9 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * Helper to wrap blocks which consist of multiple inventories into one e.g. chests.
+ * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.helpers.OpenableBlockEntitiesV2 }
  */
+@Deprecated
 public final class OpenableBlockEntities implements OpenableBlockEntity {
     private final OpenableBlockEntity[] parts;
     private final Container inventory;

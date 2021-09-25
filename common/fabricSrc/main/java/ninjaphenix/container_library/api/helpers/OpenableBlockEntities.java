@@ -11,6 +11,7 @@ import java.util.Arrays;
 /**
  * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.helpers.OpenableBlockEntitiesV2 }
  */
+@Deprecated
 public final class OpenableBlockEntities implements OpenableBlockEntity {
     private final OpenableBlockEntity[] parts;
     private final Inventory inventory;

@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 /**
  * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2 }
  */
+@Deprecated
 public interface OpenableBlockEntityProvider {
     /**
      * Return the openable block entity, {@link ninjaphenix.container_library.api.helpers.OpenableBlockEntities} can be used to supply more than one inventory.

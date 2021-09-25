@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * @deprecated Use V2 instead {@link ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2 }
  */
+@Deprecated
 public final class NCL_ClientApi {
     private NCL_ClientApi() {
         throw new IllegalStateException("NCL_ClientApi cannot be instantiated.");
