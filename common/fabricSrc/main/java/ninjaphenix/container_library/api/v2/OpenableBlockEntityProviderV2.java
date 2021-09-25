@@ -36,8 +36,7 @@ public interface OpenableBlockEntityProviderV2 {
     // Should be protected, only called from within class.
     default ActionResult ncl_onBlockUse(World world, BlockState state, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient()) {
-            this.ncl_cOpenInventory(pos, hand, hit);
-            return ActionResult.SUCCESS;
+            return this.ncl_cOpenInventory(pos, hand, hit) ? ActionResult.SUCCESS : ActionResult.FAIL;
         } else {
             if (player instanceof ServerPlayerEntity serverPlayer) {
                 this.ncl_sOpenInventory(world, state, pos, serverPlayer);
@@ -47,8 +46,8 @@ public interface OpenableBlockEntityProviderV2 {
     }
 
     // Should be protected, only called from within class.
-    default void ncl_cOpenInventory(BlockPos pos, Hand hand, BlockHitResult hit) {
-        NCL_ClientApiV2.openInventoryAt(pos, hand, hit);
+    default boolean ncl_cOpenInventory(BlockPos pos, Hand hand, BlockHitResult hit) {
+        return NCL_ClientApiV2.openInventoryAt(pos, hand, hit);
     }
 
     // Should be protected, only called from within class.

@@ -187,4 +187,13 @@ public final class VariableSidedInventory implements WorldlyContainer {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
         return this.getPartAccessor(slot).apply((part, rSlot) -> part.canTakeItemThroughFace(rSlot, stack, direction));
     }
+
+    public boolean containsPart(WorldlyContainer part) {
+        for (WorldlyContainer inventory : parts) {
+            if (inventory == part) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -26,16 +26,18 @@ public final class NCL_ClientApiV2 {
     /**
      * Call on client side to attempt to open an inventory, sort of internal, should be accessed through:
      * {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2}.
+     *
+     * @return true if a valid screen type is already selected.
      */
-    public static void openInventoryAt(BlockPos pos, Hand hand, BlockHitResult hit) {
+    public static boolean openInventoryAt(BlockPos pos, Hand hand, BlockHitResult hit) {
         Objects.requireNonNull(pos, "pos must not be null");
-        if (AbstractScreen.isScreenTypeDeclared(ConfigWrapper.getInstance().getPreferredScreenType())) {
-            NetworkWrapper.getInstance().c_openInventoryAt(pos);
-        } else {
+        if (!AbstractScreen.isScreenTypeDeclared(ConfigWrapper.getInstance().getPreferredScreenType())) {
             MinecraftClient.getInstance().setScreen(new PickScreen(() -> {
                 MinecraftClient.getInstance().getNetworkHandler().sendPacket(new PlayerInteractBlockC2SPacket(hand, hit));
             }));
+            return false;
         }
+        return true;
     }
 
     /**

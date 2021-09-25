@@ -154,4 +154,13 @@ public final class VariableInventory implements Container {
         }
         throw new IllegalStateException("getPartAccessor called without validating slot bounds.");
     }
+
+    public boolean containsPart(Container part) {
+        for (Container inventory : parts) {
+            if (inventory == part) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
