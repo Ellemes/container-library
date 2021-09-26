@@ -1,33 +1,33 @@
 package ninjaphenix.container_library.api.helpers;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import ninjaphenix.container_library.inventory.InventorySlotAccessor;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
-public final class VariableInventory implements Container {
-    private final Container[] parts;
+public final class VariableInventory implements IInventory {
+    private final IInventory[] parts;
     private final int size;
     private final int maxStackCount;
 
-    private VariableInventory(Container... parts) {
+    private VariableInventory(IInventory... parts) {
         for (int i = 0; i < parts.length; i++) {
             Objects.requireNonNull(parts[i], "part at index" + i + " must not be null");
         }
         this.parts = parts;
-        this.size = Arrays.stream(parts).mapToInt(Container::getContainerSize).sum();
+        this.size = Arrays.stream(parts).mapToInt(IInventory::getContainerSize).sum();
         this.maxStackCount = parts[0].getMaxStackSize();
-        for (Container part : parts) {
+        for (IInventory part : parts) {
             assert part.getMaxStackSize() == maxStackCount : "all parts must have equal max stack counts.";
         }
     }
 
-    public static Container of(Container... parts) {
+    public static IInventory of(IInventory... parts) {
         assert parts.length > 0 : "parts must contain at least 1 inventory";
         if (parts.length == 1) {
             return parts[0];
@@ -43,7 +43,7 @@ public final class VariableInventory implements Container {
 
     @Override
     public boolean isEmpty() {
-        for (Container part : parts) {
+        for (IInventory part : parts) {
             if (!part.isEmpty()) {
                 return false;
             }
@@ -54,7 +54,7 @@ public final class VariableInventory implements Container {
     @Override
     public ItemStack getItem(int slot) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::getItem);
+        return this.getPartAccessor(slot).apply(IInventory::getItem);
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class VariableInventory implements Container {
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::removeItemNoUpdate);
+        return this.getPartAccessor(slot).apply(IInventory::removeItemNoUpdate);
     }
 
     @Override
@@ -82,14 +82,14 @@ public final class VariableInventory implements Container {
 
     @Override
     public void setChanged() {
-        for (Container part : parts) {
+        for (IInventory part : parts) {
             part.setChanged();
         }
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        for (Container part : parts) {
+    public boolean stillValid(PlayerEntity player) {
+        for (IInventory part : parts) {
             if (!part.stillValid(player)) {
                 return false;
             }
@@ -98,15 +98,15 @@ public final class VariableInventory implements Container {
     }
 
     @Override
-    public void startOpen(Player player) {
-        for (Container part : parts) {
+    public void startOpen(PlayerEntity player) {
+        for (IInventory part : parts) {
             part.startOpen(player);
         }
     }
 
     @Override
-    public void stopOpen(Player player) {
-        for (Container part : parts) {
+    public void stopOpen(PlayerEntity player) {
+        for (IInventory part : parts) {
             part.stopOpen(player);
         }
     }
@@ -120,7 +120,7 @@ public final class VariableInventory implements Container {
     @Override
     public int countItem(Item item) {
         int count = 0;
-        for (Container part : parts) {
+        for (IInventory part : parts) {
             count += part.countItem(item);
         }
         return count;
@@ -128,7 +128,7 @@ public final class VariableInventory implements Container {
 
     @Override
     public boolean hasAnyOf(Set<Item> set) {
-        for (Container part : parts) {
+        for (IInventory part : parts) {
             if (part.hasAnyOf(set)) {
                 return true;
             }
@@ -138,13 +138,13 @@ public final class VariableInventory implements Container {
 
     @Override
     public void clearContent() {
-        for (Container part : parts) {
+        for (IInventory part : parts) {
             part.clearContent();
         }
     }
 
-    private InventorySlotAccessor<Container> getPartAccessor(int slot) {
-        for (Container part : parts) {
+    private InventorySlotAccessor<IInventory> getPartAccessor(int slot) {
+        for (IInventory part : parts) {
             int inventorySize = part.getContainerSize();
             if (slot >= inventorySize) {
                 slot -= inventorySize;
@@ -155,8 +155,8 @@ public final class VariableInventory implements Container {
         throw new IllegalStateException("getPartAccessor called without validating slot bounds.");
     }
 
-    public boolean containsPart(Container part) {
-        for (Container inventory : parts) {
+    public boolean containsPart(IInventory part) {
+        for (IInventory inventory : parts) {
             if (inventory == part) {
                 return true;
             }

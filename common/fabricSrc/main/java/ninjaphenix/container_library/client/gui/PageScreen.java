@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableWidget;
@@ -73,8 +74,8 @@ public final class PageScreen extends AbstractScreen {
 
     @Override
     protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, textureLocation);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(textureLocation);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         DrawableHelper.drawTexture(stack, x, y, 0, 0, backgroundWidth, backgroundHeight, textureWidth, textureHeight);
         blankArea.forEach(image -> image.render(stack));
     }
@@ -170,7 +171,7 @@ public final class PageScreen extends AbstractScreen {
     @Override
     protected void drawForeground(MatrixStack stack, int mouseX, int mouseY) {
         textRenderer.draw(stack, title, 8, 6, 0x404040);
-        textRenderer.draw(stack, playerInventoryTitle, 8, backgroundHeight - 96 + 2, 0x404040);
+        textRenderer.draw(stack, playerInventory.getDisplayName(), 8, backgroundHeight - 96 + 2, 0x404040);
         if (currentPageText != null) {
             textRenderer.draw(stack, currentPageText.asOrderedText(), pageTextX - x, backgroundHeight - 94, 0x404040);
         }
@@ -199,9 +200,9 @@ public final class PageScreen extends AbstractScreen {
         int originalX = x;
         int y = this.y + backgroundHeight - 96;
         List<ClickableWidget> renderableChildren = new ArrayList<>();
-        for (var child : this.children()) {
-            if (child instanceof ClickableWidget widget) {
-                renderableChildren.add(widget);
+        for (Element child : this.children()) {
+            if (child instanceof ClickableWidget) {
+                renderableChildren.add((ClickableWidget) child);
             }
         }
         renderableChildren.sort(Comparator.comparingInt(a -> -a.x));
@@ -219,11 +220,11 @@ public final class PageScreen extends AbstractScreen {
                 new TranslatableText("screen.ninjaphenix_container_lib.prev_page"), button -> this.setPage(page, page - 1),
                 this::renderButtonTooltip);
         leftPageButton.active = false;
-        this.addDrawableChild(leftPageButton);
+        this.addButton(leftPageButton);
         rightPageButton = new PageButton(x + 42, y, 1,
                 new TranslatableText("screen.ninjaphenix_container_lib.next_page"), button -> this.setPage(page, page + 1),
                 this::renderButtonTooltip);
-        this.addDrawableChild(rightPageButton);
+        this.addButton(rightPageButton);
         this.setPageText();
     }
 

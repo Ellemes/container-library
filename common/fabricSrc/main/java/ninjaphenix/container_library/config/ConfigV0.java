@@ -57,12 +57,15 @@ public class ConfigV0 implements Config {
 
         @Override
         public ConfigV0 fromSource(Map<String, Object> source) {
-            if (source.get("container_type") instanceof String screenType && source.get("restrictive_scrolling") instanceof Boolean restrictiveScrolling) {
+            Object screenType = source.get("container_type");
+            Object restrictiveScrolling = source.get("restrictive_scrolling");
+            if (screenType instanceof String && restrictiveScrolling instanceof Boolean) {
                 Boolean preferSmallerScreens = Boolean.TRUE;
-                if (source.containsKey("prefer_smaller_screens") && source.get("prefer_smaller_screens") instanceof Boolean bool) {
-                    preferSmallerScreens = bool;
+                Object bool = source.get("prefer_smaller_screens");
+                if (source.containsKey("prefer_smaller_screens") && bool instanceof Boolean) {
+                    preferSmallerScreens = (Boolean) bool;
                 }
-                return new ConfigV0(Identifier.tryParse(screenType), restrictiveScrolling, preferSmallerScreens);
+                return new ConfigV0(Identifier.tryParse((String) screenType), (Boolean) restrictiveScrolling, preferSmallerScreens);
             }
             return null;
         }

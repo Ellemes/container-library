@@ -1,6 +1,11 @@
 package ninjaphenix.container_library.api.helpers;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import ninjaphenix.container_library.inventory.InventorySlotAccessor;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,32 +13,26 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import net.minecraft.core.Direction;
-import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
-public final class VariableSidedInventory implements WorldlyContainer {
-    private final WorldlyContainer[] parts;
+public final class VariableSidedInventory implements ISidedInventory {
+    private final ISidedInventory[] parts;
     private final int size;
     private final int maxStackCount;
     private final Map<Direction, int[]> slotsAccessibleThroughFace = new HashMap<>();
 
-    private VariableSidedInventory(WorldlyContainer... parts) {
+    private VariableSidedInventory(ISidedInventory... parts) {
         for (int i = 0; i < parts.length; i++) {
             assert parts[i] != null : "part at index " + i + " must not be null";
         }
         this.parts = parts;
-        this.size = Arrays.stream(parts).mapToInt(Container::getContainerSize).sum();
+        this.size = Arrays.stream(parts).mapToInt(ISidedInventory::getContainerSize).sum();
         this.maxStackCount = parts[0].getMaxStackSize();
-        for (Container part : parts) {
+        for (ISidedInventory part : parts) {
             assert part.getMaxStackSize() == maxStackCount : "all parts must have equal max stack counts.";
         }
     }
 
-    public static WorldlyContainer of(WorldlyContainer... parts) {
+    public static ISidedInventory of(ISidedInventory... parts) {
         assert parts.length > 0 : "parts must contain at least 1 inventory";
         if (parts.length == 1) {
             return parts[0];
@@ -49,7 +48,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
 
     @Override
     public boolean isEmpty() {
-        for (Container part : parts) {
+        for (ISidedInventory part : parts) {
             if (!part.isEmpty()) {
                 return false;
             }
@@ -60,7 +59,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
     @Override
     public ItemStack getItem(int slot) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::getItem);
+        return this.getPartAccessor(slot).apply(ISidedInventory::getItem);
     }
 
     @Override
@@ -72,7 +71,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::removeItemNoUpdate);
+        return this.getPartAccessor(slot).apply(ISidedInventory::removeItemNoUpdate);
     }
 
     @Override
@@ -88,14 +87,14 @@ public final class VariableSidedInventory implements WorldlyContainer {
 
     @Override
     public void setChanged() {
-        for (Container part : parts) {
+        for (ISidedInventory part : parts) {
             part.setChanged();
         }
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        for (Container part : parts) {
+    public boolean stillValid(PlayerEntity player) {
+        for (ISidedInventory part : parts) {
             if (!part.stillValid(player)) {
                 return false;
             }
@@ -104,15 +103,15 @@ public final class VariableSidedInventory implements WorldlyContainer {
     }
 
     @Override
-    public void startOpen(Player player) {
-        for (Container part : parts) {
+    public void startOpen(PlayerEntity player) {
+        for (ISidedInventory part : parts) {
             part.startOpen(player);
         }
     }
 
     @Override
-    public void stopOpen(Player player) {
-        for (Container part : parts) {
+    public void stopOpen(PlayerEntity player) {
+        for (ISidedInventory part : parts) {
             part.stopOpen(player);
         }
     }
@@ -126,7 +125,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
     @Override
     public int countItem(Item item) {
         int count = 0;
-        for (Container part : parts) {
+        for (ISidedInventory part : parts) {
             count += part.countItem(item);
         }
         return count;
@@ -134,7 +133,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
 
     @Override
     public boolean hasAnyOf(Set<Item> set) {
-        for (Container part : parts) {
+        for (ISidedInventory part : parts) {
             if (part.hasAnyOf(set)) {
                 return true;
             }
@@ -144,13 +143,13 @@ public final class VariableSidedInventory implements WorldlyContainer {
 
     @Override
     public void clearContent() {
-        for (Container part : parts) {
+        for (ISidedInventory part : parts) {
             part.clearContent();
         }
     }
 
-    private InventorySlotAccessor<WorldlyContainer> getPartAccessor(int slot) {
-        for (WorldlyContainer part : parts) {
+    private InventorySlotAccessor<ISidedInventory> getPartAccessor(int slot) {
+        for (ISidedInventory part : parts) {
             int inventorySize = part.getContainerSize();
             if (slot >= inventorySize) {
                 slot -= inventorySize;
@@ -166,7 +165,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
         return slotsAccessibleThroughFace.computeIfAbsent(direction, (dir) -> {
             int previousSize = 0;
             IntArrayList list = new IntArrayList();
-            for (WorldlyContainer part : parts) {
+            for (ISidedInventory part : parts) {
                 for (int i : part.getSlotsForFace(dir)) {
                     list.add(i + previousSize);
                 }
@@ -188,8 +187,8 @@ public final class VariableSidedInventory implements WorldlyContainer {
         return this.getPartAccessor(slot).apply((part, rSlot) -> part.canTakeItemThroughFace(rSlot, stack, direction));
     }
 
-    public boolean containsPart(WorldlyContainer part) {
-        for (WorldlyContainer inventory : parts) {
+    public boolean containsPart(ISidedInventory part) {
+        for (ISidedInventory inventory : parts) {
             if (inventory == part) {
                 return true;
             }

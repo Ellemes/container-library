@@ -1,71 +1,35 @@
 package ninjaphenix.container_library.wrappers;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
-import net.minecraftforge.fmllegacy.network.NetworkRegistry;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
-import ninjaphenix.container_library.Utils;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.network.NetworkHooks;
 import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
-import ninjaphenix.container_library.network.OpenInventoryMessage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 public final class NetworkWrapperImpl extends NetworkWrapper {
-    private SimpleChannel channel;
-
     public void initialise() {
-        String channelVersion = "1";
-        channel = NetworkRegistry.newSimpleChannel(Utils.id("channel"), () -> channelVersion, channelVersion::equals, channelVersion::equals);
 
-        channel.registerMessage(0, OpenInventoryMessage.class, OpenInventoryMessage::encode, OpenInventoryMessage::decode, OpenInventoryMessage::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 
     @Override
-    protected void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title) {
-        NetworkHooks.openGui(player, new MenuProvider() {
+    protected void openScreenHandler(ServerPlayerEntity player, IInventory inventory, ServerScreenHandlerFactory factory, ITextComponent title) {
+        NetworkHooks.openGui(player, new INamedContainerProvider() {
             @Override
-            public Component getDisplayName() {
+            public ITextComponent getDisplayName() {
                 return title;
             }
 
             @Nullable
             @Override
-            public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
+            public Container createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
                 return factory.create(syncId, inventory, playerInventory);
             }
         }, buffer -> buffer.writeInt(inventory.getContainerSize()));
-    }
-
-    @Override
-    protected boolean checkUsagePermission(ServerPlayer player, BlockPos pos) {
-        return true;
-    }
-
-    public void handleOpenInventory(BlockPos pos, ServerPlayer player) {
-        this.openScreenHandlerIfAllowed(pos, player);
-    }
-
-    protected static class Client extends NetworkWrapper.Client {
-        @Override
-        void sendOpenInventoryPacket(BlockPos pos) {
-            NetworkWrapper.getInstance().toInternal().channel.sendToServer(new OpenInventoryMessage(pos));
-        }
-
-        @Override
-        boolean canSendOpenInventoryPacket() {
-            ClientPacketListener handler = Minecraft.getInstance().getConnection();
-            return handler != null && NetworkWrapper.getInstance().toInternal().channel.isRemotePresent(handler.getConnection());
-        }
     }
 }

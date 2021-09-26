@@ -13,8 +13,8 @@ import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
-import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +32,7 @@ public final class NCL_ClientApiV2 {
     public static boolean openInventoryAt(BlockPos pos, Hand hand, BlockHitResult hit) {
         Objects.requireNonNull(pos, "pos must not be null");
         if (!AbstractScreen.isScreenTypeDeclared(ConfigWrapper.getInstance().getPreferredScreenType())) {
-            MinecraftClient.getInstance().setScreen(new PickScreen(() -> {
+            MinecraftClient.getInstance().openScreen(new PickScreen(() -> {
                 MinecraftClient.getInstance().getNetworkHandler().sendPacket(new PlayerInteractBlockC2SPacket(hand, hit));
             }));
             return false;
@@ -63,7 +63,7 @@ public final class NCL_ClientApiV2 {
         Objects.requireNonNull(texture, "texture must not be null");
         Objects.requireNonNull(title, "title must not be null");
         //noinspection deprecation
-        PickScreen.declareButtonSettings(type, texture, title, ScreenSizePredicate::noTest, List.of());
+        PickScreen.declareButtonSettings(type, texture, title, ScreenSizePredicate::noTest, Collections.emptyList());
     }
 
     /**

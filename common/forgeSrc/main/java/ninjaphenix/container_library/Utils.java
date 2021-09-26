@@ -4,14 +4,14 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import ninjaphenix.container_library.config.IdentifierTypeAdapter;
 import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 
 public class Utils {
     public static final String MOD_ID = "ninjaphenix_container_lib";
@@ -47,7 +47,7 @@ public class Utils {
         return new ResourceLocation(Utils.MOD_ID, path);
     }
 
-    public static MutableComponent translation(String key, Object... values) {
-        return new TranslatableComponent(key, values);
+    public static IFormattableTextComponent translation(String key, Object... values) {
+        return new TranslationTextComponent(key, values);
     }
 }

@@ -146,7 +146,7 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
         if (this.handleKeyPress(keyCode, scanCode, modifiers)) {
             return true;
         } else if (PlatformUtils.isConfigKeyPressed(keyCode, scanCode, modifiers)) {
-            client.setScreen(new PickScreen(() -> AbstractScreen.createScreen(handler, client.player.getInventory(), title), handler));
+            client.openScreen(new PickScreen(() -> AbstractScreen.createScreen(handler, client.player.inventory, title), handler));
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE || client.options.keyInventory.matchesKey(keyCode, scanCode)) {
             client.player.closeHandledScreen();

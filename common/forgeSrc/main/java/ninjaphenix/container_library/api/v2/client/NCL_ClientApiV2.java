@@ -1,5 +1,13 @@
 package ninjaphenix.container_library.api.v2.client;
 
+import net.minecraft.block.Block;
+import net.minecraft.network.play.client.CPlayerTryUseItemOnBlockPacket;
+import net.minecraft.network.play.server.SBlockActionPacket;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import ninjaphenix.container_library.api.client.ScreenConstructor;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
@@ -8,15 +16,10 @@ import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.phys.BlockHitResult;
 
 public final class NCL_ClientApiV2 {
     private NCL_ClientApiV2() {
@@ -29,11 +32,11 @@ public final class NCL_ClientApiV2 {
      *
      * @return true if a valid screen type is already selected.
      */
-    public static boolean openInventoryAt(BlockPos pos, InteractionHand hand, BlockHitResult hit) {
+    public static boolean openInventoryAt(BlockPos pos, Hand hand, BlockRayTraceResult hit) {
         Objects.requireNonNull(pos, "pos must not be null");
         if (!AbstractScreen.isScreenTypeDeclared(ConfigWrapper.getInstance().getPreferredScreenType())) {
             Minecraft.getInstance().setScreen(new PickScreen(() -> {
-                Minecraft.getInstance().getConnection().send(new ServerboundUseItemOnPacket(hand, hit));
+                Minecraft.getInstance().getConnection().send(new CPlayerTryUseItemOnBlockPacket(hand, hit));
             }));
             return false;
         }
@@ -44,7 +47,7 @@ public final class NCL_ClientApiV2 {
      * Register button for screen type pick screen with an optional error message.
      * Note: texture must be 96 x 288 ( 3 images: normal, hovered, current )
      */
-    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component title, ScreenSizePredicate warningTest, List<Component> warningText) {
+    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, ITextComponent title, ScreenSizePredicate warningTest, List<ITextComponent> warningText) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
         Objects.requireNonNull(title, "title must not be null");
@@ -58,12 +61,12 @@ public final class NCL_ClientApiV2 {
      * Register button for screen type pick screen
      * Note: texture must be 96 x 288 ( 3 images: normal, hovered, current )
      */
-    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, Component title) {
+    public static void registerScreenButton(ResourceLocation type, ResourceLocation texture, ITextComponent title) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(texture, "texture must not be null");
         Objects.requireNonNull(title, "title must not be null");
         //noinspection deprecation
-        PickScreen.declareButtonSettings(type, texture, title, ScreenSizePredicate::noTest, List.of());
+        PickScreen.declareButtonSettings(type, texture, title, ScreenSizePredicate::noTest, Collections.emptyList());
     }
 
     /**

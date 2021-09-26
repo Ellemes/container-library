@@ -101,8 +101,8 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, textureLocation);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(textureLocation);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         DrawableHelper.drawTexture(stack, x, y, 0, 0, backgroundRenderWidth, backgroundHeight, textureWidth, textureHeight);
 
         int containerSlotsHeight = inventoryHeight * 18;
@@ -119,7 +119,7 @@ public final class ScrollScreen extends AbstractScreen {
     @Override
     protected void drawForeground(MatrixStack stack, int mouseX, int mouseY) {
         textRenderer.draw(stack, title, 8, 6, 0x404040);
-        textRenderer.draw(stack, playerInventoryTitle, 8, backgroundHeight - 96 + 2, 0x404040);
+        textRenderer.draw(stack, playerInventory.getDisplayName(), 8, backgroundHeight - 96 + 2, 0x404040);
     }
 
     private boolean isMouseOverTrack(double mouseX, double mouseY) {

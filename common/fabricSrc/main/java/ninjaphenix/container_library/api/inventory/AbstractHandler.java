@@ -107,7 +107,6 @@ public final class AbstractHandler extends ScreenHandler {
 
     public void clearSlots() {
         this.slots.clear();
-        this.previousTrackedStacks.clear();
         this.trackedStacks.clear();
     }
 

@@ -10,7 +10,7 @@ plugins {
 }
 
 minecraft {
-    mappings("official", "1.17.1")
+    mappings("official", "1.16.5")
 
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg")) // Currently, this location cannot be changed from the default.
 

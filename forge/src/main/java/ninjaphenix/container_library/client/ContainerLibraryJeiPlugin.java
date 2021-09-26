@@ -4,8 +4,8 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.Rectangle2d;
+import net.minecraft.util.ResourceLocation;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import org.jetbrains.annotations.NotNull;
@@ -22,9 +22,9 @@ public class ContainerLibraryJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addGuiContainerHandler(AbstractScreen.class, new IGuiContainerHandler<>() {
+        registration.addGuiContainerHandler(AbstractScreen.class, new IGuiContainerHandler<AbstractScreen>() {
             @Override
-            public List<Rect2i> getGuiExtraAreas(AbstractScreen screen) {
+            public List<Rectangle2d> getGuiExtraAreas(AbstractScreen screen) {
                 return screen.getExclusionZones();
             }
         });

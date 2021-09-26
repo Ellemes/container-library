@@ -1,5 +1,6 @@
 package ninjaphenix.container_library;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -40,7 +42,7 @@ public final class CommonMain {
                     Utils.id("textures/gui/single_button.png"),
                     Utils.translation("screen.expandedstorage.single_screen"),
                     (scaledWidth, scaledHeight) -> scaledWidth < 370 || scaledHeight < 386, // Smallest possible resolution a double netherite chest fits on.
-                    List.of(
+                    ImmutableList.of(
                             Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").formatted(Formatting.GRAY),
                             Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").formatted(Formatting.GRAY)
                     ));

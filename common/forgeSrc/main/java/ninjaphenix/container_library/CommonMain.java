@@ -1,5 +1,9 @@
 package ninjaphenix.container_library;
 
+import com.google.common.collect.ImmutableList;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
 import ninjaphenix.container_library.client.gui.PageScreen;
@@ -16,16 +20,13 @@ import org.apache.logging.log4j.message.FormattedMessage;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiFunction;
-import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.MenuType;
 
 public final class CommonMain {
     public static final Logger LOGGER = LogManager.getLogger(Utils.MOD_ID);
-    private static MenuType<AbstractHandler> screenHandlerType;
+    private static ContainerType<AbstractHandler> screenHandlerType;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void initialize(BiFunction<ResourceLocation, ClientScreenHandlerFactory, MenuType> handlerTypeFunction, Path configPath, Path oldConfigPath) {
+    public static void initialize(BiFunction<ResourceLocation, ClientScreenHandlerFactory, ContainerType> handlerTypeFunction, Path configPath, Path oldConfigPath) {
         screenHandlerType = handlerTypeFunction.apply(Utils.HANDLER_TYPE_ID, AbstractHandler::createClientMenu);
 
         if (PlatformUtils.isClient()) {
@@ -40,9 +41,9 @@ public final class CommonMain {
                     Utils.id("textures/gui/single_button.png"),
                     Utils.translation("screen.expandedstorage.single_screen"),
                     (scaledWidth, scaledHeight) -> scaledWidth < 370 || scaledHeight < 386, // Smallest possible resolution a double netherite chest fits on.
-                    List.of(
-                            Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY),
-                            Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY)
+                    ImmutableList.of(
+                            Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_1").withStyle(TextFormatting.GRAY),
+                            Utils.translation("screen.ninjaphenix_container_lib.off_screen_warning_2").withStyle(TextFormatting.GRAY)
                     ));
 
             NCL_ClientApiV2.registerScreenType(Utils.PAGE_SCREEN_TYPE, PageScreen::new);
@@ -64,7 +65,7 @@ public final class CommonMain {
         CommonMain.LOGGER.warn(new FormattedMessage(message, values, throwable));
     }
 
-    public static MenuType<AbstractHandler> getScreenHandlerType() {
+    public static ContainerType<AbstractHandler> getScreenHandlerType() {
         return screenHandlerType;
     }
 }

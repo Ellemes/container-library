@@ -3,7 +3,6 @@ package ninjaphenix.container_library.api.client.gui;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class TexturedRect {
     private final int x, y, width, height, textureX, textureY, textureWidth, textureHeight;
 

@@ -1,23 +1,23 @@
 package ninjaphenix.container_library.api.v2;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.Nameable;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.util.INameable;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public interface OpenableBlockEntityV2 {
-    default boolean canBeUsedBy(ServerPlayer player) {
-        BaseContainerBlockEntity self = (BaseContainerBlockEntity) this;
-        return self.getLevel().getBlockEntity(self.getBlockPos()) == self && player.distanceToSqr(Vec3.atCenterOf(self.getBlockPos())) <= 64 && self.canOpen(player);
+    default boolean canBeUsedBy(ServerPlayerEntity player) {
+        LockableLootTileEntity self = (LockableLootTileEntity) this;
+        return self.getLevel().getBlockEntity(self.getBlockPos()) == self && player.distanceToSqr(Vector3d.atCenterOf(self.getBlockPos())) <= 64 && self.canOpen(player);
     }
 
-    default Container getInventory() {
-        return (Container) this;
+    default IInventory getInventory() {
+        return (IInventory) this;
     }
 
-    default Component getInventoryTitle() {
-        return ((Nameable) this).getDisplayName();
+    default ITextComponent getInventoryTitle() {
+        return ((INameable) this).getDisplayName();
     }
 }

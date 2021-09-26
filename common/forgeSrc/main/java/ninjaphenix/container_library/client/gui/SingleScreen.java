@@ -1,7 +1,15 @@
 package ninjaphenix.container_library.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.renderer.Rectangle2d;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -13,20 +21,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 public final class SingleScreen extends AbstractScreen {
     private final Set<TexturedRect> blankArea = new HashSet<>();
     private final ResourceLocation textureLocation;
     private final int textureWidth, textureHeight, blankSlots;
 
-    public SingleScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
+    public SingleScreen(AbstractHandler handler, PlayerInventory playerInventory, ITextComponent title, ScreenSize screenSize) {
         super(handler, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
@@ -59,7 +60,7 @@ public final class SingleScreen extends AbstractScreen {
         super.init();
         if (blankSlots > 0) {
             blankArea.clear();
-            int rows = Mth.intFloorDiv(blankSlots, inventoryWidth);
+            int rows = MathHelper.intFloorDiv(blankSlots, inventoryWidth);
             int remainder = (blankSlots - inventoryWidth * rows);
             int yTop = topPos + Utils.CONTAINER_HEADER_HEIGHT + (inventoryHeight - 1) * Utils.SLOT_SIZE;
             int xLeft = leftPos + Utils.CONTAINER_PADDING_LDR;
@@ -78,20 +79,20 @@ public final class SingleScreen extends AbstractScreen {
     }
 
     @Override
-    protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, textureLocation);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
+    protected void renderBg(MatrixStack stack, float delta, int mouseX, int mouseY) {
+        Minecraft.getInstance().getTextureManager().bind(textureLocation);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        AbstractGui.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
         blankArea.forEach(image -> image.render(stack));
     }
 
     @Override
-    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
         font.draw(stack, title, 8, 6, 0x404040);
-        font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 0x404040);
+        font.draw(stack, inventory.getDisplayName(), 8, imageHeight - 96 + 2, 0x404040);
     }
 
-    private void initializeSlots(Inventory playerInventory) {
+    private void initializeSlots(PlayerInventory playerInventory) {
         for (int i = 0; i < menu.getInventory().getContainerSize(); i++) {
             int x = i % inventoryWidth;
             int y = (i - x) / inventoryWidth;
@@ -110,7 +111,7 @@ public final class SingleScreen extends AbstractScreen {
     }
 
     @NotNull
-    public List<Rect2i> getExclusionZones() {
+    public List<Rectangle2d> getExclusionZones() {
         return Collections.emptyList();
     }
 

@@ -1,7 +1,15 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.google.common.collect.ImmutableSortedSet;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -20,16 +28,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 
 public final class PickScreen extends Screen {
     private static final Map<ResourceLocation, PickButton> BUTTON_SETTINGS = new HashMap<>();
@@ -41,14 +39,14 @@ public final class PickScreen extends Screen {
     private int topPadding;
 
     public PickScreen(Supplier<Screen> returnToScreen, AbstractHandler handler) {
-        super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
+        super(new TranslationTextComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
         this.returnToScreen = returnToScreen;
         this.handler = handler;
         this.onOptionPicked = () -> {};
     }
 
     public PickScreen(@NotNull Runnable onOptionPicked) {
-        super(new TranslatableComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
+        super(new TranslationTextComponent("screen.ninjaphenix_container_lib.screen_picker_title"));
         this.returnToScreen = () -> null;
         this.handler = null;
         this.onOptionPicked = onOptionPicked;
@@ -57,7 +55,7 @@ public final class PickScreen extends Screen {
     @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
-    public static void declareButtonSettings(ResourceLocation type, ResourceLocation texture, Component title, ScreenSizePredicate warningTest, List<Component> warningText) {
+    public static void declareButtonSettings(ResourceLocation type, ResourceLocation texture, ITextComponent title, ScreenSizePredicate warningTest, List<ITextComponent> warningText) {
         PickScreen.BUTTON_SETTINGS.putIfAbsent(type, new PickButton(texture, title, warningTest, warningText));
     }
 
@@ -68,7 +66,7 @@ public final class PickScreen extends Screen {
             ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
             int invSize = handler.getInventory().getContainerSize();
             if (AbstractScreen.getScreenSize(preference, invSize, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight()) == null) {
-                minecraft.player.displayClientMessage(Utils.translation("generic.ninjaphenix_container_lib.label").withStyle(ChatFormatting.GOLD).append(Utils.translation("chat.ninjaphenix_container_lib.cannot_display_screen", Utils.translation("screen." + preference.getNamespace() + "." + preference.getPath() + "_screen")).withStyle(ChatFormatting.WHITE)), false);
+                minecraft.player.displayClientMessage(Utils.translation("generic.ninjaphenix_container_lib.label").withStyle(TextFormatting.GOLD).append(Utils.translation("chat.ninjaphenix_container_lib.cannot_display_screen", Utils.translation("screen." + preference.getNamespace() + "." + preference.getPath() + "_screen")).withStyle(TextFormatting.WHITE)), false);
                 minecraft.player.closeContainer();
                 return;
             }
@@ -88,7 +86,7 @@ public final class PickScreen extends Screen {
         super.init();
         ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
         int choices = options.size();
-        int columns = Math.min(Mth.intFloorDiv(width, 96), choices);
+        int columns = Math.min(MathHelper.intFloorDiv(width, 96), choices);
         int innerPadding = Math.min((width - columns * 96) / (columns + 1), 20); // 20 is smallest gap for any screen.
         int outerPadding = (width - (((columns - 1) * innerPadding) + (columns * 96))) / 2;
         int x = 0;
@@ -99,12 +97,12 @@ public final class PickScreen extends Screen {
             PickButton settings = PickScreen.BUTTON_SETTINGS.get(option);
             boolean isWarn = settings.getWarningTest().test(width, height);
             boolean isCurrent = option.equals(preference);
-            Button.OnTooltip tooltip = new Button.OnTooltip() {
-                private static final Component CURRENT_OPTION_TEXT = Utils.translation("screen.ninjaphenix_container_lib.current_option_notice").withStyle(ChatFormatting.GOLD);
+            Button.ITooltip tooltip = new Button.ITooltip() {
+                private final ITextComponent CURRENT_OPTION_TEXT = Utils.translation("screen.ninjaphenix_container_lib.current_option_notice").withStyle(TextFormatting.GOLD);
 
                 @Override
-                public void onTooltip(Button button, PoseStack stack, int x, int y) {
-                    List<Component> tooltip = new ArrayList<>(4);
+                public void onTooltip(Button button, MatrixStack stack, int x, int y) {
+                    List<ITextComponent> tooltip = new ArrayList<>(4);
                     tooltip.add(button.getMessage());
                     if (isCurrent) {
                         tooltip.add(CURRENT_OPTION_TEXT);
@@ -112,24 +110,10 @@ public final class PickScreen extends Screen {
                     if (isWarn) {
                         tooltip.addAll(settings.getWarningText());
                     }
-                    PickScreen.this.renderTooltip(stack, tooltip, Optional.empty(), x, y);
-                }
-
-                @Override
-                public void narrateTooltip(Consumer<Component> consumer) {
-                    if (isCurrent) {
-                        consumer.accept(CURRENT_OPTION_TEXT);
-                    }
-                    if (isWarn) {
-                        MutableComponent text = new TextComponent("");
-                        for (Component component : settings.getWarningText()) {
-                            text.append(component);
-                        }
-                        consumer.accept(text);
-                    }
+                    PickScreen.this.renderComponentTooltip(stack, tooltip, x, y); // Not sure about this.
                 }
             };
-            optionButtons.add(this.addRenderableWidget(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
+            optionButtons.add(this.addButton(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
                     settings.getTexture(), settings.getTitle(), isWarn, isCurrent, button -> this.updatePlayerPreference(option), tooltip)));
             x++;
         }
@@ -142,10 +126,10 @@ public final class PickScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, delta);
         optionButtons.forEach(button -> button.renderButtonTooltip(stack, mouseX, mouseY));
-        GuiComponent.drawCenteredString(stack, font, title, width / 2, Math.max(topPadding / 2, 0), 0xFFFFFFFF);
+        AbstractGui.drawCenteredString(stack, font, title, width / 2, Math.max(topPadding / 2, 0), 0xFFFFFFFF);
     }
 }

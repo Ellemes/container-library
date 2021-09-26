@@ -1,6 +1,7 @@
 package ninjaphenix.container_library.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -23,21 +24,21 @@ public final class ScreenPickButton extends ButtonWidget {
 
     @Override
     public void renderButton(MatrixStack stack, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, alpha);
         DrawableHelper.drawTexture(stack, x, y, 0, height * (this.isHovered() ? 1 : isCurrentPreference ? 2 : 0), width, height, width, height * 3);
         if (showWarningSymbol) {
-            RenderSystem.setShaderTexture(0, WARNING_TEXTURE);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
+            MinecraftClient.getInstance().getTextureManager().bindTexture(WARNING_TEXTURE);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, alpha);
             DrawableHelper.drawTexture(stack, x + width - 28, y + 9, 0, 0, 16, 32, 16, 32);
         }
     }
 
     public void renderButtonTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if (hovered) {
-            this.renderTooltip(stack, mouseX, mouseY);
+            this.renderToolTip(stack, mouseX, mouseY);
         } else if (this.isFocused()) {
-            this.renderTooltip(stack, x, y);
+            this.renderToolTip(stack, x, y);
         }
     }
 }

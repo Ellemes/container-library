@@ -1,6 +1,7 @@
 package ninjaphenix.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Rect2i;
@@ -79,8 +80,8 @@ public final class SingleScreen extends AbstractScreen {
 
     @Override
     protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, textureLocation);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(textureLocation);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         DrawableHelper.drawTexture(stack, x, y, 0, 0, backgroundWidth, backgroundHeight, textureWidth, textureHeight);
         blankArea.forEach(image -> image.render(stack));
     }
@@ -88,7 +89,7 @@ public final class SingleScreen extends AbstractScreen {
     @Override
     protected void drawForeground(MatrixStack stack, int mouseX, int mouseY) {
         textRenderer.draw(stack, title, 8, 6, 0x404040);
-        textRenderer.draw(stack, playerInventoryTitle, 8, backgroundHeight - 96 + 2, 0x404040);
+        textRenderer.draw(stack, playerInventory.getDisplayName(), 8, backgroundHeight - 96 + 2, 0x404040);
     }
 
     private void initializeSlots(PlayerInventory playerInventory) {

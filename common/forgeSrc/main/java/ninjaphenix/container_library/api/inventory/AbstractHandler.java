@@ -1,28 +1,28 @@
 package ninjaphenix.container_library.api.inventory;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.MathHelper;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 
 import java.util.function.IntUnaryOperator;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 
-public final class AbstractHandler extends AbstractContainerMenu {
-    private final Container inventory;
+public final class AbstractHandler extends Container {
+    private final IInventory inventory;
 
-    public AbstractHandler(int syncId, Container inventory, Inventory playerInventory) {
+    public AbstractHandler(int syncId, IInventory inventory, PlayerInventory playerInventory) {
         super(CommonMain.getScreenHandlerType(), syncId);
         this.inventory = inventory;
         inventory.startOpen(playerInventory.player);
-        if (playerInventory.player instanceof ServerPlayer) {
+        if (playerInventory.player instanceof ServerPlayerEntity) {
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 this.addSlot(new Slot(inventory, i, i * Utils.SLOT_SIZE, 0));
             }
@@ -36,28 +36,28 @@ public final class AbstractHandler extends AbstractContainerMenu {
     }
 
     // Client only
-    public static AbstractHandler createClientMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buffer) {
-        return new AbstractHandler(syncId, new SimpleContainer(buffer.readInt()), playerInventory);
+    public static AbstractHandler createClientMenu(int syncId, PlayerInventory playerInventory, PacketBuffer buffer) {
+        return new AbstractHandler(syncId, new Inventory(buffer.readInt()), playerInventory);
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(PlayerEntity player) {
         return inventory.stillValid(player);
     }
 
     @Override
-    public void removed(Player player) {
+    public void removed(PlayerEntity player) {
         super.removed(player);
         inventory.stopOpen(player);
     }
 
     // Public API, required for mods to check if blocks should be considered open
-    public Container getInventory() {
+    public IInventory getInventory() {
         return inventory;
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
+    public ItemStack quickMoveStack(PlayerEntity player, int index) {
         ItemStack originalStack = ItemStack.EMPTY;
         Slot slot = slots.get(index);
         if (slot.hasItem()) {
@@ -83,7 +83,7 @@ public final class AbstractHandler extends AbstractContainerMenu {
     public void resetSlotPositions(boolean createSlots, int menuWidth, int menuHeight) {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             int slotXPos = i % menuWidth;
-            int slotYPos = Mth.ceil((((double) (i - slotXPos)) / menuWidth));
+            int slotYPos = MathHelper.ceil((((double) (i - slotXPos)) / menuWidth));
             int realYPos = slotYPos >= menuHeight ? (Utils.SLOT_SIZE * (slotYPos % menuHeight)) - 2000 : slotYPos * Utils.SLOT_SIZE;
             if (createSlots) {
                 this.addSlot(new Slot(inventory, i, slotXPos * Utils.SLOT_SIZE + 8, realYPos + Utils.SLOT_SIZE));
@@ -107,7 +107,6 @@ public final class AbstractHandler extends AbstractContainerMenu {
 
     public void clearSlots() {
         this.slots.clear();
-        this.remoteSlots.clear();
         this.lastSlots.clear();
     }
 

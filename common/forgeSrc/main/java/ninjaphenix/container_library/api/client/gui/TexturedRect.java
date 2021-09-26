@@ -1,9 +1,8 @@
 package ninjaphenix.container_library.api.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.AbstractGui;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class TexturedRect {
     private final int x, y, width, height, textureX, textureY, textureWidth, textureHeight;
 
@@ -18,7 +17,7 @@ public final class TexturedRect {
         this.textureHeight = textureHeight;
     }
 
-    public void render(PoseStack stack) {
-        GuiComponent.blit(stack, x, y, textureX, textureY, width, height, textureWidth, textureHeight);
+    public void render(MatrixStack stack) {
+        AbstractGui.blit(stack, x, y, textureX, textureY, width, height, textureWidth, textureHeight);
     }
 }

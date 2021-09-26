@@ -81,7 +81,7 @@ val excludeFabric: (ModuleDependency) -> Unit = {
 
 dependencies {
     minecraft(libs.minecraft.fabric)
-    mappings("net.fabricmc:yarn:1.17.1+build.61:v2")
+    mappings("net.fabricmc:yarn:1.16.5+build.10:v2")
 
     modImplementation(libs.fabric.loader)
     implementation(libs.jetbrainAnnotations)

@@ -1,7 +1,15 @@
 package ninjaphenix.container_library.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.Rectangle2d;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
@@ -16,14 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 public final class ScrollScreen extends AbstractScreen {
     private static final int THUMB_WIDTH = 12, THUMB_HEIGHT = 15;
@@ -34,7 +34,7 @@ public final class ScrollScreen extends AbstractScreen {
     private int topRow, scrollYOffset, thumbY, blankSlots;
     private @Nullable TexturedRect blankArea;
 
-    public ScrollScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
+    public ScrollScreen(AbstractHandler handler, PlayerInventory playerInventory, ITextComponent title, ScreenSize screenSize) {
         super(handler, playerInventory, title, screenSize);
 
         this.initializeSlots(playerInventory);
@@ -56,17 +56,17 @@ public final class ScrollScreen extends AbstractScreen {
             default -> throw new IllegalStateException("Unexpected value: " + inventoryHeight);
         };
 
-        totalRows = Mth.ceil(((double) totalSlots) / inventoryWidth);
+        totalRows = MathHelper.ceil(((double) totalSlots) / inventoryWidth);
         imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * inventoryWidth + Utils.CONTAINER_PADDING_LDR + 22 - 4; // 22 - 4 is scrollbar width - overlap
         backgroundRenderWidth = imageWidth - 22 + 4; // - 22 + 4 is scrollbar width - overlap
         imageHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * inventoryHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
         scrollingUnrestricted = ConfigWrapper.getInstance().isScrollingUnrestricted();
     }
 
-    private void initializeSlots(Inventory playerInventory) {
+    private void initializeSlots(PlayerInventory playerInventory) {
         for (int i = 0; i < totalSlots; i++) {
             int slotXPos = i % inventoryWidth;
-            int slotYPos = Mth.ceil((((double) (i - slotXPos)) / inventoryWidth));
+            int slotYPos = MathHelper.ceil((((double) (i - slotXPos)) / inventoryWidth));
             int realYPos = slotYPos >= inventoryHeight ? -2000 : slotYPos * Utils.SLOT_SIZE + Utils.SLOT_SIZE;
             menu.addClientSlot(new Slot(menu.getInventory(), i, slotXPos * Utils.SLOT_SIZE + 8, realYPos));
         }
@@ -100,16 +100,16 @@ public final class ScrollScreen extends AbstractScreen {
     }
 
     @Override
-    protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, textureLocation);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        GuiComponent.blit(stack, leftPos, topPos, 0, 0, backgroundRenderWidth, imageHeight, textureWidth, textureHeight);
+    protected void renderBg(MatrixStack stack, float delta, int mouseX, int mouseY) {
+        Minecraft.getInstance().getTextureManager().bind(textureLocation);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        AbstractGui.blit(stack, leftPos, topPos, 0, 0, backgroundRenderWidth, imageHeight, textureWidth, textureHeight);
 
         int containerSlotsHeight = inventoryHeight * 18;
         int scrollbarHeight = containerSlotsHeight + (inventoryWidth > 9 ? 34 : 24);
-        GuiComponent.blit(stack, leftPos + backgroundRenderWidth - 4, topPos, backgroundRenderWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
+        AbstractGui.blit(stack, leftPos + backgroundRenderWidth - 4, topPos, backgroundRenderWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
 
-        GuiComponent.blit(stack, leftPos + backgroundRenderWidth - 2, topPos + Utils.CONTAINER_HEADER_HEIGHT + 1 + thumbY, backgroundRenderWidth, scrollbarHeight, ScrollScreen.THUMB_WIDTH, ScrollScreen.THUMB_HEIGHT, textureWidth, textureHeight);
+        AbstractGui.blit(stack, leftPos + backgroundRenderWidth - 2, topPos + Utils.CONTAINER_HEADER_HEIGHT + 1 + thumbY, backgroundRenderWidth, scrollbarHeight, ScrollScreen.THUMB_WIDTH, ScrollScreen.THUMB_HEIGHT, textureWidth, textureHeight);
 
         if (blankArea != null && blankAreaVisible) {
             blankArea.render(stack);
@@ -117,9 +117,9 @@ public final class ScrollScreen extends AbstractScreen {
     }
 
     @Override
-    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
         font.draw(stack, title, 8, 6, 0x404040);
-        font.draw(stack, playerInventoryTitle, 8, imageHeight - 96 + 2, 0x404040);
+        font.draw(stack, inventory.getDisplayName(), 8, imageHeight - 96 + 2, 0x404040);
     }
 
     private boolean isMouseOverTrack(double mouseX, double mouseY) {
@@ -242,13 +242,13 @@ public final class ScrollScreen extends AbstractScreen {
                 menu.setSlotRange(setOutBegin, setOutBegin + setAmount, index -> -2000);
                 menu.moveSlotRange(movableBegin, setInBegin, -18 * rows);
                 menu.setSlotRange(setInBegin, Math.min(setInBegin + setAmount, totalSlots),
-                        index -> 18 * Mth.intFloorDiv(index - movableBegin + inventoryWidth, inventoryWidth));
+                        index -> 18 * MathHelper.intFloorDiv(index - movableBegin + inventoryWidth, inventoryWidth));
             } else {
                 int setInBegin = newTopRow * inventoryWidth;
                 int movableBegin = oldTopRow * inventoryWidth;
                 int setOutBegin = movableBegin + movableAmount;
                 menu.setSlotRange(setInBegin, setInBegin + setAmount,
-                        index -> 18 * Mth.intFloorDiv(index - setInBegin + inventoryWidth, inventoryWidth));
+                        index -> 18 * MathHelper.intFloorDiv(index - setInBegin + inventoryWidth, inventoryWidth));
                 menu.moveSlotRange(movableBegin, setOutBegin, 18 * rows);
                 menu.setSlotRange(setOutBegin, Math.min(setOutBegin + setAmount, totalSlots), index -> -2000);
             }
@@ -257,7 +257,7 @@ public final class ScrollScreen extends AbstractScreen {
             menu.setSlotRange(oldMin, Math.min(oldMin + inventoryWidth * inventoryHeight, totalSlots), index -> -2000);
             int newMin = newTopRow * inventoryWidth;
             menu.setSlotRange(newMin, newMin + inventoryWidth * inventoryHeight - (blankAreaVisible ? blankSlots : 0),
-                    index -> 18 + 18 * Mth.intFloorDiv(index - newMin, inventoryWidth));
+                    index -> 18 + 18 * MathHelper.intFloorDiv(index - newMin, inventoryWidth));
         }
     }
 
@@ -270,9 +270,9 @@ public final class ScrollScreen extends AbstractScreen {
 
     @NotNull
     @Override
-    public List<Rect2i> getExclusionZones() {
+    public List<Rectangle2d> getExclusionZones() {
         int height = Utils.CONTAINER_HEADER_HEIGHT + inventoryHeight * Utils.SLOT_SIZE + (inventoryWidth > 9 ? 10 : 0) + Utils.CONTAINER_PADDING_LDR;
-        return Collections.singletonList(new Rect2i(leftPos + backgroundRenderWidth, topPos, 22 - 4, height)); // 22 - 4 is scrollbar width minus overlap
+        return Collections.singletonList(new Rectangle2d(leftPos + backgroundRenderWidth, topPos, 22 - 4, height)); // 22 - 4 is scrollbar width minus overlap
     }
 
     public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {

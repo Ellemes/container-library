@@ -1,6 +1,7 @@
 package ninjaphenix.container_library.api.v2;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -19,8 +20,9 @@ public interface OpenableBlockEntityProviderV2 {
      * Return the openable block entity, {@link ninjaphenix.container_library.api.v2.helpers.OpenableBlockEntitiesV2} can be used to supply more than one inventory.
      */
     default OpenableBlockEntityV2 getOpenableBlockEntity(World world, BlockState state, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof OpenableBlockEntityV2 entity) {
-            return entity;
+        BlockEntity entity = world.getBlockEntity(pos);
+        if (entity instanceof OpenableBlockEntityV2) {
+            return (OpenableBlockEntityV2) entity;
         }
         return null;
     }
@@ -38,8 +40,8 @@ public interface OpenableBlockEntityProviderV2 {
         if (world.isClient()) {
             return this.ncl_cOpenInventory(pos, hand, hit) ? ActionResult.SUCCESS : ActionResult.FAIL;
         } else {
-            if (player instanceof ServerPlayerEntity serverPlayer) {
-                this.ncl_sOpenInventory(world, state, pos, serverPlayer);
+            if (player instanceof ServerPlayerEntity) {
+                this.ncl_sOpenInventory(world, state, pos, (ServerPlayerEntity) player);
             }
             return ActionResult.CONSUME;
         }

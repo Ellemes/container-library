@@ -6,7 +6,6 @@ import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 
 import java.util.List;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class PickButton {
     private final Identifier texture;
     private final Text title;

@@ -74,7 +74,7 @@ public final class PickScreen extends Screen {
             }
             handler.clearSlots();
         }
-        client.setScreen(returnToScreen.get());
+        client.openScreen(returnToScreen.get());
     }
 
     @Override
@@ -100,7 +100,7 @@ public final class PickScreen extends Screen {
             boolean isWarn = settings.getWarningTest().test(width, height);
             boolean isCurrent = option.equals(preference);
             ButtonWidget.TooltipSupplier tooltip = new ButtonWidget.TooltipSupplier() {
-                private static final Text CURRENT_OPTION_TEXT = Utils.translation("screen.ninjaphenix_container_lib.current_option_notice").formatted(Formatting.GOLD);
+                private final Text CURRENT_OPTION_TEXT = Utils.translation("screen.ninjaphenix_container_lib.current_option_notice").formatted(Formatting.GOLD);
 
                 @Override
                 public void onTooltip(ButtonWidget button, MatrixStack stack, int x, int y) {
@@ -112,24 +112,10 @@ public final class PickScreen extends Screen {
                     if (isWarn) {
                         tooltip.addAll(settings.getWarningText());
                     }
-                    PickScreen.this.renderTooltip(stack, tooltip, Optional.empty(), x, y);
-                }
-
-                @Override
-                public void supply(Consumer<Text> consumer) {
-                    if (isCurrent) {
-                        consumer.accept(CURRENT_OPTION_TEXT);
-                    }
-                    if (isWarn) {
-                        MutableText text = new LiteralText("");
-                        for (Text component : settings.getWarningText()) {
-                            text.append(component);
-                        }
-                        consumer.accept(text);
-                    }
+                    PickScreen.this.renderTooltip(stack, tooltip, x, y); // Not sure about this
                 }
             };
-            optionButtons.add(this.addDrawableChild(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
+            optionButtons.add(this.addButton(new ScreenPickButton(outerPadding + (innerPadding + 96) * x, topPadding, 96, 96,
                     settings.getTexture(), settings.getTitle(), isWarn, isCurrent, button -> this.updatePlayerPreference(option), tooltip)));
             x++;
         }

@@ -12,8 +12,8 @@ public abstract class LastAfterInitCallbackMixin {
     @Inject(method = "init(Lnet/minecraft/client/MinecraftClient;II)V", at = @At("TAIL"))
     private void afterInit(CallbackInfo ci) {
         //noinspection ConstantConditions
-        if ((Object) this instanceof PageScreen screen) {
-            screen.addPageButtons();
+        if ((Object) this instanceof PageScreen) {
+            ((PageScreen) ((Object) this)).addPageButtons();
         }
     }
 }

@@ -1,19 +1,18 @@
 package ninjaphenix.container_library.client;
 
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 
 import java.util.List;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class PickButton {
     private final ResourceLocation texture;
-    private final Component title;
+    private final ITextComponent title;
     private final ScreenSizePredicate warningTest;
-    private final List<Component> warningText;
+    private final List<ITextComponent> warningText;
 
-    public PickButton(ResourceLocation texture, Component title, ScreenSizePredicate warningTest, List<Component> warningText) {
+    public PickButton(ResourceLocation texture, ITextComponent title, ScreenSizePredicate warningTest, List<ITextComponent> warningText) {
         this.texture = texture;
         this.title = title;
         this.warningTest = warningTest;
@@ -24,7 +23,7 @@ public final class PickButton {
         return texture;
     }
 
-    public Component getTitle() {
+    public ITextComponent getTitle() {
         return title;
     }
 
@@ -32,7 +31,7 @@ public final class PickButton {
         return warningTest;
     }
 
-    public List<Component> getWarningText() {
+    public List<ITextComponent> getWarningText() {
         return warningText;
     }
 }
