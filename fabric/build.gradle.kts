@@ -7,28 +7,7 @@ plugins {
     `maven-publish`
 }
 
-val isTest = hasProperty("test") || System.getProperties().containsKey("idea.sync.active")
-
-if (isTest) {
-    sourceSets {
-        main {
-            java {
-                setSrcDirs(listOf(
-                        "src/main/java",
-                        "src/test/java",
-                        rootDir.resolve("common/${project.name}Src/main/java")
-                ))
-            }
-            resources {
-                setSrcDirs(listOf(
-                        "src/main/resources",
-                        "src/test/resources",
-                        rootDir.resolve("common/src/main/resources")
-                ))
-            }
-        }
-    }
-}
+val isTest = hasProperty("test")
 
 loom {
     runs {
@@ -91,9 +70,6 @@ dependencies {
 
         modRuntimeOnly(libs.rei.asProvider(), excludeFabric)
         modRuntimeOnly(libs.modmenu, excludeFabric)
-
-        modCompileOnly(libs.arrp, excludeFabric)
-        modRuntimeOnly(libs.arrp, excludeFabric)
     } else {
         listOf(
                 "fabric-networking-api-v1",
@@ -102,13 +78,6 @@ dependencies {
         ).forEach {
             modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
         }
-    }
-
-    modCompileOnly("local:rtree-3i-lite-fabric:0.3.0") {
-        isTransitive = false
-    }
-    modCompileOnly("com.github.draylar:get-off-my-lawn:1.4.0-beta") {
-        isTransitive = false
     }
 
     modCompileOnly(libs.rei.api, excludeFabric)

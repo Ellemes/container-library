@@ -11,15 +11,12 @@ import ninjaphenix.container_library.client.gui.ScrollScreen;
 import ninjaphenix.container_library.client.gui.SingleScreen;
 import ninjaphenix.container_library.inventory.ClientScreenHandlerFactory;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
-import ninjaphenix.container_library.wrappers.NetworkWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.BiFunction;
 
 public final class CommonMain {
@@ -59,7 +56,6 @@ public final class CommonMain {
             NCL_ClientApiV2.setPrefersSingleScreen(Utils.PAGE_SCREEN_TYPE);
             NCL_ClientApiV2.setPrefersSingleScreen(Utils.SCROLL_SCREEN_TYPE);
         }
-        NetworkWrapper.getInstance().initialise();
     }
 
     public static void warnThrowableMessage(String message, Throwable throwable, Object... values) {

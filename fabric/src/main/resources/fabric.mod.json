@@ -3,10 +3,10 @@
   "accessWidener": "ninjaphenix_container_lib.accessWidener",
   "depends": {
     "fabric-key-binding-api-v1": ">=1.0.4",
-    "fabric-networking-api-v1": ">=1.0.12",
-    "fabric-screen-handler-api-v1": ">=1.1.8",
+    "fabric-networking-api-v1": ">=1.0.4",
+    "fabric-screen-handler-api-v1": ">=1.1.5",
     "fabricloader": ">=0.11.6",
-    "minecraft": "~1.17.1"
+    "minecraft": "~1.16.5"
   },
   "entrypoints": {
     "main": [

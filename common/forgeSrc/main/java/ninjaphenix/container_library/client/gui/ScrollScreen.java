@@ -40,21 +40,32 @@ public final class ScrollScreen extends AbstractScreen {
         this.initializeSlots(playerInventory);
 
         textureLocation = new ResourceLocation("ninjaphenix_container_lib", "textures/gui/container/shared_" + inventoryWidth + "_" + inventoryHeight + ".png");
-        textureWidth = switch (inventoryWidth) {
-            case 9 -> 208;
-            case 12 -> 256;
-            case 15 -> 320;
-            case 18 -> 368;
-            default -> throw new IllegalStateException("Unexpected value: " + inventoryWidth);
-        };
-        textureHeight = switch (inventoryHeight) {
-            case 3 -> 192;
-            case 6 -> 240;
-            case 9 -> 304;
-            case 12 -> 352;
-            case 15 -> 416;
-            default -> throw new IllegalStateException("Unexpected value: " + inventoryHeight);
-        };
+
+        if (inventoryWidth == 9) {
+            textureWidth = 208;
+        } else if (inventoryWidth == 12) {
+            textureWidth = 256;
+        } else if (inventoryWidth == 15) {
+            textureWidth = 320;
+        } else if (inventoryWidth == 18) {
+            textureWidth = 368;
+        } else {
+            throw new IllegalStateException("Unexpected value: " + inventoryWidth);
+        }
+
+        if (inventoryHeight == 3) {
+            textureHeight = 192;
+        } else if (inventoryHeight == 6) {
+            textureHeight = 240;
+        } else if (inventoryHeight == 9) {
+            textureHeight = 304;
+        } else if (inventoryHeight == 12) {
+            textureHeight = 352;
+        } else if (inventoryHeight == 15) {
+            textureHeight = 416;
+        } else {
+            throw new IllegalStateException("Unexpected value: " + inventoryWidth);
+        }
 
         totalRows = MathHelper.ceil(((double) totalSlots) / inventoryWidth);
         imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * inventoryWidth + Utils.CONTAINER_PADDING_LDR + 22 - 4; // 22 - 4 is scrollbar width - overlap
