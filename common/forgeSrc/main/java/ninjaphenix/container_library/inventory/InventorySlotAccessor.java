@@ -2,7 +2,6 @@ package ninjaphenix.container_library.inventory;
 
 import java.util.function.ObjIntConsumer;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class InventorySlotAccessor<T> {
     private final T inventory;
     private final int slot;

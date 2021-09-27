@@ -1,8 +1,6 @@
 package ninjaphenix.container_library.api.v2.client;
 
-import net.minecraft.block.Block;
 import net.minecraft.network.play.client.CPlayerTryUseItemOnBlockPacket;
-import net.minecraft.network.play.server.SBlockActionPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -14,7 +12,6 @@ import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
-import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 import java.util.Collections;
 import java.util.List;
