@@ -1,0 +1,5 @@
+# Not sure if this will actually work as we publish two artifacts
+jdk:
+    - openjdk16
+install:
+    - ./gradlew clean publishToMavenLocal
