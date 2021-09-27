@@ -78,7 +78,7 @@ val excludeFabric: (ModuleDependency) -> Unit = {
 
 dependencies {
     minecraft(libs.minecraft.fabric)
-    mappings("net.fabricmc:yarn:1.17.1+build.61:v2")
+    mappings("net.fabricmc:yarn:${properties["minecraft_version"]}+build.${properties["yarn_version"]}:v2")
 
     modImplementation(libs.fabric.loader)
     implementation(libs.jetbrainAnnotations)
@@ -86,8 +86,8 @@ dependencies {
     if (isTest) {
         modImplementation(libs.fabric.api)
 
-        modRuntimeOnly(libs.rei.asProvider(), excludeFabric)
-        modRuntimeOnly(libs.modmenu, excludeFabric)
+        //modRuntimeOnly(libs.rei.asProvider(), excludeFabric)
+        //modRuntimeOnly(libs.modmenu, excludeFabric)
 
         modCompileOnly(libs.arrp, excludeFabric)
         modRuntimeOnly(libs.arrp, excludeFabric)

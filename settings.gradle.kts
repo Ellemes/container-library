@@ -37,4 +37,4 @@ pluginManagement {
 rootProject.name = "container-library"
 
 include("fabric")
-include("forge")
+//include("forge")
