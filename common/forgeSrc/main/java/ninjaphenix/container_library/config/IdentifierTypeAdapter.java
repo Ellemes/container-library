@@ -3,8 +3,9 @@ package ninjaphenix.container_library.config;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import net.minecraft.util.ResourceLocation;
+
 import java.io.IOException;
-import net.minecraft.resources.ResourceLocation;
 
 public final class IdentifierTypeAdapter extends TypeAdapter<ResourceLocation> {
     @Override
