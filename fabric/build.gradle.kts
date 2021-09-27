@@ -7,22 +7,22 @@ plugins {
     `maven-publish`
 }
 
-val isTest = hasProperty("test") || System.getProperties().containsKey("idea.sync.active")
+val isTest = hasProperty("test")
 
-if (isTest) {
+if (isTest || System.getProperties().containsKey("idea.sync.active")) {
     sourceSets {
         main {
             java {
                 setSrcDirs(listOf(
                         "src/main/java",
-                        "src/test/java",
+                        "src/testmod/java",
                         rootDir.resolve("common/${project.name}Src/main/java")
                 ))
             }
             resources {
                 setSrcDirs(listOf(
                         "src/main/resources",
-                        "src/test/resources",
+                        "src/testmod/resources",
                         rootDir.resolve("common/src/main/resources")
                 ))
             }
