@@ -9,6 +9,27 @@ plugins {
 
 val isTest = hasProperty("test")
 
+if (isTest || System.getProperties().containsKey("idea.sync.active")) {
+    sourceSets {
+        main {
+            java {
+                setSrcDirs(listOf(
+                        "src/main/java",
+                        "src/testmod/java",
+                        rootDir.resolve("common/${project.name}Src/main/java")
+                ))
+            }
+            resources {
+                setSrcDirs(listOf(
+                        "src/main/resources",
+                        "src/testmod/resources",
+                        rootDir.resolve("common/src/main/resources")
+                ))
+            }
+        }
+    }
+}
+
 loom {
     runs {
         named("client") {
@@ -70,6 +91,9 @@ dependencies {
 
         modRuntimeOnly(libs.rei.asProvider(), excludeFabric)
         modRuntimeOnly(libs.modmenu, excludeFabric)
+
+        modCompileOnly(libs.arrp, excludeFabric)
+        modRuntimeOnly(libs.arrp, excludeFabric)
     } else {
         listOf(
                 "fabric-networking-api-v1",
