@@ -3,11 +3,16 @@
 In short this contains all the code from Expanded Storage used to open inventories including the different screen options.
 
 ## Consuming the library
-If you are to consume this library please jar in jar it or have users download it from Curseforge or Modrinth *when released*.
+If you are to consume this library please jar in jar it or have users download it from Curseforge or Modrinth:
+Curseforge: https://www.curseforge.com/minecraft/mc-mods/ninjaphenixs-container-library
+Modrinth: https://modrinth.com/mod/ninjaphenix-container-library
 
 Whilst you may fork and shade this project and add your own features I would prefer to avoid multiple versions of the library as it would worsen the user experience.
 
 Therefore, if anything can be added to help please let me know or feel free to open a PR.
+
+## Support
+Note: version 1.0.1 which was avaliable since the project's approval on CF and MR introduces a new way of networking, you should prefer the new V2 api as I may remove the V1 api in future minor updates additionally the V1 api will not be backported or future ported.
 
 ## Planned features
 - Texture generation before screens are opened.
