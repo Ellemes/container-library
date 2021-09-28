@@ -11,9 +11,6 @@ Whilst you may fork and shade this project and add your own features I would pre
 
 Therefore, if anything can be added to help please let me know or feel free to open a PR.
 
-## Support
-Note: version 1.0.1 which was avaliable since the project's approval on CF and MR introduces a new way of networking, you should prefer the new V2 api as I may remove the V1 api in future minor updates additionally the V1 api will not be backported or future ported.
-
 ## Planned features
 - Texture generation before screens are opened.
 - User configurable screen sizes including empty slots, will likely generate separate textures for blanked slots rather than in game rendering approach used now.

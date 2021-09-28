@@ -1,6 +1,7 @@
 package ninjaphenix.container_library.client;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import ninjaphenix.container_library.Utils;
 
@@ -13,6 +14,6 @@ public final class FabricKeyHandler implements KeyHandler {
 
     @Override
     public boolean isKeyPressed(int keyCode, int scanCode, int modifiers) {
-        return keybind.matchesKey(keyCode, scanCode) && (modifiers & 1) > 0;
+        return keybind.matchesKey(keyCode, scanCode) && Screen.hasShiftDown();
     }
 }
