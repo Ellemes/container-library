@@ -1,7 +1,10 @@
 package ninjaphenix.container_library.client;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import ninjaphenix.container_library.Utils;
 
 public final class FabricKeyHandler implements KeyHandler {
@@ -13,6 +16,8 @@ public final class FabricKeyHandler implements KeyHandler {
 
     @Override
     public boolean isKeyPressed(int keyCode, int scanCode, int modifiers) {
-        return keybind.matchesKey(keyCode, scanCode) && (modifiers & 1) > 0;
+        var windowHandle = MinecraftClient.getInstance().getWindow().getHandle();
+        return keybind.matchesKey(keyCode, scanCode) &&
+                (InputUtil.isKeyPressed(windowHandle, InputUtil.GLFW_KEY_LEFT_SHIFT) || InputUtil.isKeyPressed(windowHandle, InputUtil.GLFW_KEY_RIGHT_SHIFT));
     }
 }
