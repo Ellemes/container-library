@@ -10,8 +10,7 @@ import ninjaphenix.container_library.client.AmecsKeyHandler;
 import ninjaphenix.container_library.client.FabricKeyHandler;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
-public class Main implements ModInitializer {
-
+public final class Main implements ModInitializer {
     @Override
     public void onInitialize() {
         PlatformUtils.initialize(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT
