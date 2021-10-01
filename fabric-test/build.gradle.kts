@@ -61,7 +61,7 @@ dependencies {
 
     modImplementation(group = "net.fabricmc.fabric-api", name = "fabric-api", version = properties["fabric_api_version"] as String)
 
-    modRuntimeOnly(group = "me.shedaniel", name = "RoughlyEnoughItems-fabric", version = properties["rei_version"] as String, dependencyConfiguration = excludeFabric)
+    //modRuntimeOnly(group = "me.shedaniel", name = "RoughlyEnoughItems-fabric", version = properties["rei_version"] as String, dependencyConfiguration = excludeFabric)
 
     modRuntimeOnly(group = "com.terraformersmc", name = "modmenu", version = properties["modmenu_version"] as String, dependencyConfiguration = excludeFabric)
 
