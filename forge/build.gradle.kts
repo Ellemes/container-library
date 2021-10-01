@@ -10,6 +10,22 @@ plugins {
     `maven-publish`
 }
 
+//region Required for test project.
+configurations {
+    create("dev")
+}
+
+tasks.jar {
+    archiveClassifier.set("dev")
+}
+
+artifacts {
+    this.add("dev", tasks.jar.get().archiveFile) {
+        this.builtBy(tasks.jar)
+    }
+}
+//endregion
+
 mixin {
     add(sourceSets.main.get(), "ninjaphenix-container-lib.refmap.json")
 }
@@ -23,7 +39,7 @@ minecraft {
         create("client") {
             workingDirectory(rootProject.file("run"))
             mods {
-                create("ninjaphenix-container-library") {
+                create("ninjaphenix_container_lib") {
                     source(sourceSets.main.get())
                 }
             }
@@ -41,7 +57,7 @@ minecraft {
         create("server") {
             workingDirectory(rootProject.file("run"))
             mods {
-                create("ninjaphenix-container-library") {
+                create("ninjaphenix_container_lib") {
                     source(sourceSets.main.get())
                 }
             }
@@ -92,7 +108,6 @@ tasks.withType<ProcessResources> {
 
 val jarTask = tasks.getByName<Jar>("jar") {
     archiveClassifier.set("fat")
-    this.finalizedBy("reobfJar")
 }
 
 val namedJarTask = tasks.register<Jar>("namedJar") {
@@ -117,7 +132,7 @@ val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     ))
 
     from(rootDir.resolve("LICENSE"))
-    dependsOn(jarTask)
+    dependsOn(tasks["reobfJar"])
 }
 
 tasks.getByName("build") {
