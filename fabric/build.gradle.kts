@@ -2,8 +2,8 @@ import com.gitlab.ninjaphenix.gradle.api.task.MinifyJsonTask
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-    alias(libs.plugins.gradleUtils)
-    alias(libs.plugins.fabricLoom)
+    alias(libs.plugins.gradle.utils)
+    alias(libs.plugins.gradle.loom)
     `maven-publish`
 }
 
@@ -68,25 +68,25 @@ artifacts {
 //endregion
 
 dependencies {
-    minecraft(libs.minecraft.fabric)
-    mappings("net.fabricmc:yarn:${properties["minecraft_version"]}+build.${properties["yarn_version"]}:v2")
+    minecraft(group = "com.mojang", name = "minecraft", version = properties["minecraft_version"] as String)
+    mappings(group = "net.fabricmc", name = "yarn", version = "${properties["minecraft_version"]}+build.${properties["yarn_version"]}", classifier = "v2")
 
-    modImplementation(libs.fabric.loader)
-    implementation(libs.jetbrainAnnotations)
+    modImplementation(group = "net.fabricmc", name = "fabric-loader", version = properties["fabric_loader_version"] as String)
+    implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
 
     listOf(
             "fabric-networking-api-v1",
             "fabric-screen-handler-api-v1",
             "fabric-key-binding-api-v1"
     ).forEach {
-        modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
+        modImplementation(fabricApi.module(it, properties["fabric_api_version"] as String))
     }
 
-    modCompileOnly(libs.rei.api, excludeFabric)
+    modCompileOnly(group = "me.shedaniel", name = "RoughlyEnoughItems-api-fabric", version = properties["rei_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modCompileOnly(libs.modmenu, excludeFabric)
+    modCompileOnly(group = "com.terraformersmc", name = "modmenu", version = properties["modmenu_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modCompileOnly(libs.amecs.api, excludeFabric)
+    modCompileOnly(group = "de.siphalor", name = "amecsapi-1.17", version = properties["amecs_version"] as String, dependencyConfiguration = excludeFabric)
 }
 
 tasks.withType<ProcessResources> {

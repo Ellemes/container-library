@@ -4,9 +4,9 @@ import java.text.DateFormat
 import java.util.*
 
 plugins {
-    alias(libs.plugins.gradleUtils)
-    alias(libs.plugins.forgeGradle)
-    alias(libs.plugins.mixinGradle)
+    alias(libs.plugins.gradle.utils)
+    alias(libs.plugins.gradle.forge)
+    alias(libs.plugins.gradle.mixin)
     `maven-publish`
 }
 
@@ -73,13 +73,13 @@ repositories {
 }
 
 dependencies {
-    minecraft(libs.minecraft.forge)
-    val jei = (libs.jei.api as Provider<MinimalExternalModuleDependency>).get()
-    compileOnly(fg.deobf("${jei.module.group}:${jei.module.name}:${jei.versionConstraint.displayName}"))
-    implementation(libs.jetbrainAnnotations)
+    minecraft(group = "net.minecraftforge", name = "forge", version = "${properties["minecraft_version"]}-${properties["forge_version"]}")
+    implementation(group = "org.spongepowered", name = "mixin", version = properties["mixin_version"] as String)
+    annotationProcessor(group = "org.spongepowered", name = "mixin", version = properties["mixin_version"] as String, classifier = "processor")
 
-    compileOnly("org.spongepowered:mixin:0.8.4")
-    annotationProcessor("org.spongepowered:mixin:0.8.4:processor")
+    implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
+
+    compileOnly(group = "mezz.jei", name = "jei-${properties["minecraft_version"]}", version = "${properties["jei_version"]}", classifier = "api")
 }
 
 tasks.withType<ProcessResources> {

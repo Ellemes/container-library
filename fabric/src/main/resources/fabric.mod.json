@@ -6,7 +6,7 @@
     "fabric-networking-api-v1": ">=1.0.12",
     "fabric-screen-handler-api-v1": ">=1.1.8",
     "fabricloader": ">=0.11.7",
-    "minecraft": "~1.18-alpha.21.37.a"
+    "minecraft": "~1.18-alpha.21.39.a"
   },
   "entrypoints": {
     "main": [
