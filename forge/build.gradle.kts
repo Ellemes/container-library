@@ -6,7 +6,12 @@ import java.util.*
 plugins {
     alias(libs.plugins.gradleUtils)
     alias(libs.plugins.forgeGradle)
+    alias(libs.plugins.mixinGradle)
     `maven-publish`
+}
+
+mixin {
+    add(sourceSets.main.get(), "ninjaphenix-container-lib.refmap.json")
 }
 
 minecraft {
@@ -72,6 +77,9 @@ dependencies {
     val jei = (libs.jei.api as Provider<MinimalExternalModuleDependency>).get()
     compileOnly(fg.deobf("${jei.module.group}:${jei.module.name}:${jei.versionConstraint.displayName}"))
     implementation(libs.jetbrainAnnotations)
+
+    compileOnly("org.spongepowered:mixin:0.8.4")
+    annotationProcessor("org.spongepowered:mixin:0.8.4:processor")
 }
 
 tasks.withType<ProcessResources> {
@@ -105,6 +113,7 @@ val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
             "Implementation-Vendor" to "ninjaphenix",
             "Implementation-Timestamp" to DateFormat.getDateTimeInstance().format(Date()),
             "Automatic-Module-Name" to "ninjaphenix.container_library",
+            "MixinConfigs" to "ninjaphenix_container_lib.mixins.json"
     ))
 
     from(rootDir.resolve("LICENSE"))

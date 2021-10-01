@@ -5,6 +5,8 @@ pluginManagement {
         eachPlugin {
             if (requested.id.toString() == "net.minecraftforge.gradle") {
                 useModule("net.minecraftforge.gradle:ForgeGradle:${requested.version}")
+            } else if (requested.id.toString() == "org.spongepowered.mixin") {
+                useModule("org.spongepowered:mixingradle:${requested.version}")
             }
         }
     }
@@ -16,6 +18,10 @@ pluginManagement {
         maven {
             name = "MinecraftForge"
             url = uri("https://maven.minecraftforge.net/")
+        }
+        maven {
+            name = "SpongePowered"
+            url = uri("https://repo.spongepowered.org/repository/maven-public/")
         }
         exclusiveContent {
             forRepository {
@@ -37,4 +43,5 @@ pluginManagement {
 rootProject.name = "container-library"
 
 include("fabric")
+include("fabric-test")
 //include("forge")

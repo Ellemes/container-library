@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "entrypoints": {
+    "main": [
+      "ninjaphenix.container_library.test.Main"
+    ]
+  },
+  "environment": "*",
+  "authors": [
+    "NinjaPhenix"
+  ],
+  "id": "ninjaphenix_container_lib_test",
+  "license": "0BSD",
+  "name": "NinjaPhenix's Container Library Tests",
+  "version": "0.0.0"
+}

@@ -13,7 +13,7 @@ logoFile = "icon.png"
 [[dependencies.ninjaphenix_container_lib]]
 modId = "forge"
 mandatory = true
-versionRange = "[37.0.19,)"
+versionRange = "[37.0.59,)"
 ordering = "NONE"
 side = "BOTH"
 

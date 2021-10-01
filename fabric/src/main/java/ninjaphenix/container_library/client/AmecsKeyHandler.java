@@ -8,14 +8,14 @@ import net.minecraft.client.util.InputUtil;
 import ninjaphenix.container_library.Utils;
 
 public final class AmecsKeyHandler implements KeyHandler {
-    private final KeyBinding keybind;
+    private final KeyBinding binding;
 
     public AmecsKeyHandler() {
-        keybind = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.id("config"), InputUtil.Type.KEYSYM, Utils.KEY_BIND_KEY, "key.categories.inventory", new KeyModifiers().setShift(true)));
+        binding = KeyBindingHelper.registerKeyBinding(new AmecsKeyBinding(Utils.id("config"), InputUtil.Type.KEYSYM, Utils.KEY_BIND_KEY, "key.categories.inventory", new KeyModifiers().setShift(true)));
     }
 
     @Override
     public boolean isKeyPressed(int keyCode, int scanCode, int modifiers) {
-        return keybind.matchesKey(keyCode, scanCode);
+        return binding.matchesKey(keyCode, scanCode);
     }
 }

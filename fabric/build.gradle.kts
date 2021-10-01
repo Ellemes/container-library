@@ -7,29 +7,6 @@ plugins {
     `maven-publish`
 }
 
-val isTest = hasProperty("test")
-
-if (isTest || System.getProperties().containsKey("idea.sync.active")) {
-    sourceSets {
-        main {
-            java {
-                setSrcDirs(listOf(
-                        "src/main/java",
-                        "src/testmod/java",
-                        rootDir.resolve("common/${project.name}Src/main/java")
-                ))
-            }
-            resources {
-                setSrcDirs(listOf(
-                        "src/main/resources",
-                        "src/testmod/resources",
-                        rootDir.resolve("common/src/main/resources")
-                ))
-            }
-        }
-    }
-}
-
 loom {
     runs {
         named("client") {
@@ -45,10 +22,12 @@ loom {
 }
 
 repositories {
+    // For REI
     maven {
         name = "Shedaniel"
         url = uri("https://maven.shedaniel.me/")
     }
+    // For Mod Menu
     exclusiveContent {
         forRepository {
             maven {
@@ -60,21 +39,33 @@ repositories {
             includeGroup("com.terraformersmc")
         }
     }
+    // For Amecs
     maven {
         name = "Siphalor's Maven"
         url = uri("https://maven.siphalor.de/")
     }
-    maven {
-        name = "Devan Maven"
-        url = uri("https://storage.googleapis.com/devan-maven/")
-    }
-    mavenLocal()
 }
 
 val excludeFabric: (ModuleDependency) -> Unit = {
     it.exclude("net.fabricmc")
     it.exclude("net.fabricmc.fabric-api")
 }
+
+//region Required for test project.
+configurations {
+    create("dev")
+}
+
+tasks.jar {
+    archiveClassifier.set("dev")
+}
+
+artifacts {
+    this.add("dev", tasks.jar.get().archiveFile) {
+        this.builtBy(tasks.jar)
+    }
+}
+//endregion
 
 dependencies {
     minecraft(libs.minecraft.fabric)
@@ -83,22 +74,12 @@ dependencies {
     modImplementation(libs.fabric.loader)
     implementation(libs.jetbrainAnnotations)
 
-    if (isTest) {
-        modImplementation(libs.fabric.api)
-
-        //modRuntimeOnly(libs.rei.asProvider(), excludeFabric)
-        //modRuntimeOnly(libs.modmenu, excludeFabric)
-
-        modCompileOnly(libs.arrp, excludeFabric)
-        modRuntimeOnly(libs.arrp, excludeFabric)
-    } else {
-        listOf(
-                "fabric-networking-api-v1",
-                "fabric-screen-handler-api-v1",
-                "fabric-key-binding-api-v1"
-        ).forEach {
-            modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
-        }
+    listOf(
+            "fabric-networking-api-v1",
+            "fabric-screen-handler-api-v1",
+            "fabric-key-binding-api-v1"
+    ).forEach {
+        modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
     }
 
     modCompileOnly(libs.rei.api, excludeFabric)

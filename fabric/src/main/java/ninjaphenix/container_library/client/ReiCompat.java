@@ -7,7 +7,7 @@ import me.shedaniel.rei.api.common.util.CollectionUtils;
 import net.minecraft.client.util.math.Rect2i;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 
-public class ReiCompat implements REIClientPlugin {
+public final class ReiCompat implements REIClientPlugin {
     private static Rectangle asReiRectangle(Rect2i rect) {
         return new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
     }

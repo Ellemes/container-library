@@ -3,6 +3,7 @@ package ninjaphenix.container_library.wrappers;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
 import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
+
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
