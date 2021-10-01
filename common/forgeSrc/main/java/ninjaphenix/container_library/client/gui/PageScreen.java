@@ -94,6 +94,17 @@ public final class PageScreen extends AbstractScreen {
         }
     }
 
+    @Override
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
+        if (inventoryWidth > 9) {
+            int outsideRegion = (imageWidth - (Utils.CONTAINER_PADDING_LDR + 9 * Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR)) / 2;
+            if (mouseX < left + outsideRegion || mouseX > left + imageWidth - outsideRegion) {
+                return true;
+            }
+        }
+        return super.hasClickedOutside(mouseX, mouseY, left, top, button);
+    }
+
     private void setPage(int oldPage, int newPage) {
         if (newPage == 0 || newPage > pages) {
             return;

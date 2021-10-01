@@ -6,9 +6,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
+import ninjaphenix.container_library.api.v2.helpers.OpenableBlockEntitiesV2;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 /**
@@ -16,7 +18,7 @@ import ninjaphenix.container_library.wrappers.NetworkWrapper;
  */
 public interface OpenableBlockEntityProviderV2 {
     /**
-     * Return the openable block entity, {@link ninjaphenix.container_library.api.v2.helpers.OpenableBlockEntitiesV2} can be used to supply more than one inventory.
+     * Return the openable block entity, {@link OpenableBlockEntitiesV2} can be used to supply more than one inventory.
      */
     default OpenableBlockEntityV2 getOpenableBlockEntity(Level world, BlockState state, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof OpenableBlockEntityV2 entity) {
@@ -33,7 +35,11 @@ public interface OpenableBlockEntityProviderV2 {
 
     }
 
-    // Should be protected, only called from within class.
+    /**
+     * Note: when this returns {@link InteractionResult#FAIL} a packet will not be sent to the server and the player's hand will swing.
+     * <p/>
+     * Intended to be protected.
+     */
     default InteractionResult ncl_onBlockUse(Level world, BlockState state, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (world.isClientSide()) {
             return this.ncl_cOpenInventory(pos, hand, hit) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
@@ -45,12 +51,18 @@ public interface OpenableBlockEntityProviderV2 {
         }
     }
 
-    // Should be protected, only called from within class.
+    /**
+     * When this method returns {@code false} {@link Block#use} should return {@link InteractionResult#FAIL}
+     * <p/>
+     * Intended to be protected.
+     */
     default boolean ncl_cOpenInventory(BlockPos pos, InteractionHand hand, BlockHitResult hit) {
         return NCL_ClientApiV2.openInventoryAt(pos, hand, hit);
     }
 
-    // Should be protected, only called from within class.
+    /**
+     * Intended to be protected.
+     */
     default void ncl_sOpenInventory(Level world, BlockState state, BlockPos pos, ServerPlayer player) {
         NetworkWrapper.getInstance().s_openInventory(player, this.getOpenableBlockEntity(world, state, pos), this::onInitialOpen);
     }

@@ -28,7 +28,7 @@ import net.minecraft.world.inventory.Slot;
 public final class ScrollScreen extends AbstractScreen {
     private static final int THUMB_WIDTH = 12, THUMB_HEIGHT = 15;
     private final ResourceLocation textureLocation;
-    private final int textureWidth, textureHeight, totalRows, backgroundRenderWidth;
+    private final int textureWidth, textureHeight, totalRows;
     private final boolean scrollingUnrestricted;
     private boolean isDragging, blankAreaVisible;
     private int topRow, scrollYOffset, thumbY, blankSlots;
@@ -57,8 +57,7 @@ public final class ScrollScreen extends AbstractScreen {
         };
 
         totalRows = Mth.ceil(((double) totalSlots) / inventoryWidth);
-        imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * inventoryWidth + Utils.CONTAINER_PADDING_LDR + 22 - 4; // 22 - 4 is scrollbar width - overlap
-        backgroundRenderWidth = imageWidth - 22 + 4; // - 22 + 4 is scrollbar width - overlap
+        imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * inventoryWidth + Utils.CONTAINER_PADDING_LDR; // 22 - 4 is scrollbar width - overlap
         imageHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * inventoryHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
         scrollingUnrestricted = ConfigWrapper.getInstance().isScrollingUnrestricted();
     }
@@ -103,13 +102,13 @@ public final class ScrollScreen extends AbstractScreen {
     protected void renderBg(PoseStack stack, float delta, int mouseX, int mouseY) {
         RenderSystem.setShaderTexture(0, textureLocation);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        GuiComponent.blit(stack, leftPos, topPos, 0, 0, backgroundRenderWidth, imageHeight, textureWidth, textureHeight);
+        GuiComponent.blit(stack, leftPos, topPos, 0, 0, imageWidth, imageHeight, textureWidth, textureHeight);
 
         int containerSlotsHeight = inventoryHeight * 18;
         int scrollbarHeight = containerSlotsHeight + (inventoryWidth > 9 ? 34 : 24);
-        GuiComponent.blit(stack, leftPos + backgroundRenderWidth - 4, topPos, backgroundRenderWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
+        GuiComponent.blit(stack, leftPos + imageWidth - 4, topPos, imageWidth, 0, 22, scrollbarHeight, textureWidth, textureHeight);
 
-        GuiComponent.blit(stack, leftPos + backgroundRenderWidth - 2, topPos + Utils.CONTAINER_HEADER_HEIGHT + 1 + thumbY, backgroundRenderWidth, scrollbarHeight, ScrollScreen.THUMB_WIDTH, ScrollScreen.THUMB_HEIGHT, textureWidth, textureHeight);
+        GuiComponent.blit(stack, leftPos + imageWidth - 2, topPos + Utils.CONTAINER_HEADER_HEIGHT + 1 + thumbY, imageWidth, scrollbarHeight, ScrollScreen.THUMB_WIDTH, ScrollScreen.THUMB_HEIGHT, textureWidth, textureHeight);
 
         if (blankArea != null && blankAreaVisible) {
             blankArea.render(stack);
@@ -123,20 +122,31 @@ public final class ScrollScreen extends AbstractScreen {
     }
 
     private boolean isMouseOverTrack(double mouseX, double mouseY) {
-        boolean xCheck = leftPos + imageWidth - 20 <= mouseX && mouseX <= leftPos + imageWidth - 8;
+        boolean xCheck = leftPos + imageWidth - 2 <= mouseX && mouseX <= leftPos + imageWidth - 2 + ScrollScreen.THUMB_WIDTH;
         int scrollbarStart = topPos + Utils.CONTAINER_HEADER_HEIGHT + 1;
         return xCheck && scrollbarStart <= mouseY && mouseY <= scrollbarStart + inventoryHeight * 18 - 2;
     }
 
     private boolean isMouseOverThumb(double mouseX, double mouseY) {
-        boolean xCheck = leftPos + imageWidth - 20 <= mouseX && mouseX <= leftPos + imageWidth - 8;
+        boolean xCheck = leftPos + imageWidth - 2 <= mouseX && mouseX <= leftPos + imageWidth - 2 + ScrollScreen.THUMB_WIDTH;
         double correctedThumbY = topPos + Utils.CONTAINER_HEADER_HEIGHT + 1 + thumbY;
         return xCheck && correctedThumbY <= mouseY && mouseY <= correctedThumbY + ScrollScreen.THUMB_HEIGHT;
     }
 
+    private boolean isMouseOverScrollbar(double mouseX, double mouseY, int left, int top) {
+        return mouseX > left + imageWidth - 4 && mouseX <= left + imageWidth + 22 &&
+                mouseY >= top && mouseY < top + Utils.CONTAINER_HEADER_HEIGHT + inventoryHeight * 18 + (inventoryWidth > 9 ? 10 : 0) + Utils.CONTAINER_PADDING_LDR;
+    }
+
     @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
-        return super.hasClickedOutside(mouseX, mouseY, left, top, button); // || this.isMouseOverEmptyRegionUnderScrollbar(mouseX, mouseY, left, top, button);
+        if (inventoryWidth > 9) {
+            int outsideRegion = (imageWidth - (Utils.CONTAINER_PADDING_LDR + 9 * Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR)) / 2;
+            if (mouseX < left + outsideRegion || mouseX > left + imageWidth - outsideRegion) {
+                return true;
+            }
+        }
+        return super.hasClickedOutside(mouseX, mouseY, left, top, button) && !this.isMouseOverScrollbar(mouseX, mouseY, leftPos, topPos);
     }
 
     @Override
@@ -272,7 +282,7 @@ public final class ScrollScreen extends AbstractScreen {
     @Override
     public List<Rect2i> getExclusionZones() {
         int height = Utils.CONTAINER_HEADER_HEIGHT + inventoryHeight * Utils.SLOT_SIZE + (inventoryWidth > 9 ? 10 : 0) + Utils.CONTAINER_PADDING_LDR;
-        return Collections.singletonList(new Rect2i(leftPos + backgroundRenderWidth, topPos, 22 - 4, height)); // 22 - 4 is scrollbar width minus overlap
+        return Collections.singletonList(new Rect2i(leftPos + imageWidth, topPos, 22 - 4, height)); // 22 - 4 is scrollbar width minus overlap
     }
 
     public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
