@@ -78,6 +78,17 @@ public final class SingleScreen extends AbstractScreen {
     }
 
     @Override
+    protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
+        if (inventoryWidth > 9) {
+            int outsideRegion = (backgroundWidth - (Utils.CONTAINER_PADDING_LDR + 9 * Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR)) / 2;
+            if (mouseX < left + outsideRegion || mouseX > left + backgroundWidth - outsideRegion) {
+                return true;
+            }
+        }
+        return super.isClickOutsideBounds(mouseX, mouseY, left, top, button);
+    }
+
+    @Override
     protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
         RenderSystem.setShaderTexture(0, textureLocation);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
