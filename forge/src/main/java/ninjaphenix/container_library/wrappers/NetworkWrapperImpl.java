@@ -1,6 +1,5 @@
 package ninjaphenix.container_library.wrappers;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -13,10 +12,6 @@ import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
 import org.jetbrains.annotations.Nullable;
 
 public final class NetworkWrapperImpl extends NetworkWrapper {
-    public void initialise() {
-
-    }
-
     @Override
     protected void openScreenHandler(ServerPlayerEntity player, IInventory inventory, ServerScreenHandlerFactory factory, ITextComponent title) {
         NetworkHooks.openGui(player, new INamedContainerProvider() {

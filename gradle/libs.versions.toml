@@ -1,25 +1,8 @@
-[versions]
-rei = "5.12.248"
-
-[libraries]
-# Common Deps
-jetbrainAnnotations = { group = "org.jetbrains", name = "annotations", version = "22.0.0" }
-# Forge Deps
-minecraft-forge = { group = "net.minecraftforge", name = "forge", version = "1.16.5-36.2.0" }
-jei-api = { group = "mezz.jei", name = "jei-1.16.5", version = "7.7.1.121:api" }
-# Fabric Deps
-minecraft-fabric = { group = "com.mojang", name = "minecraft", version = "1.16.5" }
-fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version = "0.11.6" }
-fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version = "0.36.0+1.16" }
-rei = { group = "me.shedaniel", name = "RoughlyEnoughItems", version.ref = "rei" }
-rei-api = { group = "me.shedaniel", name = "RoughlyEnoughItems-api", version.ref = "rei" }
-modmenu = { group = "com.terraformersmc", name = "modmenu", version = "1.16.20" }
-amecs-api = { group = "de.siphalor", name = "amecsapi-1.17", version = "1.1.+" }
-arrp = { group = "net.devtech", name = "arrp", version = "0.5.1" }
 [plugins]
 # Common Plugins
-gradleUtils = { id = "com.gitlab.ninjaphenix.gradle-utils", version = "0.1.0-beta.5" }
+gradle-utils = { id = "com.gitlab.ninjaphenix.gradle-utils", version = "0.1.0-beta.5" }
 # Forge Plugins
-forgeGradle = { id = "net.minecraftforge.gradle", version = "5.1.22" }
+gradle-forge = { id = "net.minecraftforge.gradle", version = "5.1.22" }
+gradle-mixin = { id = "org.spongepowered.mixin", version = "0.7-SNAPSHOT" }
 # Fabric Plugins
-fabricLoom = { id = "ninja-loom", version = "0.10.local" }
+gradle-loom = { id = "ninja-loom", version = "0.10.local" }

@@ -4,13 +4,18 @@ import java.text.DateFormat
 import java.util.*
 
 plugins {
-    alias(libs.plugins.gradleUtils)
-    alias(libs.plugins.forgeGradle)
+    alias(libs.plugins.gradle.utils)
+    alias(libs.plugins.gradle.forge)
+    alias(libs.plugins.gradle.mixin)
     `maven-publish`
 }
 
+mixin {
+    add(sourceSets.main.get(), "ninjaphenix-container-lib.refmap.json")
+}
+
 minecraft {
-    mappings("official", "1.16.5")
+    mappings("official", properties["minecraft_version"] as String)
 
     accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg")) // Currently, this location cannot be changed from the default.
 
@@ -68,10 +73,13 @@ repositories {
 }
 
 dependencies {
-    minecraft(libs.minecraft.forge)
-    val jei = (libs.jei.api as Provider<MinimalExternalModuleDependency>).get()
-    compileOnly(fg.deobf("${jei.module.group}:${jei.module.name}:${jei.versionConstraint.displayName}"))
-    implementation(libs.jetbrainAnnotations)
+    minecraft(group = "net.minecraftforge", name = "forge", version = "${properties["minecraft_version"]}-${properties["forge_version"]}")
+    implementation(group = "org.spongepowered", name = "mixin", version = properties["mixin_version"] as String)
+    annotationProcessor(group = "org.spongepowered", name = "mixin", version = properties["mixin_version"] as String, classifier = "processor")
+
+    implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
+
+    compileOnly(group = "mezz.jei", name = "jei-${properties["minecraft_version"]}", version = "${properties["jei_version"]}", classifier = "api")
 }
 
 tasks.withType<ProcessResources> {
@@ -105,6 +113,7 @@ val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
             "Implementation-Vendor" to "ninjaphenix",
             "Implementation-Timestamp" to DateFormat.getDateTimeInstance().format(Date()),
             "Automatic-Module-Name" to "ninjaphenix.container_library",
+            "MixinConfigs" to "ninjaphenix_container_lib.mixins.json"
     ))
 
     from(rootDir.resolve("LICENSE"))

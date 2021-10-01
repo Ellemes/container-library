@@ -83,7 +83,7 @@ public class Main implements ModInitializer {
     private static BufferedImage generateTexture(int inventorySize) {
         try {
             //noinspection OptionalGetWithoutIsPresent
-            BufferedImage numbers = ImageIO.read(Files.newInputStream(FabricLoader.getInstance().getModContainer("ninjaphenix_container_lib").get().getPath("assets/test/textures/gen/numbers.png")));
+            BufferedImage numbers = ImageIO.read(Files.newInputStream(FabricLoader.getInstance().getModContainer("ninjaphenix_container_lib_test").get().getPath("assets/test/textures/gen/numbers.png")));
             BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_BYTE_GRAY);
             Graphics graphics = image.createGraphics();
             graphics.setColor(Color.WHITE);

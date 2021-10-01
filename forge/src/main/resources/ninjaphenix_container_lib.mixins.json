@@ -3,11 +3,11 @@
   "package": "ninjaphenix.container_library.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "LastAfterInitCallbackMixin",
     "ClientPlayerInteractionManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
-  "minVersion": "0.8"
+  "minVersion": "0.8",
+  "refmap": "ninjaphenix-container-lib.refmap.json"
 }

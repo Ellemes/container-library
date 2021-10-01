@@ -64,7 +64,7 @@ public final class PageScreen extends AbstractScreen {
         } else if (inventoryHeight == 9) {
             textureHeight = 304;
         } else {
-            throw new IllegalStateException("Unexpected value: " + inventoryWidth);
+            throw new IllegalStateException("Unexpected value: " + inventoryHeight);
         }
 
         int slotsPerPage = inventoryWidth * inventoryHeight;
@@ -100,6 +100,17 @@ public final class PageScreen extends AbstractScreen {
         for (int x = 0; x < 9; x++) {
             menu.addClientSlot(new Slot(playerInventory, x, playerInvLeft + Utils.SLOT_SIZE * x, playerInvTop + 58));
         }
+    }
+
+    @Override
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
+        if (inventoryWidth > 9) {
+            int outsideRegion = (imageWidth - (Utils.CONTAINER_PADDING_LDR + 9 * Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR)) / 2;
+            if (mouseX < left + outsideRegion || mouseX > left + imageWidth - outsideRegion) {
+                return true;
+            }
+        }
+        return super.hasClickedOutside(mouseX, mouseY, left, top, button);
     }
 
     private void setPage(int oldPage, int newPage) {

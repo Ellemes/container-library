@@ -14,8 +14,6 @@ import java.util.function.Consumer;
 public abstract class NetworkWrapper {
     private static NetworkWrapper INSTANCE;
 
-    public abstract void initialise();
-
     protected abstract void openScreenHandler(ServerPlayerEntity player, IInventory inventory, ServerScreenHandlerFactory factory, ITextComponent title);
 
     public static NetworkWrapper getInstance() {
@@ -23,10 +21,6 @@ public abstract class NetworkWrapper {
             NetworkWrapper.INSTANCE = new NetworkWrapperImpl();
         }
         return NetworkWrapper.INSTANCE;
-    }
-
-    public final NetworkWrapperImpl toInternal() {
-        return (NetworkWrapperImpl) this;
     }
 
     public final void s_openInventory(ServerPlayerEntity player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayerEntity> onInitialOpen) {

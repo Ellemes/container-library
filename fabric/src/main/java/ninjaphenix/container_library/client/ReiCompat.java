@@ -12,7 +12,7 @@ import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReiCompat implements REIPluginV0 {
+public final class ReiCompat implements REIPluginV0 {
     private static Rectangle asReiRectangle(Rect2i rect) {
         return new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
     }

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @JeiPlugin
-public class ContainerLibraryJeiPlugin implements IModPlugin {
+public final class ContainerLibraryJeiPlugin implements IModPlugin {
     @NotNull
     @Override
     public ResourceLocation getPluginUid() {

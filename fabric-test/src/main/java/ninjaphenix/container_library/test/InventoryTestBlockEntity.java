@@ -20,7 +20,7 @@ public class InventoryTestBlockEntity extends LootableContainerBlockEntity imple
     public InventoryTestBlockEntity(BlockEntityType<?> type, int inventorySize) {
         super(type);
         this.inventorySize = inventorySize;
-        this.inventory = DefaultedList.ofSize(this.inventorySize, ItemStack.EMPTY);
+        this.inventory = DefaultedList.ofSize(inventorySize, ItemStack.EMPTY);
     }
 
     @Override

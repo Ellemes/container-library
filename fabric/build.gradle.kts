@@ -2,32 +2,9 @@ import com.gitlab.ninjaphenix.gradle.api.task.MinifyJsonTask
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-    alias(libs.plugins.gradleUtils)
-    alias(libs.plugins.fabricLoom)
+    alias(libs.plugins.gradle.utils)
+    alias(libs.plugins.gradle.loom)
     `maven-publish`
-}
-
-val isTest = hasProperty("test")
-
-if (isTest || System.getProperties().containsKey("idea.sync.active")) {
-    sourceSets {
-        main {
-            java {
-                setSrcDirs(listOf(
-                        "src/main/java",
-                        "src/testmod/java",
-                        rootDir.resolve("common/${project.name}Src/main/java")
-                ))
-            }
-            resources {
-                setSrcDirs(listOf(
-                        "src/main/resources",
-                        "src/testmod/resources",
-                        rootDir.resolve("common/src/main/resources")
-                ))
-            }
-        }
-    }
 }
 
 loom {
@@ -45,10 +22,12 @@ loom {
 }
 
 repositories {
+    // For REI
     maven {
         name = "Shedaniel"
         url = uri("https://maven.shedaniel.me/")
     }
+    // For Mod Menu
     exclusiveContent {
         forRepository {
             maven {
@@ -60,18 +39,11 @@ repositories {
             includeGroup("com.terraformersmc")
         }
     }
+    // For Amecs
     maven {
         name = "Siphalor's Maven"
         url = uri("https://maven.siphalor.de/")
     }
-    maven {
-        name = "Devan Maven"
-        url = uri("https://storage.googleapis.com/devan-maven/")
-    }
-    flatDir {
-        dir(rootDir.resolve("local_dependencies"))
-    }
-    mavenLocal()
 }
 
 val excludeFabric: (ModuleDependency) -> Unit = {
@@ -79,36 +51,42 @@ val excludeFabric: (ModuleDependency) -> Unit = {
     it.exclude("net.fabricmc.fabric-api")
 }
 
+//region Required for test project.
+configurations {
+    create("dev")
+}
+
+tasks.jar {
+    archiveClassifier.set("dev")
+}
+
+artifacts {
+    this.add("dev", tasks.jar.get().archiveFile) {
+        this.builtBy(tasks.jar)
+    }
+}
+//endregion
+
 dependencies {
-    minecraft(libs.minecraft.fabric)
-    mappings("net.fabricmc:yarn:1.16.5+build.10:v2")
+    minecraft(group = "com.mojang", name = "minecraft", version = properties["minecraft_version"] as String)
+    mappings(group = "net.fabricmc", name = "yarn", version = "${properties["minecraft_version"]}+build.${properties["yarn_version"]}", classifier = "v2")
 
-    modImplementation(libs.fabric.loader)
-    implementation(libs.jetbrainAnnotations)
+    modImplementation(group = "net.fabricmc", name = "fabric-loader", version = properties["fabric_loader_version"] as String)
+    implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
 
-    if (isTest) {
-        modImplementation(libs.fabric.api)
-
-        modRuntimeOnly(libs.rei.asProvider(), excludeFabric)
-        modRuntimeOnly(libs.modmenu, excludeFabric)
-
-        modCompileOnly(libs.arrp, excludeFabric)
-        modRuntimeOnly(libs.arrp, excludeFabric)
-    } else {
-        listOf(
-                "fabric-networking-api-v1",
-                "fabric-screen-handler-api-v1",
-                "fabric-key-binding-api-v1"
-        ).forEach {
-            modImplementation(fabricApi.module(it, libs.fabric.api.get().versionConstraint.displayName))
-        }
+    listOf(
+            "fabric-networking-api-v1",
+            "fabric-screen-handler-api-v1",
+            "fabric-key-binding-api-v1"
+    ).forEach {
+        modImplementation(fabricApi.module(it, properties["fabric_api_version"] as String))
     }
 
-    modCompileOnly(libs.rei.api, excludeFabric)
+    modCompileOnly(group = "me.shedaniel", name = "RoughlyEnoughItems-api", version = properties["rei_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modCompileOnly(libs.modmenu, excludeFabric)
+    modCompileOnly(group = "com.terraformersmc", name = "modmenu", version = properties["modmenu_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modCompileOnly(libs.amecs.api, excludeFabric)
+    modCompileOnly(group = "de.siphalor", name = "amecsapi-1.17", version = properties["amecs_version"] as String, dependencyConfiguration = excludeFabric)
 }
 
 tasks.withType<ProcessResources> {
