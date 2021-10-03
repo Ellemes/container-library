@@ -84,6 +84,7 @@ public final class ScrollScreen extends AbstractScreen {
     @Override
     protected void init() {
         super.init();
+        leftPos = (width - (imageWidth + 22 - 4)) / 2;
         isDragging = false;
         topRow = 0;
 
