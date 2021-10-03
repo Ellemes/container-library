@@ -95,6 +95,7 @@ public final class ScrollScreen extends AbstractScreen {
     @Override
     protected void init() {
         super.init();
+        leftPos = (width - (imageWidth + 22 - 4)) / 2;
         isDragging = false;
         topRow = 0;
 
@@ -151,7 +152,7 @@ public final class ScrollScreen extends AbstractScreen {
 
     @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
-        if (inventoryWidth > 9) {
+        if (inventoryWidth > 9 && mouseY >= top + Utils.CONTAINER_HEADER_HEIGHT + inventoryHeight * Utils.SLOT_SIZE + Utils.CONTAINER_HEADER_HEIGHT) {
             int outsideRegion = (imageWidth - (Utils.CONTAINER_PADDING_LDR + 9 * Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR)) / 2;
             if (mouseX < left + outsideRegion || mouseX > left + imageWidth - outsideRegion) {
                 return true;

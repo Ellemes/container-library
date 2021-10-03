@@ -1,116 +1,78 @@
 package ninjaphenix.container_library.test;
 
+import com.google.common.collect.ImmutableSet;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod("ninjaphenix_container_lib_test")
 public final class Main {
-    //private static final RuntimeResourcePack RESOURCE_PACK = RuntimeResourcePack.create("test:test");
     private static TileEntityType<InventoryTestBlockEntity> blockEntityType;
-    private static ItemGroup group;
-
-    public static TileEntityType<InventoryTestBlockEntity> getBlockEntityType() {
-        return blockEntityType;
-    }
 
     public Main() {
+        ItemGroup group = new ItemGroup("test.test") {
+            @Override
+            public ItemStack makeIcon() {
+                return new ItemStack(Blocks.SOUL_CAMPFIRE);
+            }
+        };
 
-    }
-
-    //// todo: print out warning if dependency version in fabric.mod.json is outdated.
-    //@SuppressWarnings("unused")
-    //@Override
-    //public void onInitialize() {
-    //    group = FabricItemGroupBuilder.create(new Identifier("test", "test")).build();
-    //    JLang lang = JLang.lang().itemGroup(new Identifier("test", "test"), "Test Inventory Blocks");
-    //    InventoryTestBlock[] blocks = new ListBuilder<>(i -> Main.register(i, lang)).range(27, 540, 27)
-    //                                                                     .range(24, 540, 27)
-    //                                                                     .range(30, 540, 27)
-    //                                                                     .build().toArray(new InventoryTestBlock[0]);
-    //    RESOURCE_PACK.addLang(new Identifier("test", "en_us"), lang);
-    //    blockEntityType = BlockEntityType.Builder.create(() -> new InventoryTestBlockEntity(Main.getBlockEntityType(), 0), blocks).build(null);
-    //    Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("test", "block_entity_type"), blockEntityType);
-
-    //    RRPCallback.AFTER_VANILLA.register(resources -> resources.add(RESOURCE_PACK));
-
-    //    if (PlatformUtils.isClient()) {
-    //        Main.setDebugRenderEnabled();
-    //    }
-    //}
-
-    //private static InventoryTestBlock register(int inventorySize, JLang lang) {
-    //    Identifier id = new Identifier("test", "block" + inventorySize);
-    //    InventoryTestBlock block = new InventoryTestBlock(AbstractBlock.Settings.of(Material.BAMBOO), inventorySize);
-    //    Registry.register(Registry.BLOCK, id, block);
-    //    lang.blockRespect(block, "Inventory " + inventorySize);
-
-    //    RESOURCE_PACK.addBlockState(JState.state(JState.variant(JState.model(new Identifier(id.getNamespace(), "block/" + id.getPath())))), id);
-    //    RESOURCE_PACK.addModel(JModel.model("minecraft:block/orientable")
-    //                                 .textures(JModel.textures()
-    //                                                 .var("top", "test:block/blockn")
-    //                                                 .var("front", "test:block/block" + inventorySize)
-    //                                                 .var("side", "test:block/block" + inventorySize)),
-    //            new Identifier(id.getNamespace(), "block/" + id.getPath()));
-
-    //    RESOURCE_PACK.addModel(JModel.model(id.getNamespace() + ":block/" + id.getPath()), new Identifier(id.getNamespace(), "item/" + id.getPath()));
-    //    RESOURCE_PACK.addTexture(new Identifier("test", "block/block" + inventorySize), Main.generateTexture(inventorySize));
-
-    //    BlockItem item = new BlockItem(block, new Item.Settings().group(group));
-    //    Registry.register(Registry.ITEM, id, item);
-    //    return block;
-    //}
-
-    //private static BufferedImage generateTexture(int inventorySize) {
-    //    try {
-    //        //noinspection OptionalGetWithoutIsPresent
-    //        BufferedImage numbers = ImageIO.read(Files.newInputStream(FabricLoader.getInstance().getModContainer("ninjaphenix_container_lib_test").get().getPath("assets/test/textures/gen/numbers.png")));
-    //        BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_BYTE_GRAY);
-    //        Graphics graphics = image.createGraphics();
-    //        graphics.setColor(Color.WHITE);
-    //        graphics.fillRect(0, 0, 16, 16);
-    //        String characters = Integer.toString(inventorySize);
-    //        for (int i = 0; i < characters.length(); i++) {
-    //            String letter = characters.substring(i, i + 1);
-    //            BufferedImage number = numbers.getSubimage(1, Main.getNumberOffset(letter.charAt(0)), 3, 5);
-    //            graphics.drawImage(number, 1 + 4 * i, 1, 3, 5, null);
-    //        }
-    //        return image;
-    //    } catch (IOException e) {
-    //        throw new IllegalStateException("Cannot find numbers.png");
-    //    }
-    //}
-
-    private static int getNumberOffset(char character) {
-        if (character == '1') {
-            return 1;
-        } else if (character == '2') {
-            return 7;
-        } else if (character == '3') {
-            return 13;
-        } else if (character == '4') {
-            return 19;
-        } else if (character == '5') {
-            return 25;
-        } else if (character == '6') {
-            return 31;
-        } else if (character == '7') {
-            return 37;
-        } else if (character == '8') {
-            return 43;
-        } else if (character == '9') {
-            return 49;
-        } else if (character == '0') {
-            return 55;
+        List<Block> blocks = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
+        IntArrayList list = new IntArrayList(100);
+        for (int i = 1; i < 20; i++) {
+            list.add(i * 27 - 3);
+            list.add(i * 27);
+            list.add(i * 27 + 3);
         }
-        throw new IllegalArgumentException("character must be a single number");
+
+        for (int i : list) {
+            ResourceLocation id = new ResourceLocation("test", "inventory_" + i);
+            InventoryTestBlock block = new InventoryTestBlock(AbstractBlock.Properties.of(Material.BAMBOO), i);
+            block.setRegistryName(id);
+            Item item = new BlockItem(block, new Item.Properties().tab(group));
+            item.setRegistryName(id);
+            blocks.add(block);
+            items.add(item);
+        }
+
+        blockEntityType = new TileEntityType<>((() -> new InventoryTestBlockEntity(Main.getBlockEntityType(), 0)), ImmutableSet.copyOf(blocks), null);
+        blockEntityType.setRegistryName(new ResourceLocation("test", "block_entity_type"));
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        bus.addGenericListener(Block.class, (RegistryEvent.Register<Block> event) -> {
+            IForgeRegistry<Block> registry = event.getRegistry();
+            blocks.forEach(registry::register);
+        });
+
+        bus.addGenericListener(Item.class, (RegistryEvent.Register<Item> event) -> {
+            IForgeRegistry<Item> registry = event.getRegistry();
+            items.forEach(registry::register);
+        });
+
+        bus.addGenericListener(TileEntityType.class, (RegistryEvent.Register<TileEntityType<?>> event) -> {
+            IForgeRegistry<TileEntityType<?>> registry = event.getRegistry();
+            registry.register(blockEntityType);
+        });
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void setDebugRenderEnabled() {
-        AbstractScreen.DEBUG_RENDER = true;
+    public static TileEntityType<?> getBlockEntityType() {
+        return blockEntityType;
     }
 }
