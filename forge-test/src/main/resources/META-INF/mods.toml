@@ -1,0 +1,10 @@
+modLoader = "javafml"
+loaderVersion = "[37,)"
+issueTrackerURL = "https://github.com/NinjaPhenix/container-library/issues/"
+license = "0BSD"
+
+[[mods]]
+modId = "ninjaphenix_container_lib_test"
+version = "0.0.0"
+displayName = "NinjaPhenix's Container Library Tests"
+authors = "NinjaPhenix"
