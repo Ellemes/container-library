@@ -1,5 +1,6 @@
 package ninjaphenix.container_library.wrappers;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -26,5 +27,10 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
                 return factory.create(syncId, inventory, playerInventory);
             }
         }, buffer -> buffer.writeInt(inventory.getContainerSize()));
+    }
+
+    @Override
+    boolean canOpenInventory(ServerPlayer player, BlockPos pos) {
+        return true;
     }
 }

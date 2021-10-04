@@ -64,6 +64,6 @@ public interface OpenableBlockEntityProviderV2 {
      * Intended to be protected.
      */
     default void ncl_sOpenInventory(Level world, BlockState state, BlockPos pos, ServerPlayer player) {
-        NetworkWrapper.getInstance().s_openInventory(player, this.getOpenableBlockEntity(world, state, pos), this::onInitialOpen);
+        NetworkWrapper.getInstance().s_openInventory(player, this.getOpenableBlockEntity(world, state, pos), this::onInitialOpen, pos);
     }
 }
