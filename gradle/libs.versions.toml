@@ -1,8 +1,10 @@
 [plugins]
 # Common Plugins
 gradle-utils = { id = "com.gitlab.ninjaphenix.gradle-utils", version = "0.1.0-beta.5" }
+gradle-curseforge = { id = "com.matthewprenger.cursegradle", version = "1.4.0" }
+gradle-modrinth = { id = "com.modrinth.minotaur", version = "1.2.1" }
 # Forge Plugins
 gradle-forge = { id = "net.minecraftforge.gradle", version = "5.1.22" }
 gradle-mixin = { id = "org.spongepowered.mixin", version = "0.7-SNAPSHOT" }
 # Fabric Plugins
-gradle-loom = { id = "fabric-loom", version = "0.10.local" }
+gradle-loom = { id = "fabric-loom", version = "0.10-SNAPSHOT" }
