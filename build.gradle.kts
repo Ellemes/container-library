@@ -75,6 +75,9 @@ tasks.register("publishToMavenLocal") {
     }
 }
 
+val forgeProject = findProject(":forge")
+val fabricProject = findProject(":fabric")
+
 var modrinthForgeTask : TaskProvider<com.modrinth.minotaur.TaskModrinthUpload>? = null
 var modrinthFabricTask : TaskProvider<com.modrinth.minotaur.TaskModrinthUpload>? = null
 
@@ -86,70 +89,91 @@ val modrinthToken: String? = System.getenv("MODRINTH_TOKEN")
 val curseforgeToken: String? = System.getenv("CURSEFORGE_TOKEN")
 
 if (modrinthToken != null) {
-    modrinthForgeTask = tasks.register<com.modrinth.minotaur.TaskModrinthUpload>("publishModrinthForge") {
-        dependsOn(project(":forge").tasks.getByName("minJar"))
+    if (forgeProject != null) {
+        modrinthForgeTask = tasks.register<com.modrinth.minotaur.TaskModrinthUpload>("publishModrinthForge") {
+            val releaseJarTask = forgeProject.tasks.getByName("minJar")
+            dependsOn(releaseJarTask)
 
-        detectLoaders = false
-        changelog = realChangelog
-        token = modrinthToken
-        projectId = properties["modrinth_project_id"] as String
-        versionName = "Forge ${properties["mod_version"]}"
-        versionNumber = "${properties["mod_version"]}-forge"
-        versionType = VersionType.RELEASE
-        uploadFile = project(":forge").tasks.getByName("minJar")
-        addGameVersion(properties["minecraft_version"] as String)
-        addLoader("forge")
+            detectLoaders = false
+            changelog = realChangelog
+            token = modrinthToken
+            projectId = properties["modrinth_project_id"] as String
+            versionName = "Forge ${properties["mod_version"]}-${properties["minecraft_version"]}"
+            versionNumber = "${properties["mod_version"]}-${properties["minecraft_version"]}-forge"
+            versionType = VersionType.RELEASE
+            uploadFile = releaseJarTask
+            addGameVersion(properties["minecraft_version"] as String)
+            addLoader("forge")
+        }
     }
 
-    modrinthFabricTask = tasks.register<com.modrinth.minotaur.TaskModrinthUpload>("publishModrinthFabric") {
-        dependsOn(project(":fabric").tasks.getByName("minJar"))
-        mustRunAfter(modrinthForgeTask)
+    if (fabricProject != null) {
+        modrinthFabricTask = tasks.register<com.modrinth.minotaur.TaskModrinthUpload>("publishModrinthFabric") {
+            val releaseJarTask = fabricProject.tasks.getByName("minJar")
+            dependsOn(releaseJarTask)
+            if (modrinthForgeTask != null) {
+                mustRunAfter(modrinthForgeTask)
+            }
 
-        detectLoaders = false
-        changelog = realChangelog
-        token = modrinthToken
-        projectId = properties["modrinth_project_id"] as String
-        versionName = "Fabric ${properties["mod_version"]}"
-        versionNumber = "${properties["mod_version"]}-fabric"
-        versionType = VersionType.RELEASE
-        uploadFile = project(":fabric").tasks.getByName("minJar")
-        addGameVersion(properties["minecraft_version"] as String)
-        addLoader("fabric")
+            detectLoaders = false
+            changelog = realChangelog
+            token = modrinthToken
+            projectId = properties["modrinth_project_id"] as String
+            versionName = "Fabric ${properties["mod_version"]}-${properties["minecraft_version"]}"
+            versionNumber = "${properties["mod_version"]}-${properties["minecraft_version"]}-fabric"
+            versionType = VersionType.RELEASE
+            uploadFile = releaseJarTask
+            addGameVersion(properties["minecraft_version"] as String)
+            addLoader("fabric")
+        }
     }
 }
 
 if (curseforgeToken != null) {
-    curseforgeForgeTask = tasks.register<com.matthewprenger.cursegradle.CurseUploadTask>("publishCurseforgeForge") {
-        dependsOn(project(":forge").tasks.getByName("minJar"))
-
-        apiKey = curseforgeToken
-        projectId = properties["curseforge_project_id"] as String
-        mainArtifact = CurseArtifact().apply {
-            artifact = project(":forge").tasks.getByName("minJar")
-            changelogType = "markdown"
-            changelog = realChangelog
-            displayName = "[Forge - ${properties["minecraft_version"]}] ${properties["mod_version"]}"
-            releaseType = "release"
-            gameVersionStrings = listOf(properties["minecraft_version"], "Forge", "Java ${properties["mod_java_version"]}")
-        }
-        additionalArtifacts = listOf()
+    var gameVersion = properties["minecraft_version"] as String
+    if ("w" in gameVersion) {
+        gameVersion = "1.18-Snapshot"
     }
 
-    curseforgeFabricTask = tasks.register<com.matthewprenger.cursegradle.CurseUploadTask>("publishCurseforgeFabric") {
-        dependsOn(project(":fabric").tasks.getByName("minJar"))
-        mustRunAfter(curseforgeForgeTask)
+    if (forgeProject != null) {
+        curseforgeForgeTask = tasks.register<com.matthewprenger.cursegradle.CurseUploadTask>("publishCurseforgeForge") {
+            val releaseJarTask = forgeProject.tasks.getByName("minJar")
+            dependsOn(releaseJarTask)
 
-        apiKey = curseforgeToken
-        projectId = properties["curseforge_project_id"] as String
-        mainArtifact = CurseArtifact().apply {
-            artifact = project(":fabric").tasks.getByName("minJar")
-            changelogType = "markdown"
-            changelog = realChangelog
-            displayName = "[Fabric - ${properties["minecraft_version"]}] ${properties["mod_version"]}"
-            releaseType = "release"
-            gameVersionStrings = listOf(properties["minecraft_version"], "Fabric", "Java ${properties["mod_java_version"]}")
+            apiKey = curseforgeToken
+            projectId = properties["curseforge_project_id"] as String
+            mainArtifact = CurseArtifact().apply {
+                artifact = releaseJarTask
+                changelogType = "markdown"
+                changelog = realChangelog
+                displayName = "[Forge - ${properties["minecraft_version"]}] ${properties["mod_version"]}"
+                releaseType = "release"
+                gameVersionStrings = listOf(gameVersion, "Forge", "Java ${properties["mod_java_version"]}")
+            }
+            additionalArtifacts = listOf()
         }
-        additionalArtifacts = listOf()
+    }
+
+    if (fabricProject != null) {
+        curseforgeFabricTask = tasks.register<com.matthewprenger.cursegradle.CurseUploadTask>("publishCurseforgeFabric") {
+            val releaseJarTask = fabricProject.tasks.getByName("minJar")
+            dependsOn(releaseJarTask)
+            if (curseforgeForgeTask != null) {
+                mustRunAfter(curseforgeForgeTask)
+            }
+
+            apiKey = curseforgeToken
+            projectId = properties["curseforge_project_id"] as String
+            mainArtifact = CurseArtifact().apply {
+                artifact = releaseJarTask
+                changelogType = "markdown"
+                changelog = realChangelog
+                displayName = "[Fabric - ${properties["minecraft_version"]}] ${properties["mod_version"]}"
+                releaseType = "release"
+                gameVersionStrings = listOf(gameVersion, "Fabric", "Java ${properties["mod_java_version"]}")
+            }
+            additionalArtifacts = listOf()
+        }
     }
 }
 
