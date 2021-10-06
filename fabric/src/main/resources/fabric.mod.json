@@ -12,7 +12,7 @@
     "main": [
       "ninjaphenix.container_library.Main"
     ],
-    "rei": [
+    "rei_plugins": [
       "ninjaphenix.container_library.client.ReiCompat"
     ],
     "modmenu": [
