@@ -98,8 +98,8 @@ if (modrinthToken != null) {
             changelog = realChangelog
             token = modrinthToken
             projectId = properties["modrinth_project_id"] as String
-            versionName = "Forge ${properties["mod_version"]}"
-            versionNumber = "${properties["mod_version"]}-forge"
+            versionName = "Forge ${properties["mod_version"]}-${properties["minecraft_version"]}"
+            versionNumber = "${properties["mod_version"]}-${properties["minecraft_version"]}-forge"
             versionType = VersionType.RELEASE
             uploadFile = releaseJarTask
             addGameVersion(properties["minecraft_version"] as String)
@@ -119,8 +119,8 @@ if (modrinthToken != null) {
             changelog = realChangelog
             token = modrinthToken
             projectId = properties["modrinth_project_id"] as String
-            versionName = "Fabric ${properties["mod_version"]}"
-            versionNumber = "${properties["mod_version"]}-fabric"
+            versionName = "Fabric ${properties["mod_version"]}-${properties["minecraft_version"]}"
+            versionNumber = "${properties["mod_version"]}-${properties["minecraft_version"]}-fabric"
             versionType = VersionType.RELEASE
             uploadFile = releaseJarTask
             addGameVersion(properties["minecraft_version"] as String)
