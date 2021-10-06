@@ -3,4 +3,4 @@
 .vscode/
 build/
 run/
-local_dependencies/
+no_perm_deps/

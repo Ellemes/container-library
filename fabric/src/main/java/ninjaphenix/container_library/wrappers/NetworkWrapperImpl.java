@@ -1,6 +1,9 @@
 package ninjaphenix.container_library.wrappers;
 
+import io.github.flemmli97.flan.api.ClaimHandler;
+import io.github.flemmli97.flan.api.permission.PermissionRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -8,6 +11,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,5 +35,16 @@ final class NetworkWrapperImpl extends NetworkWrapper {
                 return factory.create(syncId, inventory, playerInventory);
             }
         });
+    }
+
+    @Override
+    boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos) {
+        boolean canOpenInventory = true;
+        if (FabricLoader.getInstance().isModLoaded("flan")) {
+            if (!ClaimHandler.getPermissionStorage(player.getWorld()).getForPermissionCheck(pos).canInteract(player, PermissionRegistry.OPENCONTAINER, pos, true)) {
+                canOpenInventory = false;
+            }
+        }
+        return canOpenInventory;
     }
 }
