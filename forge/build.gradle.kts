@@ -86,6 +86,10 @@ repositories {
         url = uri("https://modmaven.k-4u.nl")
     }
     mavenCentral()
+    flatDir {
+        name = "Deps with no redistribute perms"
+        dir(rootDir.resolve("no_perm_deps"))
+    }
 }
 
 dependencies {
@@ -96,6 +100,7 @@ dependencies {
     implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
 
     compileOnly(group = "mezz.jei", name = "jei-${properties["minecraft_version"]}", version = "${properties["jei_version"]}", classifier = "api")
+    compileOnly(fg.deobf("local:flan-1.16.5:${properties["flan_version"]}-forge"))
 }
 
 tasks.withType<ProcessResources> {

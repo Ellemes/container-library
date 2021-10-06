@@ -45,6 +45,13 @@ minecraft {
     }
 }
 
+repositories {
+    flatDir {
+        name = "Deps with no redistribute perms"
+        dir(rootDir.resolve("no_perm_deps"))
+    }
+}
+
 dependencies {
     minecraft(group = "net.minecraftforge", name = "forge", version = "${properties["minecraft_version"]}-${properties["forge_version"]}")
     implementation(group = "org.spongepowered", name = "mixin", version = properties["mixin_version"] as String)
@@ -52,4 +59,5 @@ dependencies {
 
     implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
     implementation(project(":forge", configuration = "dev"))
+    runtimeOnly(fg.deobf("local:flan-1.16.5:${properties["flan_version"]}-forge"))
 }

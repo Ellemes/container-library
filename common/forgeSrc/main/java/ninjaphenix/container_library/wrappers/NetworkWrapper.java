@@ -4,6 +4,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
@@ -23,14 +24,18 @@ public abstract class NetworkWrapper {
         return NetworkWrapper.INSTANCE;
     }
 
-    public final void s_openInventory(ServerPlayerEntity player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayerEntity> onInitialOpen) {
-        ITextComponent title = inventory.getInventoryTitle();
-        if (!inventory.canBeUsedBy(player)) {
-            player.displayClientMessage(new TranslationTextComponent("container.isLocked", title), true);
-            player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return;
+    public final void s_openInventory(ServerPlayerEntity player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayerEntity> onInitialOpen, BlockPos pos) {
+        if (this.canOpenInventory(player, pos)) {
+            ITextComponent title = inventory.getInventoryTitle();
+            if (!inventory.canBeUsedBy(player)) {
+                player.displayClientMessage(new TranslationTextComponent("container.isLocked", title), true);
+                player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                return;
+            }
+            onInitialOpen.accept(player);
+            this.openScreenHandler(player, inventory.getInventory(), AbstractHandler::new, title);
         }
-        onInitialOpen.accept(player);
-        this.openScreenHandler(player, inventory.getInventory(), AbstractHandler::new, title);
     }
+
+    abstract boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos);
 }

@@ -44,6 +44,10 @@ repositories {
         name = "Siphalor's Maven"
         url = uri("https://maven.siphalor.de/")
     }
+    flatDir {
+        name = "Deps with no redistribute perms"
+        dir(rootDir.resolve("no_perm_deps"))
+    }
 }
 
 val excludeFabric: (ModuleDependency) -> Unit = {
@@ -87,6 +91,8 @@ dependencies {
     modCompileOnly(group = "com.terraformersmc", name = "modmenu", version = properties["modmenu_version"] as String, dependencyConfiguration = excludeFabric)
 
     modCompileOnly(group = "de.siphalor", name = "amecsapi-1.17", version = properties["amecs_version"] as String, dependencyConfiguration = excludeFabric)
+
+    modCompileOnly(group = "local", name = "flan-1.16.5", version = "${properties["flan_version"]}-fabric", dependencyConfiguration = excludeFabric)
 }
 
 tasks.withType<ProcessResources> {

@@ -42,6 +42,10 @@ repositories {
         name = "Devan Maven"
         url = uri("https://storage.googleapis.com/devan-maven/")
     }
+    flatDir {
+        name = "Deps with no redistribute perms"
+        dir(rootDir.resolve("no_perm_deps"))
+    }
     mavenLocal()
 }
 
@@ -66,4 +70,6 @@ dependencies {
     modRuntimeOnly(group = "com.terraformersmc", name = "modmenu", version = properties["modmenu_version"] as String, dependencyConfiguration = excludeFabric)
 
     modImplementation(group = "net.devtech", name = "arrp", version = properties["arrp_version"] as String, dependencyConfiguration = excludeFabric)
+
+    modRuntimeOnly(group = "local", name = "flan-1.16.5", version = "${properties["flan_version"]}-fabric", dependencyConfiguration = excludeFabric)
 }

@@ -36,7 +36,6 @@ pluginManagement {
             }
         }
         gradlePluginPortal()
-        mavenLocal()
     }
 }
 
