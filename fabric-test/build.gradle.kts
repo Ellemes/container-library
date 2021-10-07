@@ -71,5 +71,5 @@ dependencies {
 
     modImplementation(group = "net.devtech", name = "arrp", version = properties["arrp_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modRuntimeOnly(group = "local", name = "flan-1.17.1", version = properties["flan_version"] as String, dependencyConfiguration = excludeFabric)
+    //modRuntimeOnly(group = "local", name = "flan-1.17.1", version = properties["flan_version"] as String, dependencyConfiguration = excludeFabric)
 }
