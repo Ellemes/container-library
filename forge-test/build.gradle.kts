@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.gradle.mixin)
 }
 
+mixin {
+    disableAnnotationProcessorCheck()
+}
+
 minecraft {
     mappings("official", properties["minecraft_version"] as String)
 
