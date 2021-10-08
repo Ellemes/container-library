@@ -44,9 +44,9 @@ repositories {
         name = "Siphalor's Maven"
         url = uri("https://maven.siphalor.de/")
     }
-    flatDir {
-        name = "Deps with no redistribute perms"
-        dir(rootDir.resolve("no_perm_deps"))
+    maven {
+        name = "Flemmli97"
+        url = uri("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     }
 }
 
@@ -92,7 +92,10 @@ dependencies {
 
     modCompileOnly(group = "de.siphalor", name = "amecsapi-1.17", version = properties["amecs_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modCompileOnly(group = "local", name = "flan-1.16.5", version = "${properties["flan_version"]}-fabric", dependencyConfiguration = excludeFabric)
+    modCompileOnly(group = "io.github.flemmli97", name = "flan", version = "1.16.5-${properties["flan_version"]}", classifier = "fabric-api")  {
+        also(excludeFabric)
+        isTransitive = false
+    }
 }
 
 tasks.withType<ProcessResources> {
@@ -144,10 +147,11 @@ tasks.getByName("build") {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "ninjaphenix.container_library"
-            artifactId = "fabric"
+            groupId = "ninjaphenix"
+            artifactId = "container_library"
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)
+                classifier = "fabric"
             }
         }
     }

@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.gradle.mixin)
 }
 
+mixin {
+    disableAnnotationProcessorCheck()
+}
+
 minecraft {
     mappings("official", properties["minecraft_version"] as String)
 
@@ -46,9 +50,9 @@ minecraft {
 }
 
 repositories {
-    flatDir {
-        name = "Deps with no redistribute perms"
-        dir(rootDir.resolve("no_perm_deps"))
+    maven {
+        name = "Flemmli97"
+        url = uri("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     }
 }
 
@@ -59,5 +63,9 @@ dependencies {
 
     implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
     implementation(project(":forge", configuration = "dev"))
-    runtimeOnly(fg.deobf("local:flan-1.16.5:${properties["flan_version"]}-forge"))
+
+    val dep = fg.deobf("io.github.flemmli97:flan:1.16.5-${properties["flan_version"]}:forge", closureOf<ExternalModuleDependency> {
+        isTransitive = false;
+    })
+    runtimeOnly(dep)
 }

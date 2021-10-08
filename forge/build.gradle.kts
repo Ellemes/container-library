@@ -28,6 +28,7 @@ artifacts {
 
 mixin {
     add(sourceSets.main.get(), "ninjaphenix-container-lib.refmap.json")
+    disableAnnotationProcessorCheck()
 }
 
 minecraft {
@@ -86,9 +87,9 @@ repositories {
         url = uri("https://modmaven.k-4u.nl")
     }
     mavenCentral()
-    flatDir {
-        name = "Deps with no redistribute perms"
-        dir(rootDir.resolve("no_perm_deps"))
+    maven {
+        name = "Flemmli97"
+        url = uri("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     }
 }
 
@@ -100,7 +101,10 @@ dependencies {
     implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
 
     compileOnly(group = "mezz.jei", name = "jei-${properties["minecraft_version"]}", version = "${properties["jei_version"]}", classifier = "api")
-    compileOnly(fg.deobf("local:flan-1.16.5:${properties["flan_version"]}-forge"))
+    val dep = fg.deobf("io.github.flemmli97:flan:1.16.5-${properties["flan_version"]}:forge-api", closureOf<ExternalModuleDependency> {
+        isTransitive = false;
+    })
+    compileOnly(dep)
 }
 
 tasks.withType<ProcessResources> {
@@ -148,10 +152,11 @@ tasks.getByName("build") {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "ninjaphenix.container_library"
-            artifactId = "forge"
+            groupId = "ninjaphenix"
+            artifactId = "container_library"
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)
+                classifier = "forge"
             }
         }
     }
