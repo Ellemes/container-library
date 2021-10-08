@@ -71,7 +71,7 @@ dependencies {
 
     modImplementation(group = "net.devtech", name = "arrp", version = properties["arrp_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modRuntimeOnly(group = "io.github.flemmli97", name = "flan", version = "1.17.1-${properties["flan_version"]}", classifier = "fabric") {
+    modRuntimeOnly(group = "io.github.flemmli97", name = "flan", version = "1.17.1-${properties["flan_version"]}") {
         also(excludeFabric)
         isTransitive = false
     }
