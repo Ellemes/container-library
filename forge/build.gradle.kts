@@ -152,7 +152,6 @@ tasks.getByName("build") {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "ninjaphenix"
             artifactId = "container_library"
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)
