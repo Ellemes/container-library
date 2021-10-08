@@ -28,6 +28,7 @@ artifacts {
 
 mixin {
     add(sourceSets.main.get(), "ninjaphenix-container-lib.refmap.json")
+    disableAnnotationProcessorCheck()
 }
 
 minecraft {
@@ -143,10 +144,11 @@ tasks.getByName("build") {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "ninjaphenix.container_library"
-            artifactId = "forge"
+            groupId = "ninjaphenix"
+            artifactId = "container_library"
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)
+                classifier = "forge"
             }
         }
     }

@@ -1,5 +1,6 @@
 # Not sure if this will actually work as we publish two artifacts
-jdk:
-    - openjdk16
+before_install:
+    - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+    - source install-jdk.sh --feature 16
 install:
-    - ./gradlew clean publishToMavenLocal
+    - ./gradlew build publishToMavenLocal

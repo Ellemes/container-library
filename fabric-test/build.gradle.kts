@@ -42,9 +42,9 @@ repositories {
         name = "Devan Maven"
         url = uri("https://storage.googleapis.com/devan-maven/")
     }
-    flatDir {
-        name = "Deps with no redistribute perms"
-        dir(rootDir.resolve("no_perm_deps"))
+    maven {
+        name = "Flemmli97"
+        url = uri("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     }
     mavenLocal()
 }
@@ -71,5 +71,8 @@ dependencies {
 
     modImplementation(group = "net.devtech", name = "arrp", version = properties["arrp_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modRuntimeOnly(group = "local", name = "flan-1.17.1", version = properties["flan_version"] as String, dependencyConfiguration = excludeFabric)
+    modRuntimeOnly(group = "io.github.flemmli97", name = "flan", version = "1.17.1-${properties["flan_version"]}", classifier = "fabric") {
+        also(excludeFabric)
+        isTransitive = false
+    }
 }
