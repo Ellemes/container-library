@@ -25,8 +25,14 @@ fun isMainSubProject(name: String): Boolean {
 subprojects {
     apply(plugin = "java")
 
-    group = properties["maven_group"] as String
-    version = "${properties["mod_version"]}+${properties["minecraft_version"]}"
+    if (group == this.name) {
+        group = properties["maven_group"] as String
+    }
+    if (version == "unspecified") {
+        version = "${properties["mod_version"]}+${properties["minecraft_version"]}"
+    } else {
+        version = "${version}+${properties["minecraft_version"]}"
+    }
     base.archivesName.set(properties["archives_base_name"] as String)
     buildDir = rootDir.resolve("build/${project.name}")
 
