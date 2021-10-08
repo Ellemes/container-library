@@ -92,7 +92,7 @@ dependencies {
 
     modCompileOnly(group = "de.siphalor", name = "amecsapi-1.17", version = properties["amecs_version"] as String, dependencyConfiguration = excludeFabric)
 
-    modCompileOnly(group = "io.github.flemmli97", name = "flan", version = "1.17.1-${properties["flan_version"]}", classifier = "fabric-api")  {
+    modCompileOnly(group = "io.github.flemmli97", name = "flan", version = "1.17.1-${properties["flan_version"]}", classifier = "api")  {
         also(excludeFabric)
         isTransitive = false
     }
