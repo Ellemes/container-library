@@ -1,9 +1,9 @@
 {
   "screen.ninjaphenix_container_lib.change_screen_button": "Changer le type d'écran",
   "screen.ninjaphenix_container_lib.screen_picker_title": "Sélectionner le type d'écran",
-  "screen.expandedstorage.page_screen": "Ecran Paginé",
-  "screen.expandedstorage.scroll_screen": "Ecran défilant",
-  "screen.expandedstorage.single_screen": "Ecran en une seule page",
+  "screen.expandedstorage.page_screen": "Écran Paginé",
+  "screen.expandedstorage.scroll_screen": "Écran défilant",
+  "screen.expandedstorage.single_screen": "Écran en une seule page",
   "screen.ninjaphenix_container_lib.next_page": "Page suivante",
   "screen.ninjaphenix_container_lib.prev_page": "Page précédente",
   "screen.ninjaphenix_container_lib.page_x_y": "%d/%d",
