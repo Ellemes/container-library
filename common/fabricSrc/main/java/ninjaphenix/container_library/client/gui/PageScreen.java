@@ -23,11 +23,14 @@ import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.widget.PageButton;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
+import org.anti_ad.mc.ipn.api.IPNButton;
+import org.anti_ad.mc.ipn.api.IPNGuiHint;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
+@IPNGuiHint(button = IPNButton.MOVE_TO_CONTAINER, horizontalOffset = 58)
 public final class PageScreen extends AbstractScreen {
     private final Identifier textureLocation;
     private final int textureWidth, textureHeight;

@@ -97,6 +97,7 @@ dependencies {
     implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
 
     compileOnly(group = "mezz.jei", name = "jei-${properties["minecraft_version"]}", version = "${properties["jei_version"]}", classifier = "api")
+    compileOnly(group = "org.anti-ad.mc", name = "inventory-profiles-next",version = "forge-1.17.1-${properties["ipn_version"]}")
 }
 
 tasks.withType<ProcessResources> {
