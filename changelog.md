@@ -1,2 +1,2 @@
-- Centered the scrolling screen which was accidentally reverted when fixing REI / JEI support.
-- Add flan claim support (fabric)
+- Add french translations thanks to Wombhy.
+- Add IPN support thanks to the IPN dev, mirinimi.
