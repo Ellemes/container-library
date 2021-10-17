@@ -110,8 +110,8 @@ public final class SingleScreen extends AbstractScreen {
         }
         int left = (inventoryWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
         int top = Utils.SLOT_SIZE + 14 + (inventoryHeight * Utils.SLOT_SIZE);
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 3; y++) {
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
                 handler.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, left + Utils.SLOT_SIZE * x, top + y * Utils.SLOT_SIZE));
             }
         }

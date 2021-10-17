@@ -1,2 +1,1 @@
-- Add french translations thanks to Wombhy.
-- Add IPN support thanks to the IPN dev, mirinimi.
+- Fix slot ordering to match vanilla's slot order in player inventory.
