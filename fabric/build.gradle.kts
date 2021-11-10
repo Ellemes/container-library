@@ -96,6 +96,7 @@ dependencies {
         also(excludeFabric)
         isTransitive = false
     }
+    modCompileOnly(group = "org.anti-ad.mc", name = "inventory-profiles-next", version = "fabric-1.17.1-${properties["ipn_version"]}", dependencyConfiguration = excludeFabric)
 }
 
 tasks.withType<ProcessResources> {

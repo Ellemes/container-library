@@ -23,11 +23,14 @@ import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.client.gui.widget.PageButton;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
+import org.anti_ad.mc.ipn.api.IPNButton;
+import org.anti_ad.mc.ipn.api.IPNGuiHint;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
+@IPNGuiHint(button = IPNButton.MOVE_TO_CONTAINER, horizontalOffset = 58)
 public final class PageScreen extends AbstractScreen {
     private final Identifier textureLocation;
     private final int textureWidth, textureHeight;
@@ -83,8 +86,8 @@ public final class PageScreen extends AbstractScreen {
         handler.resetSlotPositions(true, inventoryWidth, inventoryHeight);
         int playerInvLeft = (inventoryWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
         int playerInvTop = Utils.SLOT_SIZE + 14 + (inventoryHeight * Utils.SLOT_SIZE);
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 3; y++) {
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
                 handler.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, playerInvLeft + Utils.SLOT_SIZE * x, playerInvTop + y * Utils.SLOT_SIZE));
             }
         }

@@ -5,8 +5,8 @@
     "fabric-key-binding-api-v1": ">=1.0.4",
     "fabric-networking-api-v1": ">=1.0.14",
     "fabric-screen-handler-api-v1": ">=1.1.8",
-    "fabricloader": ">=0.11.7",
-    "minecraft": "~1.18-alpha.21.39.a"
+    "fabricloader": ">=0.12.5",
+    "minecraft": "~1.18-alpha.21.44.a"
   },
   "entrypoints": {
     "main": [

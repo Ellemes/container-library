@@ -1,1 +1,1 @@
-- Initial port from 1.17.1 to 1.18 snapshots (21w39a)
+- Fix slot ordering to match vanilla's slot order in player inventory.
