@@ -38,5 +38,6 @@ public abstract class NetworkWrapper {
         }
     }
 
-    abstract boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos);
+    // todo: expose in api or way to force a specific screen
+    public abstract boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos);
 }

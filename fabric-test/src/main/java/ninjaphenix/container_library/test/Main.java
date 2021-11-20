@@ -5,8 +5,6 @@ import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JState;
 import net.devtech.arrp.json.lang.JLang;
 import net.devtech.arrp.json.models.JModel;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -19,8 +17,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -54,10 +50,6 @@ public class Main implements ModInitializer {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("test", "block_entity_type"), blockEntityType);
 
         RRPCallback.AFTER_VANILLA.register(resources -> resources.add(RESOURCE_PACK));
-
-        if (PlatformUtils.isClient()) {
-            Main.setDebugRenderEnabled();
-        }
     }
 
     private static InventoryTestBlock register(int inventorySize, JLang lang) {
@@ -125,10 +117,5 @@ public class Main implements ModInitializer {
             return 55;
         }
         throw new IllegalArgumentException("character must be a single number");
-    }
-
-    @Environment(EnvType.CLIENT)
-    private static void setDebugRenderEnabled() {
-        AbstractScreen.DEBUG_RENDER = true;
     }
 }

@@ -31,7 +31,6 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
     private static final Map<Identifier, ScreenConstructor<?>> SCREEN_CONSTRUCTORS = new HashMap<>();
     private static final Map<Identifier, ScreenSizeRetriever> SIZE_RETRIEVERS = new HashMap<>();
     private static final Set<Identifier> PREFERS_SINGLE_SCREEN = new HashSet<>();
-    public static boolean DEBUG_RENDER = false;
 
     protected final int inventoryWidth, inventoryHeight, totalSlots;
 
@@ -132,12 +131,6 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
-        //noinspection ConstantConditions
-        if (AbstractScreen.DEBUG_RENDER && client.options.debugEnabled) {
-            this.renderTooltip(stack, new LiteralText("w: " + width + ", h: " + height), 5, 20);
-            this.renderTooltip(stack, new LiteralText("x: " + mouseX + ", y: " + mouseY), 5, 40);
-            this.renderTooltip(stack, new LiteralText("bW: " + backgroundWidth + ", bH: " + backgroundHeight), 5, 60);
-        }
     }
 
     @Override
