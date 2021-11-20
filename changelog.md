@@ -1,1 +1,2 @@
-- Fix slot ordering to match vanilla's slot order in player inventory.
+- Remove some debug code.
+- Expose internal api with plans to properly expose it later.

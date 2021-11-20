@@ -38,7 +38,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos) {
+    public boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos) {
         boolean canOpenInventory = true;
         if (FabricLoader.getInstance().isModLoaded("flan")) {
             if (!ClaimHandler.getPermissionStorage(player.getWorld()).getForPermissionCheck(pos).canInteract(player, PermissionRegistry.OPENCONTAINER, pos, true)) {
