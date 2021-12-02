@@ -137,7 +137,7 @@ if (modrinthToken != null) {
 
 if (curseforgeToken != null) {
     var gameVersion = properties["minecraft_version"] as String
-    if ("w" in gameVersion) {
+    if ("w" in gameVersion || "rc" in gameVersion) {
         gameVersion = "1.18-Snapshot"
     }
 
