@@ -38,5 +38,5 @@ public abstract class NetworkWrapper {
         }
     }
 
-    abstract boolean canOpenInventory(ServerPlayer player, BlockPos pos);
+    public abstract boolean canOpenInventory(ServerPlayer player, BlockPos pos);
 }

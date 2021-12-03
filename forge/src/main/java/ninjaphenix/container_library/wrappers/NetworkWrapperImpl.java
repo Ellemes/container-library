@@ -30,7 +30,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    boolean canOpenInventory(ServerPlayer player, BlockPos pos) {
+    public boolean canOpenInventory(ServerPlayer player, BlockPos pos) {
         return true;
     }
 }
