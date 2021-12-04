@@ -1,2 +1,1 @@
-- Remove some debug code.
-- Expose internal api with plans to properly expose it later.
+- Update to and require 1.18+

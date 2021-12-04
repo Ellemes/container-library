@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[37,)"
+loaderVersion = "[38,)"
 issueTrackerURL = "https://github.com/NinjaPhenix/container-library/issues/"
 license = "0BSD"
 

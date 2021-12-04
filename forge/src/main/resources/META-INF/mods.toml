@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[37,)"
+loaderVersion = "[38,)"
 issueTrackerURL = "https://github.com/NinjaPhenix/container-library/issues/"
 license = "0BSD"
 
@@ -13,13 +13,13 @@ logoFile = "icon.png"
 [[dependencies.ninjaphenix_container_lib]]
 modId = "forge"
 mandatory = true
-versionRange = "[37.0.59,)"
+versionRange = "[38.0.14,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.ninjaphenix_container_lib]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.17.1,)"
+versionRange = "[1.18,)"
 ordering = "NONE"
 side = "BOTH"
