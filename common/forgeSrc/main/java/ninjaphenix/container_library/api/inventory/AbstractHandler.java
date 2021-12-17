@@ -26,8 +26,8 @@ public final class AbstractHandler extends Container {
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 this.addSlot(new Slot(inventory, i, i * Utils.SLOT_SIZE, 0));
             }
-            for (int x = 0; x < 9; x++) {
-                for (int y = 0; y < 3; y++) {
+            for (int y = 0; y < 3; y++) {
+                for (int x = 0; x < 9; x++) {
                     this.addSlot(new Slot(playerInventory, y * 9 + x + 9, Utils.SLOT_SIZE * x, y * Utils.SLOT_SIZE));
                 }
             }

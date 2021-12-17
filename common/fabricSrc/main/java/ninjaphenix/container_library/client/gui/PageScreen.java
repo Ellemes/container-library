@@ -93,8 +93,8 @@ public final class PageScreen extends AbstractScreen {
         handler.resetSlotPositions(true, inventoryWidth, inventoryHeight);
         int playerInvLeft = (inventoryWidth * Utils.SLOT_SIZE + 14) / 2 - 80;
         int playerInvTop = Utils.SLOT_SIZE + 14 + (inventoryHeight * Utils.SLOT_SIZE);
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 3; y++) {
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
                 handler.addClientSlot(new Slot(playerInventory, y * 9 + x + 9, playerInvLeft + Utils.SLOT_SIZE * x, playerInvTop + y * Utils.SLOT_SIZE));
             }
         }

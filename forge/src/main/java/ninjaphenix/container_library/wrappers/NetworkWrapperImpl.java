@@ -32,7 +32,7 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos) {
+    public boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos) {
         boolean canOpenInventory = true;
         if (PlatformUtils.isModLoaded("flan")) {
             if (!ClaimHandler.getPermissionStorage(player.getLevel()).getForPermissionCheck(pos).canInteract(player, PermissionRegistry.OPENCONTAINER, pos, true)) {
