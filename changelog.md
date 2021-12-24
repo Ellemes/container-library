@@ -1,2 +1,1 @@
-- Remove some debug code.
-- Expose internal api with plans to properly expose it later.
+- Add pt_br ( brazil portuguese ) translations by https://github.com/seriousfreezing
