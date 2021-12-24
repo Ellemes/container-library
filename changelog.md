@@ -1,1 +1,1 @@
-- Backport changes from 1.18
+- Add pt_br ( brazil portuguese ) translations by https://github.com/seriousfreezing
