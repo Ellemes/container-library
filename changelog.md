@@ -1,1 +1,1 @@
-- Backport french translations by https://github.com/jbavay
+- Fix error when legacy config fails to convert.

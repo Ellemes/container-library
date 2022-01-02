@@ -131,6 +131,9 @@ public abstract class ConfigWrapper {
     protected final <A, B extends Config> B convert(A config, int configVersion, Converter<A, B> converter) {
         if (configVersion == converter.getSourceVersion()) {
             B returnValue = converter.fromSource(config);
+            if (returnValue == null) {
+                return null;
+            }
             if (returnValue.getVersion() == converter.getTargetVersion()) {
                 return returnValue;
             } else {
