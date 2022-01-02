@@ -1,1 +1,1 @@
-- Add pt_br ( brazil portuguese ) translations by https://github.com/seriousfreezing
+- Fix error when legacy config fails to convert.
