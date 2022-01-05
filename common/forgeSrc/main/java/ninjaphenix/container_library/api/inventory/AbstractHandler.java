@@ -5,6 +5,7 @@ import ninjaphenix.container_library.Utils;
 
 import java.util.function.IntUnaryOperator;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
@@ -17,10 +18,12 @@ import net.minecraft.world.item.ItemStack;
 
 public final class AbstractHandler extends AbstractContainerMenu {
     private final Container inventory;
+    private final ResourceLocation forcedScreenType;
 
-    public AbstractHandler(int syncId, Container inventory, Inventory playerInventory) {
+    public AbstractHandler(int syncId, Container inventory, Inventory playerInventory, ResourceLocation forcedScreenType) {
         super(CommonMain.getScreenHandlerType(), syncId);
         this.inventory = inventory;
+        this.forcedScreenType = forcedScreenType;
         inventory.startOpen(playerInventory.player);
         if (playerInventory.player instanceof ServerPlayer) {
             for (int i = 0; i < inventory.getContainerSize(); i++) {
@@ -39,7 +42,12 @@ public final class AbstractHandler extends AbstractContainerMenu {
 
     // Client only
     public static AbstractHandler createClientMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buffer) {
-        return new AbstractHandler(syncId, new SimpleContainer(buffer.readInt()), playerInventory);
+        int inventorySize = buffer.readInt();
+        ResourceLocation forcedScreenType = null;
+        if (buffer.readableBytes() > 0) {
+            forcedScreenType = buffer.readResourceLocation();
+        }
+        return new AbstractHandler(syncId, new SimpleContainer(inventorySize), playerInventory, forcedScreenType);
     }
 
     @Override
@@ -115,5 +123,9 @@ public final class AbstractHandler extends AbstractContainerMenu {
 
     public void addClientSlot(Slot slot) {
         this.addSlot(slot);
+    }
+
+    public ResourceLocation getForcedScreenType() {
+        return forcedScreenType;
     }
 }

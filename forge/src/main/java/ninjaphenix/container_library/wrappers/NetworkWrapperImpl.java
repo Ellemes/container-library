@@ -2,6 +2,7 @@ package ninjaphenix.container_library.wrappers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class NetworkWrapperImpl extends NetworkWrapper {
     @Override
-    protected void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title) {
+    protected void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title, ResourceLocation forcedScreenType) {
         NetworkHooks.openGui(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {
@@ -26,7 +27,12 @@ public final class NetworkWrapperImpl extends NetworkWrapper {
             public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
                 return factory.create(syncId, inventory, playerInventory);
             }
-        }, buffer -> buffer.writeInt(inventory.getContainerSize()));
+        }, buffer -> {
+            buffer.writeInt(inventory.getContainerSize());
+            if (forcedScreenType != null) {
+                buffer.writeResourceLocation(forcedScreenType);
+            }
+        });
     }
 
     @Override

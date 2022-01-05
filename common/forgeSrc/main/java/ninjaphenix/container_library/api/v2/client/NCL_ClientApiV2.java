@@ -6,7 +6,6 @@ import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
-import ninjaphenix.container_library.wrappers.NetworkWrapper;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,10 +27,24 @@ public final class NCL_ClientApiV2 {
      * {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2}.
      *
      * @return true if a valid screen type is already selected.
+     * @deprecated Use method with skipOptionCheck boolean
      */
+    @Deprecated
     public static boolean openInventoryAt(BlockPos pos, InteractionHand hand, BlockHitResult hit) {
+        return NCL_ClientApiV2.openInventoryAt(pos, hand, hit, false);
+    }
+
+    /**
+     * Call on client side to attempt to open an inventory, sort of internal, should be accessed through:
+     * {@link ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2}.
+     * <p>
+     * If {@code skipOptionCheck} is true then the user's screen preference is not checked.
+     *
+     * @return true if a valid screen type is already selected.
+     */
+    public static boolean openInventoryAt(BlockPos pos, InteractionHand hand, BlockHitResult hit, boolean skipOptionCheck) {
         Objects.requireNonNull(pos, "pos must not be null");
-        if (!AbstractScreen.isScreenTypeDeclared(ConfigWrapper.getInstance().getPreferredScreenType())) {
+        if (!skipOptionCheck && !AbstractScreen.isScreenTypeDeclared(ConfigWrapper.getInstance().getPreferredScreenType())) {
             Minecraft.getInstance().setScreen(new PickScreen(() -> {
                 Minecraft.getInstance().getConnection().send(new ServerboundUseItemOnPacket(hand, hit));
             }));

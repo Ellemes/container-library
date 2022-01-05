@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,7 +17,7 @@ import net.minecraft.world.Container;
 public abstract class NetworkWrapper {
     private static NetworkWrapper INSTANCE;
 
-    protected abstract void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title);
+    protected abstract void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title, ResourceLocation forcedScreenType);
 
     public static NetworkWrapper getInstance() {
         if (NetworkWrapper.INSTANCE == null) {
@@ -25,7 +26,7 @@ public abstract class NetworkWrapper {
         return NetworkWrapper.INSTANCE;
     }
 
-    public final void s_openInventory(ServerPlayer player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayer> onInitialOpen, BlockPos pos) {
+    public final void s_openInventory(ServerPlayer player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayer> onInitialOpen, BlockPos pos, ResourceLocation forcedScreenType) {
         if (this.canOpenInventory(player, pos)) {
             Component title = inventory.getInventoryTitle();
             if (!inventory.canBeUsedBy(player)) {
@@ -34,9 +35,9 @@ public abstract class NetworkWrapper {
                 return;
             }
             onInitialOpen.accept(player);
-            this.openScreenHandler(player, inventory.getInventory(), AbstractHandler::new, title);
+            this.openScreenHandler(player, inventory.getInventory(), (syncId, inv, playerInv) -> new AbstractHandler(syncId, inv, playerInv, null), title, forcedScreenType);
         }
     }
 
-    public abstract boolean canOpenInventory(ServerPlayer player, BlockPos pos);
+    protected abstract boolean canOpenInventory(ServerPlayer player, BlockPos pos);
 }
