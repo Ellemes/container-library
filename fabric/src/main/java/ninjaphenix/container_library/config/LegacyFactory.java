@@ -1,8 +1,9 @@
 package ninjaphenix.container_library.config;
 
-import ninjaphenix.container_library.Utils;
-import java.util.Map;
 import net.minecraft.util.Identifier;
+import ninjaphenix.container_library.Utils;
+
+import java.util.Map;
 
 public final class LegacyFactory implements Converter<Map<String, Object>, ConfigV0> {
     public static final LegacyFactory INSTANCE = new LegacyFactory();
