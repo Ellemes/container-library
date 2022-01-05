@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -57,13 +58,31 @@ public interface OpenableBlockEntityProviderV2 {
      * Intended to be protected.
      */
     default boolean ncl_cOpenInventory(BlockPos pos, Hand hand, BlockHitResult hit) {
-        return NCL_ClientApiV2.openInventoryAt(pos, hand, hit);
+        return NCL_ClientApiV2.openInventoryAt(pos, hand, hit, false);
+    }
+
+    /**
+     * When this method returns {@code false} {@link Block#onUse} should return {@link ActionResult#FAIL}
+     * <p/>
+     * This does the same as {@link OpenableBlockEntityProviderV2#ncl_cOpenInventory(BlockPos, Hand, BlockHitResult)} except it skips the screen option check.
+     * <p>
+     * Intended to be protected.
+     */
+    default boolean ncl_cOpenInventoryNoScreenCheck(BlockPos pos, Hand hand, BlockHitResult hit) {
+        return NCL_ClientApiV2.openInventoryAt(pos, hand, hit, true);
     }
 
     /**
      * Intended to be protected.
      */
     default void ncl_sOpenInventory(World world, BlockState state, BlockPos pos, ServerPlayerEntity player) {
-        NetworkWrapper.getInstance().s_openInventory(player, this.getOpenableBlockEntity(world, state, pos), this::onInitialOpen, pos);
+        this.ncl_sOpenInventory(world, state, pos, player, null);
+    }
+
+    /**
+     * Intended to be protected.
+     */
+    default void ncl_sOpenInventory(World world, BlockState state, BlockPos pos, ServerPlayerEntity player, Identifier forcedScreenType) {
+        NetworkWrapper.getInstance().s_openInventory(player, this.getOpenableBlockEntity(world, state, pos), this::onInitialOpen, pos, forcedScreenType);
     }
 }
