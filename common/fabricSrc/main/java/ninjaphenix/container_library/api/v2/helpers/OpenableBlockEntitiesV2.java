@@ -1,6 +1,5 @@
 package ninjaphenix.container_library.api.v2.helpers;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;

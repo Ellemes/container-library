@@ -28,7 +28,12 @@ import org.anti_ad.mc.ipn.api.IPNGuiHint;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @IPNGuiHint(button = IPNButton.MOVE_TO_CONTAINER, horizontalOffset = 58)
 public final class PageScreen extends AbstractScreen {
