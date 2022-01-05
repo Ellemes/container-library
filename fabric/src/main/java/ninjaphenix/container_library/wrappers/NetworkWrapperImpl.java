@@ -11,17 +11,21 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
 import org.jetbrains.annotations.Nullable;
 
 final class NetworkWrapperImpl extends NetworkWrapper {
     @Override
-    protected void openScreenHandler(ServerPlayerEntity player, Inventory inventory, ServerScreenHandlerFactory factory, Text title) {
+    protected void openScreenHandler(ServerPlayerEntity player, Inventory inventory, ServerScreenHandlerFactory factory, Text title, Identifier forcedScreenType) {
         player.openHandledScreen(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buffer) {
                 buffer.writeInt(inventory.size());
+                if (forcedScreenType != null) {
+                    buffer.writeIdentifier(forcedScreenType);
+                }
             }
 
             @Override
@@ -38,7 +42,7 @@ final class NetworkWrapperImpl extends NetworkWrapper {
     }
 
     @Override
-    public boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos) {
+    protected boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos) {
         boolean canOpenInventory = true;
         if (FabricLoader.getInstance().isModLoaded("flan")) {
             if (!ClaimHandler.getPermissionStorage(player.getWorld()).getForPermissionCheck(pos).canInteract(player, PermissionRegistry.OPENCONTAINER, pos, true)) {

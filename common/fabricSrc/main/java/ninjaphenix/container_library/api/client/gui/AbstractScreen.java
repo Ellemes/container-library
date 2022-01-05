@@ -5,7 +5,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import ninjaphenix.container_library.Utils;
@@ -45,12 +44,13 @@ public abstract class AbstractScreen extends HandledScreen<AbstractHandler> {
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static AbstractScreen createScreen(AbstractHandler handler, PlayerInventory playerInventory, Text title) {
-        Identifier preference = ConfigWrapper.getInstance().getPreferredScreenType();
+        Identifier forcedScreenType = handler.getForcedScreenType();
+        Identifier preference = forcedScreenType != null ? forcedScreenType : ConfigWrapper.getInstance().getPreferredScreenType();
         int scaledWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
         int scaledHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
         int slots = handler.getInventory().size();
 
-        if (AbstractScreen.canSingleScreenDisplay(slots, scaledWidth, scaledHeight) && AbstractScreen.shouldPreferSingleScreen(preference)) {
+        if (forcedScreenType == null && AbstractScreen.canSingleScreenDisplay(slots, scaledWidth, scaledHeight) && AbstractScreen.shouldPreferSingleScreen(preference)) {
             preference = Utils.SINGLE_SCREEN_TYPE;
         }
 

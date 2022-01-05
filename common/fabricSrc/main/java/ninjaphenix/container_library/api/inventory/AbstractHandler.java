@@ -9,6 +9,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
@@ -17,10 +18,12 @@ import java.util.function.IntUnaryOperator;
 
 public final class AbstractHandler extends ScreenHandler {
     private final Inventory inventory;
+    private final Identifier forcedScreenType;
 
-    public AbstractHandler(int syncId, Inventory inventory, PlayerInventory playerInventory) {
+    public AbstractHandler(int syncId, Inventory inventory, PlayerInventory playerInventory, Identifier forcedScreenType) {
         super(CommonMain.getScreenHandlerType(), syncId);
         this.inventory = inventory;
+        this.forcedScreenType = forcedScreenType;
         inventory.onOpen(playerInventory.player);
         if (playerInventory.player instanceof ServerPlayerEntity) {
             for (int i = 0; i < inventory.size(); i++) {
@@ -39,7 +42,12 @@ public final class AbstractHandler extends ScreenHandler {
 
     // Client only
     public static AbstractHandler createClientMenu(int syncId, PlayerInventory playerInventory, PacketByteBuf buffer) {
-        return new AbstractHandler(syncId, new SimpleInventory(buffer.readInt()), playerInventory);
+        int inventorySize = buffer.readInt();
+        Identifier forcedScreenType = null;
+        if (buffer.readableBytes() > 0) {
+            forcedScreenType = buffer.readIdentifier();
+        }
+        return new AbstractHandler(syncId, new SimpleInventory(inventorySize), playerInventory, forcedScreenType);
     }
 
     @Override
@@ -115,5 +123,9 @@ public final class AbstractHandler extends ScreenHandler {
 
     public void addClientSlot(Slot slot) {
         this.addSlot(slot);
+    }
+
+    public Identifier getForcedScreenType() {
+        return forcedScreenType;
     }
 }

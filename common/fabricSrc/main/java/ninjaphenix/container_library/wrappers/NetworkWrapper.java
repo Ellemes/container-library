@@ -6,6 +6,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
@@ -16,7 +17,7 @@ import java.util.function.Consumer;
 public abstract class NetworkWrapper {
     private static NetworkWrapper INSTANCE;
 
-    protected abstract void openScreenHandler(ServerPlayerEntity player, Inventory inventory, ServerScreenHandlerFactory factory, Text title);
+    protected abstract void openScreenHandler(ServerPlayerEntity player, Inventory inventory, ServerScreenHandlerFactory factory, Text title, Identifier forcedScreenType);
 
     public static NetworkWrapper getInstance() {
         if (NetworkWrapper.INSTANCE == null) {
@@ -25,7 +26,7 @@ public abstract class NetworkWrapper {
         return NetworkWrapper.INSTANCE;
     }
 
-    public final void s_openInventory(ServerPlayerEntity player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayerEntity> onInitialOpen, BlockPos pos) {
+    public final void s_openInventory(ServerPlayerEntity player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayerEntity> onInitialOpen, BlockPos pos, Identifier forcedScreenType) {
         if (this.canOpenInventory(player, pos)) {
             Text title = inventory.getInventoryTitle();
             if (!inventory.canBeUsedBy(player)) {
@@ -34,10 +35,9 @@ public abstract class NetworkWrapper {
                 return;
             }
             onInitialOpen.accept(player);
-            this.openScreenHandler(player, inventory.getInventory(), AbstractHandler::new, title);
+            this.openScreenHandler(player, inventory.getInventory(), (syncId, inv, playerInv) -> new AbstractHandler(syncId, inv, playerInv, null), title, forcedScreenType);
         }
     }
 
-    // todo: expose in api or way to force a specific screen
-    public abstract boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos);
+    protected abstract boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos);
 }
