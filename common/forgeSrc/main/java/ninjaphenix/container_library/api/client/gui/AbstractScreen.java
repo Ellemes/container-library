@@ -22,7 +22,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -30,7 +29,6 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     private static final Map<ResourceLocation, ScreenConstructor<?>> SCREEN_CONSTRUCTORS = new HashMap<>();
     private static final Map<ResourceLocation, ScreenSizeRetriever> SIZE_RETRIEVERS = new HashMap<>();
     private static final Set<ResourceLocation> PREFERS_SINGLE_SCREEN = new HashSet<>();
-    public static boolean DEBUG_RENDER = false;
 
     protected final int inventoryWidth, inventoryHeight, totalSlots;
 
@@ -45,12 +43,13 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     @ApiStatus.Internal
     @SuppressWarnings("DeprecatedIsStillUsed")
     public static AbstractScreen createScreen(AbstractHandler handler, Inventory playerInventory, Component title) {
-        ResourceLocation preference = ConfigWrapper.getInstance().getPreferredScreenType();
+        ResourceLocation forcedScreenType = handler.getForcedScreenType();
+        ResourceLocation preference = forcedScreenType != null ? forcedScreenType : ConfigWrapper.getInstance().getPreferredScreenType();
         int scaledWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int scaledHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         int slots = handler.getInventory().getContainerSize();
 
-        if (AbstractScreen.canSingleScreenDisplay(slots, scaledWidth, scaledHeight) && AbstractScreen.shouldPreferSingleScreen(preference)) {
+        if (forcedScreenType == null && AbstractScreen.canSingleScreenDisplay(slots, scaledWidth, scaledHeight) && AbstractScreen.shouldPreferSingleScreen(preference)) {
             preference = Utils.SINGLE_SCREEN_TYPE;
         }
 
@@ -131,12 +130,6 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, delta);
         this.renderTooltip(stack, mouseX, mouseY);
-        //noinspection ConstantConditions
-        if (AbstractScreen.DEBUG_RENDER && minecraft.options.renderDebug) {
-            this.renderTooltip(stack, new TextComponent("w: " + width + ", h: " + height), 5, 20);
-            this.renderTooltip(stack, new TextComponent("x: " + mouseX + ", y: " + mouseY), 5, 40);
-            this.renderTooltip(stack, new TextComponent("bW: " + imageWidth + ", bH: " + imageHeight), 5, 60);
-        }
     }
 
     @Override
