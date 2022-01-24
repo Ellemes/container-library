@@ -119,7 +119,7 @@ val namedJarTask = tasks.register<Jar>("namedJar") {
 
 val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     input.set(jarTask.outputs.files.singleFile)
-    archiveClassifier.set("")
+    archiveClassifier.set("forge")
 
     manifest.attributes(mapOf(
             "Specification-Title" to "NinjaPhenix's Container Library",
@@ -148,7 +148,6 @@ publishing {
             artifactId = "container_library"
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)
-                classifier = "forge"
             }
         }
     }

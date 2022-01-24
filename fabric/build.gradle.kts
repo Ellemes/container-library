@@ -135,7 +135,7 @@ val remapJarTask: RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
 
 val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     input.set(remapJarTask.outputs.files.singleFile)
-    archiveClassifier.set("")
+    archiveClassifier.set("fabric")
     from(rootDir.resolve("LICENSE"))
     dependsOn(remapJarTask)
 }
@@ -151,7 +151,6 @@ publishing {
             artifactId = "container_library"
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)
-                classifier = "fabric"
             }
         }
     }
