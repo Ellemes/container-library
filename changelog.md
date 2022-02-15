@@ -1,1 +1,1 @@
-- Fix error when legacy config fails to convert.
+- Add api to force a specific screen type.
