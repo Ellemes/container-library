@@ -41,7 +41,8 @@ repositories {
 
 dependencies {
     compileOnly(group = "mezz.jei", name = "jei-${properties["jei_minecraft_version"]}", version = "${properties["jei_version"]}", classifier = "api")
-    compileOnly(group = "org.anti-ad.mc", name = "inventory-profiles-next", version = "forge-${properties["ipn_minecraft_version"]}-${properties["ipn_version"]}")
+    compileOnly(("org.anti-ad.mc:inventory-profiles-next:forge-${properties["ipn_minecraft_version"]}-${properties["ipn_version"]}"))
+    testCompileOnly(("org.anti-ad.mc:inventory-profiles-next:forge-${properties["ipn_minecraft_version"]}-${properties["ipn_version"]}"))
 }
 
 val jarTask = tasks.getByName<Jar>("jar") {
