@@ -4,48 +4,48 @@ import io.github.flemmli97.flan.api.ClaimHandler;
 import io.github.flemmli97.flan.api.permission.PermissionRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
 import org.jetbrains.annotations.Nullable;
 
-final class NetworkWrapperImpl extends NetworkWrapper {
+public final class NetworkWrapperImpl extends NetworkWrapper {
     @Override
-    protected void openScreenHandler(ServerPlayerEntity player, Inventory inventory, ServerScreenHandlerFactory factory, Text title, Identifier forcedScreenType) {
-        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
+    protected void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title, ResourceLocation forcedScreenType) {
+        player.openMenu(new ExtendedScreenHandlerFactory() {
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buffer) {
-                buffer.writeInt(inventory.size());
+            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buffer) {
+                buffer.writeInt(inventory.getContainerSize());
                 if (forcedScreenType != null) {
-                    buffer.writeIdentifier(forcedScreenType);
+                    buffer.writeResourceLocation(forcedScreenType);
                 }
             }
 
             @Override
-            public Text getDisplayName() {
+            public Component getDisplayName() {
                 return title;
             }
 
             @Nullable
             @Override
-            public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+            public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
                 return factory.create(syncId, inventory, playerInventory);
             }
         });
     }
 
     @Override
-    public boolean canOpenInventory(ServerPlayerEntity player, BlockPos pos) {
+    public boolean canOpenInventory(ServerPlayer player, BlockPos pos) {
         boolean canOpenInventory = true;
         if (FabricLoader.getInstance().isModLoaded("flan")) {
-            if (!ClaimHandler.getPermissionStorage(player.getWorld()).getForPermissionCheck(pos).canInteract(player, PermissionRegistry.OPENCONTAINER, pos, true)) {
+            if (!ClaimHandler.getPermissionStorage(player.getLevel()).getForPermissionCheck(pos).canInteract(player, PermissionRegistry.OPENCONTAINER, pos, true)) {
                 canOpenInventory = false;
             }
         }

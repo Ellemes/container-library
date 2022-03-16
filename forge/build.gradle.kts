@@ -1,12 +1,11 @@
-import com.gitlab.ninjaphenix.gradle.api.task.MinifyJsonTask
 import org.gradle.jvm.tasks.Jar
 import java.text.DateFormat
 import java.util.*
 
 plugins {
-    alias(libs.plugins.gradle.utils)
-    alias(libs.plugins.gradle.forge)
-    alias(libs.plugins.gradle.mixin)
+    id("ninjaphenix.gradle.mod").apply(false)
+    id("net.minecraftforge.gradle")
+    id("org.spongepowered.mixin")
     `maven-publish`
 }
 
@@ -26,55 +25,6 @@ artifacts {
 }
 //endregion
 
-mixin {
-    add(sourceSets.main.get(), "ninjaphenix-container-lib.refmap.json")
-    disableAnnotationProcessorCheck()
-}
-
-minecraft {
-    mappings("official", properties["minecraft_version"] as String)
-
-    accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg")) // Currently, this location cannot be changed from the default.
-
-    runs {
-        create("client") {
-            workingDirectory(rootProject.file("run"))
-            mods {
-                create("ninjaphenix_container_lib") {
-                    source(sourceSets.main.get())
-                }
-            }
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            //property("forge.logging.markers", "REGISTRIES")
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            //property("forge.logging.console.level", "debug")
-        }
-
-        create("server") {
-            workingDirectory(rootProject.file("run"))
-            mods {
-                create("ninjaphenix_container_lib") {
-                    source(sourceSets.main.get())
-                }
-            }
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            //property("forge.logging.markers", "REGISTRIES")
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            //property("forge.logging.console.level", "debug")
-        }
-    }
-}
-
 repositories {
     maven {
         // JEI maven
@@ -90,26 +40,14 @@ repositories {
 }
 
 dependencies {
-    minecraft(group = "net.minecraftforge", name = "forge", version = "${properties["minecraft_version"]}-${properties["forge_version"]}")
-    implementation(group = "org.spongepowered", name = "mixin", version = properties["mixin_version"] as String)
-    annotationProcessor(group = "org.spongepowered", name = "mixin", version = properties["mixin_version"] as String, classifier = "processor")
-
-    implementation(group = "org.jetbrains", name = "annotations", version = properties["jetbrains_annotations_version"] as String)
-
     compileOnly(group = "mezz.jei", name = "jei-${properties["jei_minecraft_version"]}", version = "${properties["jei_version"]}", classifier = "api")
     compileOnly(group = "org.anti-ad.mc", name = "inventory-profiles-next", version = "forge-${properties["ipn_minecraft_version"]}-${properties["ipn_version"]}")
 }
 
-tasks.withType<ProcessResources> {
-    val props = mutableMapOf("version" to properties["mod_version"]) // Needs to be mutable
-    inputs.properties(props)
-    filesMatching("META-INF/mods.toml") {
-        expand(props)
-    }
-}
-
 val jarTask = tasks.getByName<Jar>("jar") {
     archiveClassifier.set("fat")
+
+    this.finalizedBy("reobfJar")
 }
 
 val namedJarTask = tasks.register<Jar>("namedJar") {
@@ -117,7 +55,7 @@ val namedJarTask = tasks.register<Jar>("namedJar") {
     from(sourceSets["main"].output)
 }
 
-val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
+val minifyJarTask = tasks.register<ninjaphenix.gradle.mod.api.task.MinifyJsonTask>("minJar") {
     input.set(jarTask.outputs.files.singleFile)
     archiveClassifier.set("forge")
 

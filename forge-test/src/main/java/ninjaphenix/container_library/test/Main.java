@@ -19,60 +19,71 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Mod("ninjaphenix_container_lib_test")
 public final class Main {
     private static BlockEntityType<InventoryTestBlockEntity> blockEntityType;
 
     public Main() {
-        CreativeModeTab group = new CreativeModeTab("test.test") {
+        CreativeModeTab group = new CreativeModeTab("ninjaphenix_container_lib_test.tab") {
             @Override
             public ItemStack makeIcon() {
                 return new ItemStack(Blocks.SOUL_CAMPFIRE);
             }
         };
 
-        List<Block> blocks = new ArrayList<>();
-        List<Item> items = new ArrayList<>();
+        List<Supplier<InventoryTestBlock>> blocks = new ArrayList<>();
+        List<Supplier<BlockItem>> items = new ArrayList<>();
         IntArrayList list = new IntArrayList(100);
-        for (int i = 1; i < 20; i++) {
-            list.add(i * 27 - 3);
-            list.add(i * 27);
-            list.add(i * 27 + 3);
+        for (int j = 1; j < 20; j++) {
+            list.add(j * 27 - 3);
+            list.add(j * 27);
+            list.add(j * 27 + 3);
         }
 
-        for (int i : list) {
-            ResourceLocation id = new ResourceLocation("test", "inventory_" + i);
-            InventoryTestBlock block = new InventoryTestBlock(BlockBehaviour.Properties.of(Material.BAMBOO), i);
-            block.setRegistryName(id);
-            Item item = new BlockItem(block, new Item.Properties().tab(group));
-            item.setRegistryName(id);
+        for (int j : list) {
+            ResourceLocation id = new ResourceLocation("ninjaphenix_container_lib_test", "inventory_" + j);
+            Supplier<InventoryTestBlock> block = () -> {
+                var b = new InventoryTestBlock(BlockBehaviour.Properties.of(Material.BAMBOO), j);
+                b.setRegistryName(id);
+                return b;
+            };
+            Supplier<BlockItem> item = () -> {
+                var i = new BlockItem(block.get(), new Item.Properties().tab(group));
+                i.setRegistryName(id);
+                return i;
+            };
             blocks.add(block);
             items.add(item);
         }
 
-        blockEntityType = new BlockEntityType<>(((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state)), Set.copyOf(blocks), null);
-        blockEntityType.setRegistryName(new ResourceLocation("test", "block_entity_type"));
+        Supplier<BlockEntityType<InventoryTestBlockEntity>> bets = () -> {
+            var be = new BlockEntityType<>(((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state)), blocks.stream().map(Supplier::get).collect(Collectors.toSet()), null);
+            be.setRegistryName(new ResourceLocation("ninjaphenix_container_lib_test", "block_entity_type"));
+            return be;
+        };
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         bus.addGenericListener(Block.class, (RegistryEvent.Register<Block> event) -> {
             IForgeRegistry<Block> registry = event.getRegistry();
-            blocks.forEach(registry::register);
+            blocks.forEach(b -> registry.register(b.get()));
         });
 
         bus.addGenericListener(Item.class, (RegistryEvent.Register<Item> event) -> {
             IForgeRegistry<Item> registry = event.getRegistry();
-            items.forEach(registry::register);
+            items.forEach(i -> registry.register(i.get()));
         });
 
         bus.addGenericListener(BlockEntityType.class, (RegistryEvent.Register<BlockEntityType<?>> event) -> {
             IForgeRegistry<BlockEntityType<?>> registry = event.getRegistry();
-            registry.register(blockEntityType);
+            registry.register(blockEntityType = bets.get());
+
         });
     }
 
-    public static BlockEntityType<?> getBlockEntityType() {
+    public static BlockEntityType<InventoryTestBlockEntity> getBlockEntityType() {
         return blockEntityType;
     }
 }

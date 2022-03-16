@@ -8,7 +8,11 @@ import ninjaphenix.container_library.config.LegacyFactory;
 import java.io.StringReader;
 import java.nio.file.Path;
 
-final class ConfigWrapperImpl extends ConfigWrapper {
+public final class ConfigWrapperImpl extends ConfigWrapper {
+    public ConfigWrapperImpl(Path configPath, Path oldConfigPath) {
+        super(configPath, oldConfigPath);
+    }
+
     @Override
     protected ConfigV0 readOldConfig(String configLines, Path oldConfigPath) {
         CommentedConfig tomlConfig = TomlFormat.instance().createParser().parse(new StringReader(configLines));

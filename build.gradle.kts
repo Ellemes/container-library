@@ -13,64 +13,17 @@ buildscript {
 }
 
 plugins {
-    java
-    alias(libs.plugins.gradle.modrinth)
-    alias(libs.plugins.gradle.curseforge)
+    java // todo: move publish code to sub-projects or move to different publishing method / custom gradle plugin
+    id("fabric-loom").version("0.11.29").apply(false)
+    id("net.minecraftforge.gradle").version("5.1.26").apply(false)
+    id("org.spongepowered.mixin").version("0.7-SNAPSHOT").apply(false)
+    id("ninjaphenix.gradle.mod").version("6.2.0.6")
+    id("com.modrinth.minotaur").version("1.2.1")
+    id("com.matthewprenger.cursegradle").version("1.4.0")
 }
 
 fun isMainSubProject(name: String): Boolean {
     return name == "forge" || name == "fabric"
-}
-
-subprojects {
-    apply(plugin = "java")
-
-    if (group == rootProject.name) {
-        group = properties["maven_group"] as String
-    }
-    if (version == "unspecified") {
-        version = "${properties["mod_version"]}+${properties["minecraft_version"]}"
-    } else {
-        version = "${version}+${properties["minecraft_version"]}"
-    }
-    base.archivesName.set(properties["archives_base_name"] as String)
-    buildDir = rootDir.resolve("build/${project.name}")
-
-    java {
-        sourceCompatibility = JavaVersion.toVersion(properties["mod_java_version"] as String)
-        targetCompatibility = JavaVersion.toVersion(properties["mod_java_version"] as String)
-    }
-
-    if (isMainSubProject(project.name)) {
-        sourceSets {
-            main {
-                java {
-                    setSrcDirs(listOf(
-                            "src/main/java",
-                            rootDir.resolve("common/${project.name}Src/main/java")
-                    ))
-                }
-                resources {
-                    setSrcDirs(listOf(
-                            "src/main/resources",
-                            rootDir.resolve("common/src/main/resources")
-                    ))
-                }
-            }
-        }
-    }
-
-    tasks.withType<JavaCompile>().configureEach {
-        options.encoding = "UTF-8"
-    }
-}
-
-tasks.register("buildMod") {
-    subprojects.forEach {
-        if (isMainSubProject(it.name)) {
-            dependsOn(it.tasks["build"])
-        }
-    }
 }
 
 tasks.register("publishToMavenLocal") {
@@ -106,11 +59,11 @@ if (modrinthToken != null) {
             changelog = realChangelog
             token = modrinthToken
             projectId = properties["modrinth_project_id"] as String
-            versionName = "Forge ${properties["mod_version"]}+${properties["minecraft_version"]}"
-            versionNumber = "${properties["mod_version"]}+${properties["minecraft_version"]}-forge"
+            versionName = "Forge ${properties["mod_version"]}+${mod.minecraftVersion}"
+            versionNumber = "${properties["mod_version"]}+${mod.minecraftVersion}-forge"
             versionType = VersionType.RELEASE
             uploadFile = releaseJarTask
-            addGameVersion(properties["minecraft_version"] as String)
+            addGameVersion(mod.minecraftVersion)
             extraGameVersions.forEach {
                 addGameVersion(it)
             }
@@ -130,11 +83,11 @@ if (modrinthToken != null) {
             changelog = realChangelog
             token = modrinthToken
             projectId = properties["modrinth_project_id"] as String
-            versionName = "Fabric ${properties["mod_version"]}+${properties["minecraft_version"]}"
-            versionNumber = "${properties["mod_version"]}+${properties["minecraft_version"]}-fabric"
+            versionName = "Fabric ${properties["mod_version"]}+${mod.minecraftVersion}"
+            versionNumber = "${properties["mod_version"]}+${mod.minecraftVersion}-fabric"
             versionType = VersionType.RELEASE
             uploadFile = releaseJarTask
-            addGameVersion(properties["minecraft_version"] as String)
+            addGameVersion(mod.minecraftVersion)
             extraGameVersions.forEach {
                 addGameVersion(it)
             }
@@ -144,7 +97,7 @@ if (modrinthToken != null) {
 }
 
 if (curseforgeToken != null) {
-    var gameVersion = properties["minecraft_version"] as String
+    var gameVersion : String = mod.minecraftVersion
     if ("w" in gameVersion || "rc" in gameVersion) {
         gameVersion = "1.18-Snapshot"
     }
@@ -160,7 +113,7 @@ if (curseforgeToken != null) {
                 artifact = releaseJarTask
                 changelogType = "markdown"
                 changelog = realChangelog
-                displayName = "[Forge - ${properties["minecraft_version"]}] ${properties["mod_version"]}"
+                displayName = "[Forge - ${mod.minecraftVersion}] ${properties["mod_version"]}"
                 releaseType = "release"
                 gameVersionStrings = listOf(gameVersion, "Forge", "Java ${properties["mod_java_version"]}") + extraGameVersions
             }
@@ -182,7 +135,7 @@ if (curseforgeToken != null) {
                 artifact = releaseJarTask
                 changelogType = "markdown"
                 changelog = realChangelog
-                displayName = "[Fabric - ${properties["minecraft_version"]}] ${properties["mod_version"]}"
+                displayName = "[Fabric - ${mod.minecraftVersion}] ${properties["mod_version"]}"
                 releaseType = "release"
                 gameVersionStrings = listOf(gameVersion, "Fabric", "Java ${properties["mod_java_version"]}") + extraGameVersions
             }

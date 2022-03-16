@@ -23,24 +23,14 @@ pluginManagement {
             name = "SpongePowered"
             url = uri("https://repo.spongepowered.org/repository/maven-public/")
         }
-        exclusiveContent {
-            forRepository {
-                maven {
-                    url = uri("https://jitpack.io")
-                    name = "JitPack"
-                }
-            }
-            filter {
-                includeGroup("com.gitlab.ninjaphenix")
-                includeGroup("com.gitlab.ninjaphenix.gradle-utils")
-            }
-        }
+        mavenLocal()
         gradlePluginPortal()
     }
 }
 
 rootProject.name = "container-library"
 
+include("common")
 include("fabric")
 include("fabric-test")
 include("forge")

@@ -1,6 +1,6 @@
 package ninjaphenix.container_library.config;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.Utils;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public final class LegacyFactory implements Converter<Map<String, Object>, Confi
             } else if ("expandedstorage:scrollable".equals(temp)) {
                 temp = Utils.SCROLL_SCREEN_TYPE.toString();
             }
-            return new ConfigV0(Identifier.tryParse(temp), restrictiveScrolling, true);
+            return new ConfigV0(ResourceLocation.tryParse(temp), restrictiveScrolling, true);
         }
         return null;
     }

@@ -1,51 +1,50 @@
 package ninjaphenix.container_library.test;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
 
-public class InventoryTestBlockEntity extends LootableContainerBlockEntity implements OpenableBlockEntityV2 {
+public class InventoryTestBlockEntity extends RandomizableContainerBlockEntity implements OpenableBlockEntityV2 {
     private final int inventorySize;
-    private DefaultedList<ItemStack> inventory;
+    private NonNullList<ItemStack> inventory;
 
     public InventoryTestBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.inventorySize = ((InventoryTestBlock) state.getBlock()).getInventorySize();
-        this.inventory = DefaultedList.ofSize(inventorySize, ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(inventorySize, ItemStack.EMPTY);
     }
 
     @Override
-    protected DefaultedList<ItemStack> getInvStackList() {
+    protected NonNullList<ItemStack> getItems() {
         return inventory;
     }
 
     @Override
-    protected void setInvStackList(DefaultedList<ItemStack> stacks) {
+    protected void setItems(NonNullList<ItemStack> stacks) {
         inventory = stacks;
     }
 
     @Override
-    protected Text getContainerName() {
-        return new LiteralText("Inventory " + inventorySize);
+    protected BaseComponent getDefaultName() {
+        return new TextComponent("Inventory " + inventorySize);
     }
 
     // Not used.
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
+    protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
         return null;
     }
 
     @Override
-    public int size() {
+    public int getContainerSize() {
         return inventorySize;
     }
 }

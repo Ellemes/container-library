@@ -23,6 +23,8 @@ import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.ForgeKeyHandler;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
+import ninjaphenix.container_library.wrappers.ConfigWrapperImpl;
+import ninjaphenix.container_library.wrappers.NetworkWrapperImpl;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 @Mod(Utils.MOD_ID)
@@ -32,7 +34,8 @@ public final class Main {
 
         CommonMain.initialize((handlerType, factory) -> new MenuType<>((IContainerFactory<?>) factory::create).setRegistryName(handlerType),
                 FMLPaths.CONFIGDIR.get().resolve(Utils.CONFIG_PATH),
-                FMLPaths.CONFIGDIR.get().resolve(Utils.FORGE_LEGACY_CONFIG_PATH));
+                FMLPaths.CONFIGDIR.get().resolve(Utils.FORGE_LEGACY_CONFIG_PATH),
+                ConfigWrapperImpl::new, NetworkWrapperImpl::new);
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addGenericListener(MenuType.class, (RegistryEvent.Register<MenuType<?>> event) -> {
             IForgeRegistry<MenuType<?>> registry = event.getRegistry();

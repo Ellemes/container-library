@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "accessWidener": "ninjaphenix_container_lib_test.accessWidener",
   "entrypoints": {
     "main": [
       "ninjaphenix.container_library.test.Main"

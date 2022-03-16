@@ -8,6 +8,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.client.AmecsKeyHandler;
 import ninjaphenix.container_library.client.FabricKeyHandler;
+import ninjaphenix.container_library.wrappers.ConfigWrapperImpl;
+import ninjaphenix.container_library.wrappers.NetworkWrapperImpl;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 public final class Main implements ModInitializer {
@@ -19,7 +21,8 @@ public final class Main implements ModInitializer {
 
         CommonMain.initialize((handlerType, factory) -> ScreenHandlerRegistry.registerExtended(handlerType, factory::create),
                 FabricLoader.getInstance().getConfigDir().resolve(Utils.CONFIG_PATH),
-                FabricLoader.getInstance().getConfigDir().resolve(Utils.FABRIC_LEGACY_CONFIG_PATH));
+                FabricLoader.getInstance().getConfigDir().resolve(Utils.FABRIC_LEGACY_CONFIG_PATH),
+                ConfigWrapperImpl::new, NetworkWrapperImpl::new);
 
         if (PlatformUtils.isClient()) {
             //noinspection deprecation
