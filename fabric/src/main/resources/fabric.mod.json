@@ -1,6 +1,5 @@
 {
   "schemaVersion": 1,
-  "accessWidener": "ninjaphenix_container_lib.accessWidener",
   "depends": {
     "fabric-key-binding-api-v1": ">=1.0.8",
     "fabric-networking-api-v1": ">=1.0.18",

@@ -1,0 +1,189 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "ninjaphenix.gradle.mod" apply false
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+repositories {
+    // For REI
+    maven {
+        name = "Shedaniel"
+        url = uri("https://maven.shedaniel.me/")
+    }
+    // For Mod Menu
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "TerraformersMC"
+                url = uri("https://maven.terraformersmc.com/")
+            }
+        }
+        filter {
+            includeGroup("com.terraformersmc")
+        }
+    }
+    // For Amecs
+    maven {
+        name = "Siphalor's Maven"
+        url = uri("https://maven.siphalor.de/")
+    }
+    maven {
+        name = "Flemmli97"
+        url = uri("https://gitlab.com/api/v4/projects/21830712/packages/maven")
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+}
+
+//val excludeFabric: (ModuleDependency) -> Unit = {
+//    it.exclude("net.fabricmc")
+//    it.exclude("net.fabricmc.fabric-api")
+//}
+
+//region Required for test project.
+//configurations {
+//    create("dev")
+//}
+//
+//tasks.jar {
+//    archiveClassifier.set("dev")
+//}
+//
+//artifacts {
+//    this.add("dev", tasks.jar.get().archiveFile) {
+//        this.builtBy(tasks.jar)
+//    }
+//}
+//endregion
+
+def excludeFabric = { ModuleDependency it ->
+    it.exclude(group: "net.fabricmc")
+    it.exclude(group: "net.fabricmc.fabric-api")
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+    [
+            "fabric-networking-api-v1",
+            "fabric-screen-handler-api-v1",
+            "fabric-key-binding-api-v1"
+    ].forEach{
+        modApi fabricApi.module(it, project.fabric_api_version as String)
+    }
+
+    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}", excludeFabric)
+
+    modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}", excludeFabric)
+
+    modCompileOnly("de.siphalor:amecsapi-1.18:${project.amecs_version}") {
+        excludeFabric(it)
+        exclude(group: "com.github.astei")
+    }
+
+    modCompileOnly("io.github.flemmli97:flan:1.18.2-${project.flan_version}:fabric-api")  {
+        excludeFabric(it)
+        exclude(group: "curse.maven")
+    }
+    modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${rootProject.ipn_minecraft_version}-${rootProject.ipn_version}", excludeFabric)
+}
+
+//val remapJarTask: RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
+//    archiveClassifier.set("fat")
+//    dependsOn(tasks.jar)
+//}
+//
+//val minifyJarTask = tasks.register<ninjaphenix.gradle.mod.api.task.MinifyJsonTask>("minJar") {
+//    input.set(remapJarTask.outputs.files.singleFile)
+//    archiveClassifier.set("fabric")
+//    from(rootDir.resolve("LICENSE"))
+//    dependsOn(remapJarTask)
+//}
+//
+//tasks.getByName("build") {
+//    dependsOn(minifyJarTask)
+//}
+
+// https://docs.gradle.org/current/userguide/publishing_maven.html
+//publishing {
+//    publications {
+//        create<MavenPublication>("maven") {
+//            artifactId = "container_library"
+//            artifact(minifyJarTask) {
+//                builtBy(minifyJarTask)
+//            }
+//        }
+//    }
+//}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    injectAccessWidener = true
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier null
+}
+
+jar {
+    classifier "dev"
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = "container_library"
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+    }
+}
