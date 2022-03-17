@@ -1,8 +1,10 @@
-package ninjaphenix.container_library.config;
+package ninjaphenix.container_library.forge.config;
 
 import com.electronwill.nightconfig.core.Config;
 import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.config.ConfigV0;
+import ninjaphenix.container_library.config.Converter;
 import org.jetbrains.annotations.Nullable;
 
 public final class LegacyFactory implements Converter<Config, ConfigV0> {

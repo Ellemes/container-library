@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.mixin;
+package ninjaphenix.container_library.fabric.mixin;
 
 import net.minecraft.client.gui.screens.Screen;
 import ninjaphenix.container_library.client.gui.PageScreen;

@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.client;
+package ninjaphenix.container_library.fabric.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

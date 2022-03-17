@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.wrappers;
+package ninjaphenix.container_library.fabric.wrappers;
 
 import io.github.flemmli97.flan.api.ClaimHandler;
 import io.github.flemmli97.flan.api.permission.PermissionRegistry;
@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
+import ninjaphenix.container_library.wrappers.NetworkWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public final class NetworkWrapperImpl extends NetworkWrapper {

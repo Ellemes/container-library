@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.client;
+package ninjaphenix.container_library.forge.client;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;

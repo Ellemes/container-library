@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.client;
+package ninjaphenix.container_library.fabric.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import de.siphalor.amecs.api.AmecsKeyBinding;
@@ -6,6 +6,7 @@ import de.siphalor.amecs.api.KeyModifiers;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.client.KeyHandler;
 
 public final class AmecsKeyHandler implements KeyHandler {
     private final KeyMapping binding;

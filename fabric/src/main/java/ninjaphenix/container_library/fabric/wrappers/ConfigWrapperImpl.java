@@ -1,7 +1,8 @@
-package ninjaphenix.container_library.wrappers;
+package ninjaphenix.container_library.fabric.wrappers;
 
 import ninjaphenix.container_library.config.ConfigV0;
-import ninjaphenix.container_library.config.LegacyFactory;
+import ninjaphenix.container_library.fabric.config.LegacyFactory;
+import ninjaphenix.container_library.wrappers.ConfigWrapper;
 
 import java.nio.file.Path;
 

@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "ninjaphenix.container_library.mixin",
+  "package": "ninjaphenix.container_library.fabric.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
     "LastAfterInitCallbackMixin",

@@ -1,4 +1,4 @@
-package ninjaphenix.container_library;
+package ninjaphenix.container_library.forge;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.inventory.MenuType;
@@ -19,12 +19,14 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
+import ninjaphenix.container_library.CommonMain;
+import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.client.ForgeKeyHandler;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.wrappers.ConfigWrapperImpl;
-import ninjaphenix.container_library.wrappers.NetworkWrapperImpl;
+import ninjaphenix.container_library.forge.client.ForgeKeyHandler;
+import ninjaphenix.container_library.forge.wrappers.ConfigWrapperImpl;
+import ninjaphenix.container_library.forge.wrappers.NetworkWrapperImpl;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
 
 @Mod(Utils.MOD_ID)
@@ -35,7 +37,7 @@ public final class Main {
         CommonMain.initialize((handlerType, factory) -> new MenuType<>((IContainerFactory<?>) factory::create).setRegistryName(handlerType),
                 FMLPaths.CONFIGDIR.get().resolve(Utils.CONFIG_PATH),
                 FMLPaths.CONFIGDIR.get().resolve(Utils.FORGE_LEGACY_CONFIG_PATH),
-                ConfigWrapperImpl::new, NetworkWrapperImpl::new);
+                ConfigWrapperImpl::new, new NetworkWrapperImpl());
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addGenericListener(MenuType.class, (RegistryEvent.Register<MenuType<?>> event) -> {
             IForgeRegistry<MenuType<?>> registry = event.getRegistry();

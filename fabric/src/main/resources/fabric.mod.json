@@ -10,13 +10,13 @@
   },
   "entrypoints": {
     "main": [
-      "ninjaphenix.container_library.Main"
+      "ninjaphenix.container_library.fabric.Main"
     ],
     "rei": [
-      "ninjaphenix.container_library.client.ReiCompat"
+      "ninjaphenix.container_library.fabric.client.ReiCompat"
     ],
     "modmenu": [
-      "ninjaphenix.container_library.client.ModMenuCompat"
+      "ninjaphenix.container_library.fabric.client.ModMenuCompat"
     ]
   },
   "environment": "*",

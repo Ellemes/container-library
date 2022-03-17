@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.wrappers;
+package ninjaphenix.container_library.forge.wrappers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkHooks;
 import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
+import ninjaphenix.container_library.wrappers.NetworkWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public final class NetworkWrapperImpl extends NetworkWrapper {

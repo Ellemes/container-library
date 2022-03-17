@@ -1,9 +1,10 @@
-package ninjaphenix.container_library.client;
+package ninjaphenix.container_library.fabric.client;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.client.KeyHandler;
 
 public final class FabricKeyHandler implements KeyHandler {
     private final KeyMapping binding;

@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.client;
+package ninjaphenix.container_library.fabric.client;
 
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;

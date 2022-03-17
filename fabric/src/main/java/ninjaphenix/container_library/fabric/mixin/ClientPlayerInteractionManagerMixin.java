@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.mixin;
+package ninjaphenix.container_library.fabric.mixin;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -9,10 +9,8 @@ import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import ninjaphenix.container_library.api.v2.OpenableBlockEntityProviderV2;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,8 +38,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
     )
     private void ncl_noPacketOnFail(LocalPlayer player, ClientLevel world, InteractionHand hand, BlockHitResult hit,
                                     CallbackInfoReturnable<InteractionResult> cir,
-                                    BlockPos pos, ItemStack __itemStack, PlayerInteractEvent.RightClickBlock __event,
-                                    UseOnContext __useOnContext, boolean __flag, boolean __flag1) {
+                                    BlockPos pos, ItemStack __itemStack, boolean __bl2) {
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof OpenableBlockEntityProviderV2) {
             InteractionResult result = state.use(world, player, hand, hit);

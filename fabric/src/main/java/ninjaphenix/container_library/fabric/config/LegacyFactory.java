@@ -1,7 +1,9 @@
-package ninjaphenix.container_library.config;
+package ninjaphenix.container_library.fabric.config;
 
 import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.config.ConfigV0;
+import ninjaphenix.container_library.config.Converter;
 
 import java.util.Map;
 

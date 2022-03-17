@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.client;
+package ninjaphenix.container_library.forge.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -8,6 +8,7 @@ import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import ninjaphenix.container_library.Utils;
+import ninjaphenix.container_library.client.KeyHandler;
 
 public class ForgeKeyHandler implements KeyHandler {
     private final KeyMapping binding;
