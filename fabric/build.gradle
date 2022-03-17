@@ -86,6 +86,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
     [
+            "fabric-registry-sync-v0", // Required to delay registry freezing
             "fabric-networking-api-v1",
             "fabric-screen-handler-api-v1",
             "fabric-key-binding-api-v1"
@@ -93,14 +94,13 @@ dependencies {
         modApi fabricApi.module(it, project.fabric_api_version as String)
     }
 
-    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
-
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}", excludeFabric)
 
     modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}", excludeFabric)
+    //modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     modCompileOnly("de.siphalor:amecsapi-1.18:${project.amecs_version}") {
         excludeFabric(it)

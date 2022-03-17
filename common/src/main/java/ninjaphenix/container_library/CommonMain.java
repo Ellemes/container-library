@@ -1,16 +1,11 @@
 package ninjaphenix.container_library;
 
-import com.google.common.base.Suppliers;
-import dev.architectury.registry.menu.MenuRegistry;
-import dev.architectury.registry.registries.Registries;
-import dev.architectury.registry.registries.RegistrySupplier;
-import net.minecraft.core.Registry;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
 import ninjaphenix.container_library.client.gui.PageScreen;
 import ninjaphenix.container_library.client.gui.ScrollScreen;
 import ninjaphenix.container_library.client.gui.SingleScreen;
+import ninjaphenix.container_library.inventory.ClientScreenHandlerFactory;
 import ninjaphenix.container_library.wrappers.ConfigWrapper;
 import ninjaphenix.container_library.wrappers.NetworkWrapper;
 import ninjaphenix.container_library.wrappers.PlatformUtils;
@@ -21,34 +16,23 @@ import org.apache.logging.log4j.message.FormattedMessage;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 
 public final class CommonMain {
     public static final Logger LOGGER = LogManager.getLogger(Utils.MOD_ID);
-    private static RegistrySupplier<MenuType<AbstractHandler>> screenHandlerType;
+    private static MenuType<AbstractHandler> screenHandlerType;
     private static ConfigWrapper configWrapper;
     private static NetworkWrapper networkWrapper;
 
-    public static void init(Path configPath, Path oldConfigPath,
-                            BiFunction<Path, Path, ConfigWrapper> configWrapperMaker, NetworkWrapper networkWrapper) {
-        boolean isClient = PlatformUtils.isClient();
-        Supplier<Registries> registries = Suppliers.memoize(() -> Registries.get(Utils.MOD_ID));
-        registries.get().forRegistry(Registry.MENU_REGISTRY, registry -> {
-            screenHandlerType = registry.register(Utils.HANDLER_TYPE_ID, () -> {
-                var type = MenuRegistry.ofExtended(AbstractHandler::createClientMenu);
-                if (isClient) {
-                    MenuRegistry.registerScreenFactory(type, AbstractScreen::createScreen);
-                }
-                return type;
-            });
-        });
-
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static void initialize(BiFunction<ResourceLocation, ClientScreenHandlerFactory, MenuType> handlerTypeFunction, Path configPath, Path oldConfigPath,
+                                  BiFunction<Path, Path, ConfigWrapper> configWrapperMaker, NetworkWrapper networkWrapper) {
+        screenHandlerType = handlerTypeFunction.apply(Utils.HANDLER_TYPE_ID, AbstractHandler::createClientMenu);
         CommonMain.networkWrapper = networkWrapper;
-
-        if (isClient) {
+        if (PlatformUtils.isClient()) {
             configWrapper = configWrapperMaker.apply(configPath, oldConfigPath);
             NCL_ClientApiV2.registerScreenButton(Utils.PAGE_SCREEN_TYPE,
                     Utils.id("textures/gui/page_button.png"),
@@ -84,7 +68,7 @@ public final class CommonMain {
     }
 
     public static MenuType<AbstractHandler> getScreenHandlerType() {
-        return screenHandlerType.get();
+        return screenHandlerType;
     }
 
     public static ConfigWrapper getConfigWrapper() {

@@ -10,7 +10,6 @@ repositories {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
     modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${rootProject.ipn_minecraft_version}-${rootProject.ipn_version}") {
         exclude(group: "net.fabricmc")

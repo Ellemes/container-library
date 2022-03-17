@@ -1,11 +1,5 @@
 package ninjaphenix.container_library.wrappers;
 
-import dev.architectury.registry.menu.ExtendedMenuProvider;
-import dev.architectury.registry.menu.MenuRegistry;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
 import ninjaphenix.container_library.inventory.ServerScreenHandlerFactory;
@@ -19,31 +13,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class NetworkWrapper {
-    private void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title, ResourceLocation forcedScreenType) {
-        MenuRegistry.openExtendedMenu(player, new ExtendedMenuProvider() {
-            @Override
-            public void saveExtraData(FriendlyByteBuf buffer) {
-                buffer.writeInt(inventory.getContainerSize());
-                if (forcedScreenType != null) {
-                    buffer.writeResourceLocation(forcedScreenType);
-                }
-            }
-
-            @Override
-            public Component getDisplayName() {
-                return title;
-            }
-
-            @Nullable
-            @Override
-            public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
-                return factory.create(syncId, inventory, playerInventory);
-            }
-        });
-    }
+    protected abstract void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title, ResourceLocation forcedScreenType);
 
     public final void s_openInventory(ServerPlayer player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayer> onInitialOpen, BlockPos pos, ResourceLocation forcedScreenType) {
         if (this.canOpenInventory(player, pos)) {

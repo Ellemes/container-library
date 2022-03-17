@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "depends": {
+    "fabric-registry-sync-v0": ">=0.9.5",
     "fabric-key-binding-api-v1": ">=1.0.8",
     "fabric-networking-api-v1": ">=1.0.18",
     "fabric-screen-handler-api-v1": ">=1.1.11",

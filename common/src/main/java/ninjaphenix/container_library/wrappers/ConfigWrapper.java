@@ -1,7 +1,6 @@
 package ninjaphenix.container_library.wrappers;
 
 import com.google.gson.JsonParseException;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import ninjaphenix.container_library.CommonMain;
 import ninjaphenix.container_library.Utils;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
