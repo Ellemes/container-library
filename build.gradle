@@ -14,6 +14,8 @@ architectury {
 subprojects {
     apply plugin: "dev.architectury.loom"
 
+    buildDir = file(rootDir.toPath().resolve("build/${project.name}/"))
+
     loom {
         silentMojangMappingsLicense()
     }
@@ -35,6 +37,6 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 17
+        options.release.set 17
     }
 }

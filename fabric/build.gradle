@@ -1,3 +1,5 @@
+import ninjaphenix.gradle.mod.api.task.MinifyJsonTask
+
 plugins {
     id "com.github.johnrengelman.shadow"
     id "ninjaphenix.gradle.mod" apply false
@@ -56,11 +58,6 @@ repositories {
     }
 }
 
-//val excludeFabric: (ModuleDependency) -> Unit = {
-//    it.exclude("net.fabricmc")
-//    it.exclude("net.fabricmc.fabric-api")
-//}
-
 //region Required for test project.
 //configurations {
 //    create("dev")
@@ -114,34 +111,6 @@ dependencies {
     modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${rootProject.ipn_minecraft_version}-${rootProject.ipn_version}", excludeFabric)
 }
 
-//val remapJarTask: RemapJarTask = tasks.getByName<RemapJarTask>("remapJar") {
-//    archiveClassifier.set("fat")
-//    dependsOn(tasks.jar)
-//}
-//
-//val minifyJarTask = tasks.register<ninjaphenix.gradle.mod.api.task.MinifyJsonTask>("minJar") {
-//    input.set(remapJarTask.outputs.files.singleFile)
-//    archiveClassifier.set("fabric")
-//    from(rootDir.resolve("LICENSE"))
-//    dependsOn(remapJarTask)
-//}
-//
-//tasks.getByName("build") {
-//    dependsOn(minifyJarTask)
-//}
-
-// https://docs.gradle.org/current/userguide/publishing_maven.html
-//publishing {
-//    publications {
-//        create<MavenPublication>("maven") {
-//            artifactId = "container_library"
-//            artifact(minifyJarTask) {
-//                builtBy(minifyJarTask)
-//            }
-//        }
-//    }
-//}
-
 processResources {
     inputs.property "version", project.version
 
@@ -161,11 +130,21 @@ remapJar {
     injectAccessWidener = true
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "fabric"
+    classifier "fat"
 }
 
 jar {
     classifier "dev"
+}
+
+def minifyJarTask = tasks.register("minJar", MinifyJsonTask.class, task -> {
+    task.input.set(remapJar.outputs.files.singleFile)
+    task.archiveClassifier.set project.name
+    task.from(rootDir.toPath().resolve("LICENSE"))
+    task.dependsOn(remapJar)
+})
+tasks.getByName("build") {
+    dependsOn(minifyJarTask)
 }
 
 components.java {
@@ -180,10 +159,5 @@ publishing {
             artifactId = "container_library"
             from components.java
         }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
     }
 }

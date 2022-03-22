@@ -1,3 +1,5 @@
+import ninjaphenix.gradle.mod.api.task.MinifyJsonTask
+
 //import org.gradle.jvm.tasks.Jar
 //import java.text.DateFormat
 //import java.util.*
@@ -154,13 +156,23 @@ shadowJar {
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
-            dependsOn shadowJar
-            classifier "forge"
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier "fat"
 }
 
 jar {
     classifier "dev"
+}
+
+def minifyJarTask = tasks.register("minJar", MinifyJsonTask.class, task -> {
+    task.input.set(remapJar.outputs.files.singleFile)
+    task.archiveClassifier.set project.name
+    task.from(rootDir.toPath().resolve("LICENSE"))
+    task.dependsOn(remapJar)
+})
+tasks.getByName("build") {
+    dependsOn(minifyJarTask)
 }
 
 components.java {
