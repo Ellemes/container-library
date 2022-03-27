@@ -157,6 +157,7 @@ val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
     from(rootDir.resolve("LICENSE"))
     dependsOn(tasks.getByName("remapJar"))
 }
+
 tasks.build {
     dependsOn(minifyJarTask)
 }
