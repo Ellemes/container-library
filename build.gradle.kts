@@ -4,7 +4,7 @@ import kotlin.reflect.KClass
 plugins {
     id("architectury-plugin").version("3.4-SNAPSHOT")
     id("dev.architectury.loom").version("0.11.0-SNAPSHOT").apply(false)
-    id("ninjaphenix.gradle.mod").version("6.2.0.6").apply(false)
+    id("ninjaphenix.gradle.mod").version("6.2.1.1").apply(false)
     id("com.github.johnrengelman.shadow").version("7.1.2").apply(false)
     //id("com.modrinth.minotaur").version("1.2.1")
     //id("com.matthewprenger.cursegradle").version("1.4.0")
@@ -12,10 +12,6 @@ plugins {
 
 fun <T : Any> getPlugin(project : Project, type : KClass<T>): T {
     return project.extensions.findByType(type)!!
-}
-
-architectury {
-    minecraft = rootProject.properties["minecraft_version"] as String
 }
 
 tasks.register("buildMod") {
