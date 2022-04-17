@@ -1,13 +1,15 @@
 package ninjaphenix.container_library.api.helpers;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import ninjaphenix.container_library.inventory.InventorySlotAccessor;
+import ninjaphenix.container_library.inventory.InventorySlotFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.ObjIntConsumer;
+
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.WorldlyContainer;
@@ -60,25 +62,25 @@ public final class VariableSidedInventory implements WorldlyContainer {
     @Override
     public ItemStack getItem(int slot) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::getItem);
+        return this.applyFunctionToSlot(slot, Container::getItem);
     }
 
     @Override
     public ItemStack removeItem(int slot, int amount) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.removeItem(rSlot, amount));
+        return this.applyFunctionToSlot(slot, (part, rSlot) -> part.removeItem(rSlot, amount));
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::removeItemNoUpdate);
+        return this.applyFunctionToSlot(slot, Container::removeItemNoUpdate);
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        this.getPartAccessor(slot).consume((part, rSlot) -> part.setItem(rSlot, stack));
+        this.consumeSlot(slot, (part, rSlot) -> part.setItem(rSlot, stack));
     }
 
     @Override
@@ -120,7 +122,7 @@ public final class VariableSidedInventory implements WorldlyContainer {
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canPlaceItem(rSlot, stack));
+        return this.applyFunctionToSlot(slot, (part, rSlot) -> part.canPlaceItem(rSlot, stack));
     }
 
     @Override
@@ -149,18 +151,6 @@ public final class VariableSidedInventory implements WorldlyContainer {
         }
     }
 
-    private InventorySlotAccessor<WorldlyContainer> getPartAccessor(int slot) {
-        for (WorldlyContainer part : parts) {
-            int inventorySize = part.getContainerSize();
-            if (slot >= inventorySize) {
-                slot -= inventorySize;
-            } else {
-                return new InventorySlotAccessor<>(part, slot);
-            }
-        }
-        throw new IllegalStateException("getPartAccessor called without validating slot bounds.");
-    }
-
     @Override
     public int[] getSlotsForFace(Direction direction) {
         return slotsAccessibleThroughFace.computeIfAbsent(direction, (dir) -> {
@@ -179,15 +169,41 @@ public final class VariableSidedInventory implements WorldlyContainer {
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canPlaceItemThroughFace(rSlot, stack, direction));
+        return this.applyFunctionToSlot(slot, (part, rSlot) -> part.canPlaceItemThroughFace(rSlot, stack, direction));
     }
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canTakeItemThroughFace(rSlot, stack, direction));
+        return this.applyFunctionToSlot(slot, (part, rSlot) -> part.canTakeItemThroughFace(rSlot, stack, direction));
     }
 
+    private void consumeSlot(int slot, ObjIntConsumer<WorldlyContainer> consumer) {
+        for (WorldlyContainer part : parts) {
+            int inventorySize = part.getContainerSize();
+            if (slot >= inventorySize) {
+                slot -= inventorySize;
+            } else {
+                consumer.accept(part, slot);
+                return;
+            }
+        }
+        throw new IllegalStateException("consumeSlot called without validating slot bounds.");
+    }
+
+    private <T> T applyFunctionToSlot(int slot, InventorySlotFunction<WorldlyContainer, T> function) {
+        for (WorldlyContainer part : parts) {
+            int inventorySize = part.getContainerSize();
+            if (slot >= inventorySize) {
+                slot -= inventorySize;
+            } else {
+                return function.apply(part, slot);
+            }
+        }
+        throw new IllegalStateException("applyFunctionToSlot called without validating slot bounds.");
+    }
+
+    @SuppressWarnings("unused")
     public boolean containsPart(WorldlyContainer part) {
         for (WorldlyContainer inventory : parts) {
             if (inventory == part) {

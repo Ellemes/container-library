@@ -1,14 +1,15 @@
 package ninjaphenix.container_library.api.helpers;
 
-import ninjaphenix.container_library.inventory.InventorySlotAccessor;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.ObjIntConsumer;
+
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import ninjaphenix.container_library.inventory.InventorySlotFunction;
 
 public final class VariableInventory implements Container {
     private final Container[] parts;
@@ -53,26 +54,30 @@ public final class VariableInventory implements Container {
 
     @Override
     public ItemStack getItem(int slot) {
+        this.validateSlotIndex(slot);
+        return this.applyFunctionToSlot(slot, Container::getItem);
+    }
+
+    private void validateSlotIndex(int slot) {
         assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::getItem);
     }
 
     @Override
     public ItemStack removeItem(int slot, int amount) {
-        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.removeItem(rSlot, amount));
+        this.validateSlotIndex(slot);
+        return this.applyFunctionToSlot(slot, (part, rSlot) -> part.removeItem(rSlot, amount));
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply(Container::removeItemNoUpdate);
+        this.validateSlotIndex(slot);
+        return this.applyFunctionToSlot(slot, Container::removeItemNoUpdate);
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        this.getPartAccessor(slot).consume((part, rSlot) -> part.setItem(rSlot, stack));
+        this.validateSlotIndex(slot);
+        this.consumeSlot(slot, (part, rSlot) -> part.setItem(rSlot, stack));
     }
 
     @Override
@@ -113,8 +118,8 @@ public final class VariableInventory implements Container {
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        assert slot >= 0 && slot < this.getContainerSize() : "slot index out of range";
-        return this.getPartAccessor(slot).apply((part, rSlot) -> part.canPlaceItem(rSlot, stack));
+        this.validateSlotIndex(slot);
+        return this.applyFunctionToSlot(slot, (part, rSlot) -> part.canPlaceItem(rSlot, stack));
     }
 
     @Override
@@ -143,18 +148,32 @@ public final class VariableInventory implements Container {
         }
     }
 
-    private InventorySlotAccessor<Container> getPartAccessor(int slot) {
+    private void consumeSlot(int slot, ObjIntConsumer<Container> consumer) {
         for (Container part : parts) {
             int inventorySize = part.getContainerSize();
             if (slot >= inventorySize) {
                 slot -= inventorySize;
             } else {
-                return new InventorySlotAccessor<>(part, slot);
+                consumer.accept(part, slot);
+                return;
             }
         }
-        throw new IllegalStateException("getPartAccessor called without validating slot bounds.");
+        throw new IllegalStateException("consumeSlot called without validating slot bounds.");
     }
 
+    private <T> T applyFunctionToSlot(int slot, InventorySlotFunction<Container, T> function) {
+        for (Container part : parts) {
+            int inventorySize = part.getContainerSize();
+            if (slot >= inventorySize) {
+                slot -= inventorySize;
+            } else {
+                return function.apply(part, slot);
+            }
+        }
+        throw new IllegalStateException("applyFunctionToSlot called without validating slot bounds.");
+    }
+
+    @SuppressWarnings("unused")
     public boolean containsPart(Container part) {
         for (Container inventory : parts) {
             if (inventory == part) {

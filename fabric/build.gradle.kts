@@ -168,12 +168,13 @@ tasks.build {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("mavenFabric") {
             artifactId = "container_library"
-            version = "${project.version}+${properties["minecraft_version"]}"
+            version = "${project.version}+${properties["minecraft_version"]}-${project.name}"
             //from(components.getByName("java"))
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)
+                classifier = ""
             }
         }
     }
