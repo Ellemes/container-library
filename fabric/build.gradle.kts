@@ -5,11 +5,7 @@ import ninjaphenix.gradle.mod.api.task.MinifyJsonTask
 plugins {
     id("com.github.johnrengelman.shadow")
     id("ninjaphenix.gradle.mod").apply(false)
-}
-
-architectury {
-    platformSetupLoomIde()
-    fabric()
+    id("maven-publish")
 }
 
 loom {
@@ -51,48 +47,23 @@ repositories {
         name = "Flemmli97"
         url = uri("https://gitlab.com/api/v4/projects/21830712/packages/maven")
     }
-    maven {
-        name = "Modrinth"
-        url = uri("https://api.modrinth.com/maven")
-        content {
-            includeGroup("maven.modrinth")
-        }
-    }
 }
-
-//region Required for test project.
-//configurations {
-//    create("dev")
-//}
-//
-//tasks.jar {
-//    archiveClassifier.set("dev")
-//}
-//
-//artifacts {
-//    this.add("dev", tasks.jar.get().archiveFile) {
-//        this.builtBy(tasks.jar)
-//    }
-//}
-//endregion
 
 fun excludeFabric(it : ModuleDependency) {
     it.exclude(group = "net.fabricmc")
     it.exclude(group = "net.fabricmc.fabric-api")
 }
 
-dependencies {
-    modImplementation("net.fabricmc:fabric-loader:${rootProject.properties["fabric_loader_version"]}")
-
-    listOf(
+mod {
+    fabricApi(
             "fabric-registry-sync-v0", // Required to delay registry freezing
             "fabric-networking-api-v1",
             "fabric-screen-handler-api-v1",
             "fabric-key-binding-api-v1"
-    ).forEach{
-        modApi(fabricApi.module(it, "${project.properties["fabric_api_version"]}"))
-    }
+    )
+}
 
+dependencies {
     "common"(project(path = ":common", configuration = "namedElements")) {
         isTransitive = false
     }
@@ -121,14 +92,6 @@ dependencies {
 
     modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${rootProject.properties["ipn_minecraft_version"]}-${rootProject.properties["ipn_version"]}") {
         excludeFabric(this)
-    }
-}
-
-tasks.withType<ProcessResources> {
-    val properties = mutableMapOf("version" to project.version)
-    inputs.properties(properties)
-    filesMatching("fabric.mod.json") {
-        expand(properties)
     }
 }
 
