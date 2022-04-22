@@ -6,7 +6,6 @@ import java.util.Date
 
 plugins {
     id("ninjaphenix.gradle.mod").apply(false)
-    id("maven-publish")
 }
 
 loom {
@@ -47,20 +46,4 @@ tasks.getByName<MinifyJsonTask>("minJar") {
             "Automatic-Module-Name" to "ninjaphenix.container_library",
             "MixinConfigs" to "ninjaphenix_container_lib.mixins.json"
     ))
-}
-
-val minifyJarTask = tasks.getByName("minJar")
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenForge") {
-            artifactId = "container_library"
-            version = "${project.version}-${project.name}"
-            //from(components.getByName("java"))
-            artifact(minifyJarTask) {
-                builtBy(minifyJarTask)
-                classifier = ""
-            }
-        }
-    }
 }

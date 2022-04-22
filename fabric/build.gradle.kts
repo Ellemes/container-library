@@ -1,6 +1,5 @@
 plugins {
     id("ninjaphenix.gradle.mod").apply(false)
-    id("maven-publish")
 }
 
 repositories {
@@ -75,21 +74,5 @@ dependencies {
 
     modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${rootProject.properties["ipn_minecraft_version"]}-${rootProject.properties["ipn_version"]}") {
         excludeFabric(this)
-    }
-}
-
-val minifyJarTask = tasks.getByName("minJar")
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenFabric") {
-            artifactId = "container_library"
-            version = "${project.version}-${project.name}"
-            //from(components.getByName("java"))
-            artifact(minifyJarTask) {
-                builtBy(minifyJarTask)
-                classifier = ""
-            }
-        }
     }
 }
