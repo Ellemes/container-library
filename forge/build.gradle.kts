@@ -5,27 +5,16 @@ import java.text.DateFormat
 import java.util.Date
 
 plugins {
-    id("com.github.johnrengelman.shadow")
     id("ninjaphenix.gradle.mod").apply(false)
     id("maven-publish")
 }
 
 loom {
-    accessWidenerPath.set(project(":common").loom.accessWidenerPath)
-
     forge {
         convertAccessWideners.set(true)
         extraAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
         mixinConfig("ninjaphenix_container_lib.mixins.json")
     }
-}
-
-configurations {
-    create("common")
-    create("shadowCommon") // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
-    compileClasspath.get().extendsFrom(configurations["common"])
-    runtimeClasspath.get().extendsFrom(configurations["common"])
-    named("developmentForge").get().extendsFrom(configurations["common"])
 }
 
 repositories {
@@ -42,43 +31,11 @@ repositories {
 }
 
 dependencies {
-    "common"(project(path = ":common", configuration = "namedElements")) {
-        isTransitive = false
-    }
-    "shadowCommon"(project(path = ":common", configuration = "transformProductionForge")) {
-        isTransitive = false
-    }
-
     compileOnly("mezz.jei:jei-${project.properties["jei_minecraft_version"]}:${project.properties["jei_version"]}:api")
     compileOnly("maven.modrinth:inventory-profiles-next:forge-${rootProject.properties["ipn_minecraft_version"]}-${rootProject.properties["ipn_version"]}")
 }
 
-val shadowJar = tasks.getByName<ShadowJar>("shadowJar")
-
-shadowJar.apply {
-    //exclude "fabric.mod.json" // dead code?
-    exclude("architectury.common.json")
-    configurations = listOf(project.configurations["shadowCommon"])
-    archiveClassifier.set("dev-shadow")
-}
-
-tasks.getByName<RemapJarTask>("remapJar") {
-    //injectAccessWidener.set(true)
-    inputFile.set(shadowJar.archiveFile)
-    dependsOn(shadowJar)
-    archiveClassifier.set("fat")
-}
-
-tasks.jar {
-    archiveClassifier.set("dev")
-}
-
-val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
-    input.set(tasks.getByName("remapJar").outputs.files.singleFile)
-    archiveClassifier.set(project.name)
-    from(rootDir.resolve("LICENSE"))
-    dependsOn(tasks.getByName("remapJar"))
-
+tasks.getByName<MinifyJsonTask>("minJar") {
     manifest.attributes(mapOf(
             "Specification-Title" to "NinjaPhenix's Container Library",
             "Specification-Vendor" to "ninjaphenix",
@@ -91,21 +48,14 @@ val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
             "MixinConfigs" to "ninjaphenix_container_lib.mixins.json"
     ))
 }
-tasks.build {
-    dependsOn(minifyJarTask)
-}
 
-(components.findByName("java") as AdhocComponentWithVariants).apply {
-    withVariantsFromConfiguration(project.configurations.getByName("shadowRuntimeElements")) {
-        skip()
-    }
-}
+val minifyJarTask = tasks.getByName("minJar")
 
 publishing {
     publications {
         create<MavenPublication>("mavenForge") {
             artifactId = "container_library"
-            version = "${project.version}+${properties["minecraft_version"]}-${project.name}"
+            version = "${project.version}-${project.name}"
             //from(components.getByName("java"))
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)

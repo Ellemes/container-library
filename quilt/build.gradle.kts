@@ -1,23 +1,6 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import net.fabricmc.loom.task.RemapJarTask
-import ninjaphenix.gradle.mod.api.task.MinifyJsonTask
-
 plugins {
-    id("com.github.johnrengelman.shadow")
     id("ninjaphenix.gradle.mod").apply(false)
     id("maven-publish")
-}
-
-loom {
-    accessWidenerPath.set(project(":common").loom.accessWidenerPath)
-}
-
-configurations {
-    create("common")
-    create("shadowCommon") // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
-    compileClasspath.get().extendsFrom(configurations["common"])
-    runtimeClasspath.get().extendsFrom(configurations["common"])
-    named("developmentQuilt").get().extendsFrom(configurations["common"])
 }
 
 repositories {
@@ -68,13 +51,6 @@ mod {
 }
 
 dependencies {
-    "common"(project(path = ":common", configuration = "namedElements")) {
-        isTransitive = false
-    }
-    "shadowCommon"(project(path = ":common", configuration = "transformProductionQuilt")) {
-        isTransitive = false
-    }
-
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.properties["rei_version"]}") {
         excludeFabric(this)
     }
@@ -99,45 +75,13 @@ dependencies {
     }
 }
 
-val shadowJar = tasks.getByName<ShadowJar>("shadowJar")
-
-shadowJar.apply {
-    exclude("architectury.common.json")
-    configurations = listOf(project.configurations["shadowCommon"])
-    archiveClassifier.set("dev-shadow")
-}
-
-tasks.getByName<RemapJarTask>("remapJar") {
-    injectAccessWidener.set(true)
-    inputFile.set(shadowJar.archiveFile)
-    dependsOn(shadowJar)
-    archiveClassifier.set("fat")
-}
-
-tasks.jar {
-    archiveClassifier.set("dev")
-}
-
-val minifyJarTask = tasks.register<MinifyJsonTask>("minJar") {
-    input.set(tasks.getByName("remapJar").outputs.files.singleFile)
-    archiveClassifier.set(project.name)
-    from(rootDir.resolve("LICENSE"))
-    dependsOn(tasks.getByName("remapJar"))
-}
-
-tasks.build {
-    dependsOn(minifyJarTask)
-}
-
-(components.findByName("java") as AdhocComponentWithVariants).withVariantsFromConfiguration(project.configurations.getByName("shadowRuntimeElements")) {
-    skip()
-}
+val minifyJarTask = tasks.getByName("minJar")
 
 publishing {
     publications {
         create<MavenPublication>("mavenQuilt") {
             artifactId = "container_library"
-            version = "${project.version}+${properties["minecraft_version"]}-${project.name}"
+            version = "${project.version}-${project.name}"
             //from(components.getByName("java"))
             artifact(minifyJarTask) {
                 builtBy(minifyJarTask)
