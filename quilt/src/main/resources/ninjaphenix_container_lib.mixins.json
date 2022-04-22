@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "ninjaphenix.container_library.quilt.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "LastAfterInitCallbackMixin",
+    "ClientPlayerInteractionManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
