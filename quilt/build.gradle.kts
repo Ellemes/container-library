@@ -38,14 +38,20 @@ fun excludeFabric(it : ModuleDependency) {
 
 mod {
     fabricApi(
-            "fabric-registry-sync-v0", // Required to delay registry freezing
-            "fabric-networking-api-v1",
+            //"fabric-registry-sync-v0", // Required to delay registry freezing
+            //"fabric-networking-api-v1",
             "fabric-screen-handler-api-v1",
-            "fabric-key-binding-api-v1"
+            "fabric-key-binding-api-v1",
+            // Mod menu
+            //"fabric-screen-api-v1",
+            //"fabric-resource-loader-v0"
+
     )
     qsl (
             "core/qsl_base",
-            "core/networking"
+            "core/networking",
+            // Mod menu
+            //"core/resource_loader"
     )
 }
 
@@ -72,4 +78,6 @@ dependencies {
     modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${rootProject.properties["ipn_minecraft_version"]}-${rootProject.properties["ipn_version"]}") {
         excludeFabric(this)
     }
+
+    //modRuntimeOnly("maven.modrinth:modmenu:3.2.1")
 }
