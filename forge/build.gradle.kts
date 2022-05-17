@@ -1,11 +1,11 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import net.fabricmc.loom.task.RemapJarTask
-import ninjaphenix.gradle.mod.api.task.MinifyJsonTask
+import ellemes.gradle.mod.api.task.MinifyJsonTask
 import java.text.DateFormat
 import java.util.Date
 
 plugins {
-    id("ninjaphenix.gradle.mod").apply(false)
+    id("ellemes.gradle.mod").apply(false)
 }
 
 loom {

@@ -1,5 +1,5 @@
 plugins {
-    id("ninjaphenix.gradle.mod").apply(false)
+    id("ellemes.gradle.mod").apply(false)
 }
 
 repositories {
