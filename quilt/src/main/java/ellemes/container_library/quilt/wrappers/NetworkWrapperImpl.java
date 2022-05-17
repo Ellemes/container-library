@@ -1,6 +1,8 @@
 package ellemes.container_library.quilt.wrappers;
 
+import ellemes.container_library.inventory.ServerScreenHandlerFactory;
 import ellemes.container_library.quilt.ScreenHandlerFactoryAdapter;
+import ellemes.container_library.wrappers.NetworkWrapper;
 import io.github.flemmli97.flan.api.ClaimHandler;
 import io.github.flemmli97.flan.api.permission.PermissionRegistry;
 import net.minecraft.core.BlockPos;
@@ -8,8 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import ellemes.container_library.inventory.ServerScreenHandlerFactory;
-import ellemes.container_library.wrappers.NetworkWrapper;
 import org.quiltmc.loader.api.QuiltLoader;
 
 public final class NetworkWrapperImpl extends NetworkWrapper {

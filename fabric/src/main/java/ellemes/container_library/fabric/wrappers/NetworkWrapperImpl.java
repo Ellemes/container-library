@@ -1,6 +1,8 @@
 package ellemes.container_library.fabric.wrappers;
 
 import ellemes.container_library.fabric.ScreenHandlerFactoryAdapter;
+import ellemes.container_library.inventory.ServerScreenHandlerFactory;
+import ellemes.container_library.wrappers.NetworkWrapper;
 import io.github.flemmli97.flan.api.ClaimHandler;
 import io.github.flemmli97.flan.api.permission.PermissionRegistry;
 import net.fabricmc.loader.api.FabricLoader;
@@ -9,8 +11,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import ellemes.container_library.inventory.ServerScreenHandlerFactory;
-import ellemes.container_library.wrappers.NetworkWrapper;
 
 public final class NetworkWrapperImpl extends NetworkWrapper {
     @Override

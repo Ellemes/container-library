@@ -3,11 +3,11 @@ package ellemes.container_library.client.gui.widget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import ellemes.container_library.Utils;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import ellemes.container_library.Utils;
 
 public final class PageButton extends Button {
     private static final ResourceLocation TEXTURE = Utils.id("textures/gui/page_buttons.png");

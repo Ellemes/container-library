@@ -1,16 +1,16 @@
 package ellemes.container_library.quilt;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.quilt.client.AmecsKeyHandler;
 import ellemes.container_library.quilt.client.QuiltKeyHandler;
 import ellemes.container_library.quilt.wrappers.ConfigWrapperImpl;
 import ellemes.container_library.quilt.wrappers.NetworkWrapperImpl;
 import ellemes.container_library.wrappers.PlatformUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;

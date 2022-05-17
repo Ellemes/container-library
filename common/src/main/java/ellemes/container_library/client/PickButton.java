@@ -1,10 +1,10 @@
 package ellemes.container_library.client;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 
 import java.util.List;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 @SuppressWarnings("ClassCanBeRecord")
 public final class PickButton {

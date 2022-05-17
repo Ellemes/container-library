@@ -2,8 +2,6 @@ package ninjaphenix.container_library.api.inventory;
 
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
-
-import java.util.function.IntUnaryOperator;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,6 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.function.IntUnaryOperator;
 
 public final class AbstractHandler extends AbstractContainerMenu {
     private final Container inventory;

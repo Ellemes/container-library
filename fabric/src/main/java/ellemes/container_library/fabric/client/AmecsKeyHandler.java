@@ -3,10 +3,10 @@ package ellemes.container_library.fabric.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.siphalor.amecs.api.AmecsKeyBinding;
 import de.siphalor.amecs.api.KeyModifiers;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.KeyMapping;
 import ellemes.container_library.Utils;
 import ellemes.container_library.client.KeyHandler;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.KeyMapping;
 
 public final class AmecsKeyHandler implements KeyHandler {
     private final KeyMapping binding;

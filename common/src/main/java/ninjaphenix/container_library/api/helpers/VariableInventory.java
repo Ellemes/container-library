@@ -1,15 +1,15 @@
 package ninjaphenix.container_library.api.helpers;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.ObjIntConsumer;
-
+import ellemes.container_library.inventory.InventorySlotFunction;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import ellemes.container_library.inventory.InventorySlotFunction;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.ObjIntConsumer;
 
 public final class VariableInventory implements Container {
     private final Container[] parts;

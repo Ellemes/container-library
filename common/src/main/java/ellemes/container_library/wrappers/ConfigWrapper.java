@@ -3,10 +3,12 @@ package ellemes.container_library.wrappers;
 import com.google.gson.JsonParseException;
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.config.Config;
 import ellemes.container_library.config.ConfigV0;
 import ellemes.container_library.config.Converter;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,8 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 
 // todo: remove old config code in 1.18, rather repurpose it for expandedstorage.json -> ninjaphenix-container-library.json
 public abstract class ConfigWrapper {

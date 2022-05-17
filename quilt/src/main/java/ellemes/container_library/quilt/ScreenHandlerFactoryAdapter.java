@@ -1,5 +1,6 @@
 package ellemes.container_library.quilt;
 
+import ellemes.container_library.inventory.ServerScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -10,7 +11,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import ellemes.container_library.inventory.ServerScreenHandlerFactory;
 import org.jetbrains.annotations.Nullable;
 
 // Note: MenuProvider is important without it dependants will crash in development when opening inventories.

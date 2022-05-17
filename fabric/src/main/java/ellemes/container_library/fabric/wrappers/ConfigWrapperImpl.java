@@ -1,7 +1,7 @@
 package ellemes.container_library.fabric.wrappers;
 
-import ellemes.container_library.fabric.config.LegacyFactory;
 import ellemes.container_library.config.ConfigV0;
+import ellemes.container_library.fabric.config.LegacyFactory;
 import ellemes.container_library.wrappers.ConfigWrapper;
 
 import java.nio.file.Path;

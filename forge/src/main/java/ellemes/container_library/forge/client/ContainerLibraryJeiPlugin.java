@@ -1,12 +1,12 @@
 package ellemes.container_library.forge.client;
 
+import ellemes.container_library.Utils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.ResourceLocation;
-import ellemes.container_library.Utils;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,7 +1,7 @@
 package ellemes.container_library.fabric.mixin;
 
-import net.minecraft.client.gui.screens.Screen;
 import ellemes.container_library.client.gui.PageScreen;
+import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,10 +1,10 @@
 package ellemes.container_library.quilt.client;
 
+import ellemes.container_library.Utils;
+import ellemes.container_library.client.KeyHandler;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
-import ellemes.container_library.Utils;
-import ellemes.container_library.client.KeyHandler;
 
 public final class QuiltKeyHandler implements KeyHandler {
     private final KeyMapping binding;

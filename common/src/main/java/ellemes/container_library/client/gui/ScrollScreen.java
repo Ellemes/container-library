@@ -4,18 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
-import ninjaphenix.container_library.api.client.function.ScreenSize;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.api.client.gui.TexturedRect;
-import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ellemes.container_library.wrappers.ConfigWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,6 +13,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import ninjaphenix.container_library.api.client.function.ScreenSize;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import ninjaphenix.container_library.api.client.gui.TexturedRect;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public final class ScrollScreen extends AbstractScreen {
     private static final int THUMB_WIDTH = 12, THUMB_HEIGHT = 15;
@@ -61,6 +60,33 @@ public final class ScrollScreen extends AbstractScreen {
         imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * inventoryWidth + Utils.CONTAINER_PADDING_LDR; // 22 - 4 is scrollbar width - overlap
         imageHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * inventoryHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
         scrollingUnrestricted = CommonMain.getConfigWrapper().isScrollingUnrestricted();
+    }
+
+    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
+        ArrayList<ScreenSize> options = new ArrayList<>();
+        options.add(ScreenSize.of(9, 6));
+        if (scaledHeight >= 276) {
+            if (slots > 54) {
+                options.add(ScreenSize.of(9, 9));
+            }
+            if (scaledWidth >= 248 && slots > 81) {
+                options.add(ScreenSize.of(12, 9));
+            }
+            if (scaledWidth >= 302 && slots > 108) {
+                options.add(ScreenSize.of(15, 9));
+            }
+            if (scaledWidth >= 356 && slots > 135) {
+                options.add(ScreenSize.of(18, 9));
+            }
+        }
+        if (scaledHeight >= 330 && scaledWidth >= 356 && slots > 162) {
+            options.add(ScreenSize.of(18, 12));
+        }
+        if (scaledHeight >= 384 && scaledWidth >= 356 && slots > 216) {
+            options.add(ScreenSize.of(18, 15));
+        }
+
+        return options.get(options.size() - 1);
     }
 
     private void initializeSlots(Inventory playerInventory) {
@@ -285,32 +311,5 @@ public final class ScrollScreen extends AbstractScreen {
     public List<Rect2i> getExclusionZones() {
         int height = Utils.CONTAINER_HEADER_HEIGHT + inventoryHeight * Utils.SLOT_SIZE + (inventoryWidth > 9 ? 10 : 0) + Utils.CONTAINER_PADDING_LDR;
         return Collections.singletonList(new Rect2i(leftPos + imageWidth, topPos, 22 - 4, height)); // 22 - 4 is scrollbar width minus overlap
-    }
-
-    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
-        ArrayList<ScreenSize> options = new ArrayList<>();
-        options.add(ScreenSize.of(9, 6));
-        if (scaledHeight >= 276) {
-            if (slots > 54) {
-                options.add(ScreenSize.of(9, 9));
-            }
-            if (scaledWidth >= 248 && slots > 81) {
-                options.add(ScreenSize.of(12, 9));
-            }
-            if (scaledWidth >= 302 && slots > 108) {
-                options.add(ScreenSize.of(15, 9));
-            }
-            if (scaledWidth >= 356 && slots > 135) {
-                options.add(ScreenSize.of(18, 9));
-            }
-        }
-        if (scaledHeight >= 330 && scaledWidth >= 356 && slots > 162) {
-            options.add(ScreenSize.of(18, 12));
-        }
-        if (scaledHeight >= 384 && scaledWidth >= 356 && slots > 216) {
-            options.add(ScreenSize.of(18, 15));
-        }
-
-        return options.get(options.size() - 1);
     }
 }

@@ -1,10 +1,10 @@
 package ellemes.container_library.forge.config;
 
 import com.electronwill.nightconfig.core.Config;
-import net.minecraft.resources.ResourceLocation;
 import ellemes.container_library.Utils;
 import ellemes.container_library.config.ConfigV0;
 import ellemes.container_library.config.Converter;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public final class LegacyFactory implements Converter<Config, ConfigV0> {

@@ -4,12 +4,21 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
+import ellemes.container_library.client.PickButton;
+import ellemes.container_library.client.gui.widget.ScreenPickButton;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ellemes.container_library.client.PickButton;
-import ellemes.container_library.client.gui.widget.ScreenPickButton;
-import ellemes.container_library.wrappers.ConfigWrapper;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,16 +30,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 
 public final class PickScreen extends Screen {
     private static final Map<ResourceLocation, PickButton> BUTTON_SETTINGS = new HashMap<>();
@@ -45,7 +44,8 @@ public final class PickScreen extends Screen {
         super(new TranslatableComponent("screen.ellemes_container_lib.screen_picker_title"));
         this.returnToScreen = returnToScreen;
         this.handler = handler;
-        this.onOptionPicked = () -> {};
+        this.onOptionPicked = () -> {
+        };
     }
 
     public PickScreen(@NotNull Runnable onOptionPicked) {

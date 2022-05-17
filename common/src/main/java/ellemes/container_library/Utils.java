@@ -5,13 +5,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import ellemes.container_library.config.IdentifierTypeAdapter;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 
 public class Utils {
     public static final String MOD_ID = "ellemes_container_lib";
@@ -34,14 +34,14 @@ public class Utils {
                                                      .setPrettyPrinting()
                                                      .setLenient()
                                                      .create();
+    // Key bind key
+    public static final int KEY_BIND_KEY = GLFW.GLFW_KEY_G;
     private static final String LEGACY_MOD_ID = "expandedstorage";
     // Inbuilt Screen Types
     public static final ResourceLocation UNSET_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "auto");
     public static final ResourceLocation SCROLL_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "scroll");
     public static final ResourceLocation SINGLE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "single");
     public static final ResourceLocation PAGE_SCREEN_TYPE = new ResourceLocation(LEGACY_MOD_ID, "page");
-    // Key bind key
-    public static final int KEY_BIND_KEY = GLFW.GLFW_KEY_G;
 
     public static ResourceLocation id(String path) {
         return new ResourceLocation(Utils.MOD_ID, path);

@@ -5,13 +5,24 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
+import ellemes.container_library.client.gui.widget.PageButton;
+import ellemes.container_library.wrappers.PlatformUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ellemes.container_library.client.gui.widget.PageButton;
-import ellemes.container_library.wrappers.ConfigWrapper;
-import ellemes.container_library.wrappers.PlatformUtils;
 import org.anti_ad.mc.ipn.api.IPNButton;
 import org.anti_ad.mc.ipn.api.IPNGuiHint;
 import org.jetbrains.annotations.NotNull;
@@ -23,19 +34,6 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 @IPNGuiHint(button = IPNButton.MOVE_TO_CONTAINER, horizontalOffset = 58)
 public final class PageScreen extends AbstractScreen {
@@ -79,6 +77,39 @@ public final class PageScreen extends AbstractScreen {
 
     private static boolean regionIntersects(AbstractWidget widget, int x, int y, int width, int height) {
         return widget.x <= x + width && y <= widget.y + widget.getHeight() || x <= widget.x + widget.getWidth() && widget.y <= y + height;
+    }
+
+    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
+        ArrayList<Pair<ScreenSize, ScreenSize>> options = new ArrayList<>();
+        PageScreen.addEntry(options, slots, 9, 3);
+        PageScreen.addEntry(options, slots, 9, 6);
+        if (scaledHeight >= 276 && slots > 54) {
+            PageScreen.addEntry(options, slots, 9, 9);
+        }
+        Pair<ScreenSize, ScreenSize> picked = null;
+        for (Pair<ScreenSize, ScreenSize> option : options) {
+            if (picked == null) {
+                picked = option;
+            } else {
+                ScreenSize pickedMeta = picked.getSecond();
+                ScreenSize iterMeta = option.getSecond();
+                ScreenSize iterDim = option.getFirst();
+                if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
+                    picked = option;
+                } else if (CommonMain.getConfigWrapper().preferSmallerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+
+                } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+                    picked = option;
+                }
+            }
+        }
+        return picked.getFirst();
+    }
+
+    private static void addEntry(ArrayList<Pair<ScreenSize, ScreenSize>> options, int slots, int width, int height) {
+        int pages = Mth.ceil((double) slots / (width * height));
+        int blanked = slots - pages * width * height;
+        options.add(new Pair<>(ScreenSize.of(width, height), ScreenSize.of(pages, blanked)));
     }
 
     @Override
@@ -250,38 +281,5 @@ public final class PageScreen extends AbstractScreen {
 
     private void renderButtonTooltip(AbstractButton button, PoseStack stack, int x, int y) {
         this.renderTooltip(stack, button.getMessage(), x, y);
-    }
-
-    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
-        ArrayList<Pair<ScreenSize, ScreenSize>> options = new ArrayList<>();
-        PageScreen.addEntry(options, slots, 9, 3);
-        PageScreen.addEntry(options, slots, 9, 6);
-        if (scaledHeight >= 276 && slots > 54) {
-            PageScreen.addEntry(options, slots, 9, 9);
-        }
-        Pair<ScreenSize, ScreenSize> picked = null;
-        for (Pair<ScreenSize, ScreenSize> option : options) {
-            if (picked == null) {
-                picked = option;
-            } else {
-                ScreenSize pickedMeta = picked.getSecond();
-                ScreenSize iterMeta = option.getSecond();
-                ScreenSize iterDim = option.getFirst();
-                if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
-                    picked = option;
-                } else if (CommonMain.getConfigWrapper().preferSmallerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
-
-                } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
-                    picked = option;
-                }
-            }
-        }
-        return picked.getFirst();
-    }
-
-    private static void addEntry(ArrayList<Pair<ScreenSize, ScreenSize>> options, int slots, int width, int height) {
-        int pages = Mth.ceil((double) slots / (width * height));
-        int blanked = slots - pages * width * height;
-        options.add(new Pair<>(ScreenSize.of(width, height), ScreenSize.of(pages, blanked)));
     }
 }

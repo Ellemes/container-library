@@ -1,15 +1,15 @@
 package ellemes.container_library.config;
 
 import ellemes.container_library.Utils;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.resources.ResourceLocation;
 
 public class ConfigV0 implements Config {
     private ResourceLocation screenType;
-    private boolean restrictiveScrolling;
-    private boolean preferSmallerScreens;
+    private final boolean restrictiveScrolling;
+    private final boolean preferSmallerScreens;
 
     public ConfigV0() {
         this(Utils.UNSET_SCREEN_TYPE, false, true);

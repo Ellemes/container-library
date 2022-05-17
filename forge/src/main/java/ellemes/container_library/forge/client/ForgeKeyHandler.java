@@ -1,14 +1,14 @@
 package ellemes.container_library.forge.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import ellemes.container_library.Utils;
+import ellemes.container_library.client.KeyHandler;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import ellemes.container_library.Utils;
-import ellemes.container_library.client.KeyHandler;
 
 public class ForgeKeyHandler implements KeyHandler {
     private final KeyMapping binding;

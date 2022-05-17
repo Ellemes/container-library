@@ -1,5 +1,13 @@
 package ellemes.container_library.forge;
 
+import ellemes.container_library.CommonMain;
+import ellemes.container_library.Utils;
+import ellemes.container_library.client.gui.PageScreen;
+import ellemes.container_library.client.gui.PickScreen;
+import ellemes.container_library.forge.client.ForgeKeyHandler;
+import ellemes.container_library.forge.wrappers.ConfigWrapperImpl;
+import ellemes.container_library.forge.wrappers.NetworkWrapperImpl;
+import ellemes.container_library.wrappers.PlatformUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,15 +27,7 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
-import ellemes.container_library.CommonMain;
-import ellemes.container_library.Utils;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ellemes.container_library.client.gui.PageScreen;
-import ellemes.container_library.client.gui.PickScreen;
-import ellemes.container_library.forge.client.ForgeKeyHandler;
-import ellemes.container_library.forge.wrappers.ConfigWrapperImpl;
-import ellemes.container_library.forge.wrappers.NetworkWrapperImpl;
-import ellemes.container_library.wrappers.PlatformUtils;
 
 // todo: change to ellemes in 1.19
 @Mod("ninjaphenix_container_lib")

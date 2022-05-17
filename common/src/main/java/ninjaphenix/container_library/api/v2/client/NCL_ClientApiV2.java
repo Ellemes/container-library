@@ -1,14 +1,7 @@
 package ninjaphenix.container_library.api.v2.client;
 
 import ellemes.container_library.CommonMain;
-import ninjaphenix.container_library.api.client.ScreenConstructor;
-import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
-import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.client.gui.PickScreen;
-
-import java.util.List;
-import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -16,6 +9,13 @@ import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
+import ninjaphenix.container_library.api.client.ScreenConstructor;
+import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
+import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
+import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+
+import java.util.List;
+import java.util.Objects;
 
 public final class NCL_ClientApiV2 {
     private NCL_ClientApiV2() {

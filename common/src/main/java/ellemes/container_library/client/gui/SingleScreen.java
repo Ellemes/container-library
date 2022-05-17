@@ -3,6 +3,13 @@ package ellemes.container_library.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import ellemes.container_library.Utils;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 import ninjaphenix.container_library.api.client.gui.TexturedRect;
@@ -13,13 +20,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 public final class SingleScreen extends AbstractScreen {
     private final Set<TexturedRect> blankArea = new HashSet<>();
@@ -52,6 +52,38 @@ public final class SingleScreen extends AbstractScreen {
 
         imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * inventoryWidth + Utils.CONTAINER_PADDING_LDR;
         imageHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * inventoryHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
+    }
+
+    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
+        int width;
+
+        if (slots <= 81) {
+            width = 9;
+        } else if (slots <= 108) {
+            width = 12;
+        } else if (slots <= 135) {
+            width = 15;
+        } else if (slots <= 270) {
+            width = 18;
+        } else {
+            return null;
+        }
+
+        int height;
+
+        if (slots <= 27) {
+            height = 3;
+        } else if (slots <= 54) {
+            height = 6;
+        } else if (slots <= 162) {
+            height = 9;
+        } else if (slots <= 216) {
+            height = 12;
+        } else /* if (slots <= 270) */ {
+            height = 15;
+        } // slots is guaranteed to be 270 or below when getting width.
+
+        return ScreenSize.of(width, height);
     }
 
     @Override
@@ -123,37 +155,5 @@ public final class SingleScreen extends AbstractScreen {
     @NotNull
     public List<Rect2i> getExclusionZones() {
         return Collections.emptyList();
-    }
-
-    public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {
-        int width;
-
-        if (slots <= 81) {
-            width = 9;
-        } else if (slots <= 108) {
-            width = 12;
-        } else if (slots <= 135) {
-            width = 15;
-        } else if (slots <= 270) {
-            width = 18;
-        } else {
-            return null;
-        }
-
-        int height;
-
-        if (slots <= 27) {
-            height = 3;
-        } else if (slots <= 54) {
-            height = 6;
-        } else if (slots <= 162) {
-            height = 9;
-        } else if (slots <= 216) {
-            height = 12;
-        } else /* if (slots <= 270) */ {
-            height = 15;
-        } // slots is guaranteed to be 270 or below when getting width.
-
-        return ScreenSize.of(width, height);
     }
 }

@@ -1,10 +1,6 @@
 package ellemes.container_library.wrappers;
 
-import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
 import ellemes.container_library.inventory.ServerScreenHandlerFactory;
-
-import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -13,6 +9,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
+import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
+
+import java.util.function.Consumer;
 
 public abstract class NetworkWrapper {
     protected abstract void openScreenHandler(ServerPlayer player, Container inventory, ServerScreenHandlerFactory factory, Component title, ResourceLocation forcedScreenType);

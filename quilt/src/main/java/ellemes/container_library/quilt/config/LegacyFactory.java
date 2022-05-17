@@ -1,9 +1,9 @@
 package ellemes.container_library.quilt.config;
 
-import net.minecraft.resources.ResourceLocation;
 import ellemes.container_library.Utils;
 import ellemes.container_library.config.ConfigV0;
 import ellemes.container_library.config.Converter;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 

@@ -1,7 +1,5 @@
 package ellemes.container_library;
 
-import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
 import ellemes.container_library.client.gui.PageScreen;
 import ellemes.container_library.client.gui.ScrollScreen;
 import ellemes.container_library.client.gui.SingleScreen;
@@ -9,6 +7,11 @@ import ellemes.container_library.inventory.ClientScreenHandlerFactory;
 import ellemes.container_library.wrappers.ConfigWrapper;
 import ellemes.container_library.wrappers.NetworkWrapper;
 import ellemes.container_library.wrappers.PlatformUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
+import ninjaphenix.container_library.api.inventory.AbstractHandler;
+import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
@@ -16,10 +19,6 @@ import org.apache.logging.log4j.message.FormattedMessage;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiFunction;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.MenuType;
 
 public final class CommonMain {
     public static final Logger LOGGER = LogManager.getLogger(Utils.MOD_ID);
