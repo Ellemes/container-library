@@ -1,7 +1,7 @@
 package ninjaphenix.container_library.api.helpers;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import ninjaphenix.container_library.inventory.InventorySlotFunction;
+import ellemes.container_library.inventory.InventorySlotFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;

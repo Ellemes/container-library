@@ -1,14 +1,17 @@
 {
   "schema_version": 1,
   "quilt_loader": {
-    "group": "ninjaphenix",
-    "id": "ninjaphenix_container_lib",
+    "group": "ellemes",
+    "id": "ellemes_container_lib",
+    "provides": [
+      "ninjaphenix_container_lib"
+    ],
     "version": "${version}",
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
-      "init": "ninjaphenix.container_library.quilt.Main",
-      "rei": "ninjaphenix.container_library.quilt.client.ReiCompat",
-      "modmenu": "ninjaphenix.container_library.quilt.client.ModMenuCompat"
+      "init": "ellemes.container_library.quilt.Main",
+      "rei": "ellemes.container_library.quilt.client.ReiCompat",
+      "modmenu": "ellemes.container_library.quilt.client.ModMenuCompat"
     },
     "depends": [
       {
@@ -25,15 +28,15 @@
       "quilt_base"
     ],
     "metadata": {
-      "name": "NinjaPhenix's Container Library",
+      "name": "Ellemes' Container Library",
       "description": "A library mod which provides an easy way for modders to display simple inventories to the user.",
       "contributors": {
         "NinjaPhenix": "Owner"
       },
       "contact": {
         "homepage": "https://modrinth.com/mod/ninjaphenix-container-library/",
-        "sources": "https://github.com/NinjaPhenix/container-library/",
-        "issues": "https://github.com/NinjaPhenix/container-library/issues/"
+        "sources": "https://github.com/Ellemes/container-library/",
+        "issues": "https://github.com/Ellemes/container-library/issues/"
       },
       "license": [
         "0BSD"
@@ -41,5 +44,5 @@
       "icon": "icon.png"
     }
   },
-  "mixin": "ninjaphenix-container-library.mixins.json"
+  "mixin": "ellemes-container-library.mixins.json"
 }

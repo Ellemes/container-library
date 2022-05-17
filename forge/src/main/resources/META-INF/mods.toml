@@ -1,13 +1,13 @@
 modLoader = "javafml"
 loaderVersion = "[38,)"
-issueTrackerURL = "https://github.com/NinjaPhenix/container-library/issues/"
+issueTrackerURL = "https://github.com/Ellemes/container-library/issues/"
 license = "0BSD"
 
 [[mods]]
 modId = "ninjaphenix_container_lib"
 version = "${version}"
-displayName = "NinjaPhenix's Container Library"
-authors = "NinjaPhenix"
+displayName = "Ellemes' Container Library"
+authors = "Ellemes"
 logoFile = "icon.png"
 
 [[dependencies.ninjaphenix_container_lib]]

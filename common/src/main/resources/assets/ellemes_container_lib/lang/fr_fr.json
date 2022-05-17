@@ -1,0 +1,16 @@
+{
+  "screen.ellemes_container_lib.change_screen_button": "Changer le type d'écran",
+  "screen.ellemes_container_lib.screen_picker_title": "Sélectionner le type d'écran",
+  "screen.ellemes_container_lib.page_screen": "Écran Paginé",
+  "screen.ellemes_container_lib.scroll_screen": "Écran défilant",
+  "screen.ellemes_container_lib.single_screen": "Écran en une seule page",
+  "screen.ellemes_container_lib.next_page": "Page suivante",
+  "screen.ellemes_container_lib.prev_page": "Page précédente",
+  "screen.ellemes_container_lib.page_x_y": "%d/%d",
+  "screen.ellemes_container_lib.off_screen_warning_1": "Une partie de l'écran peut ne pas être visible",
+  "screen.ellemes_container_lib.off_screen_warning_2": " si vous sélectionnez cette option.",
+  "screen.ellemes_container_lib.current_option_notice": "Ceci est votre préférence actuelle.",
+  "key.ellemes_container_lib.config": "[NCL] Ouvrir la sélection d'écran",
+  "chat.ellemes_container_lib.cannot_display_screen": "L'inventaire ne peut pas être ouvert avec le type \"%s\", veuillez en sélectionner un autre.",
+  "generic.ellemes_container_lib.label": "[NCL] "
+}

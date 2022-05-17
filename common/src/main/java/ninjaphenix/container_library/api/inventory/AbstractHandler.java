@@ -1,7 +1,7 @@
 package ninjaphenix.container_library.api.inventory;
 
-import ninjaphenix.container_library.CommonMain;
-import ninjaphenix.container_library.Utils;
+import ellemes.container_library.CommonMain;
+import ellemes.container_library.Utils;
 
 import java.util.function.IntUnaryOperator;
 import net.minecraft.network.FriendlyByteBuf;

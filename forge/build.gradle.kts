@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import net.fabricmc.loom.task.RemapJarTask
 import ellemes.gradle.mod.api.task.MinifyJsonTask
 import java.text.DateFormat
 import java.util.Date
@@ -12,7 +10,7 @@ loom {
     forge {
         convertAccessWideners.set(true)
         extraAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
-        mixinConfig("ninjaphenix_container_lib.mixins.json")
+        mixinConfig("ellemes_container_lib.mixins.json")
     }
 }
 
@@ -36,14 +34,14 @@ dependencies {
 
 tasks.getByName<MinifyJsonTask>("minJar") {
     manifest.attributes(mapOf(
-            "Specification-Title" to "NinjaPhenix's Container Library",
-            "Specification-Vendor" to "ninjaphenix",
+            "Specification-Title" to "Ellemes' Container Library",
+            "Specification-Vendor" to "ellemes",
             "Specification-Version" to "1.3",
-            "Implementation-Title" to "ninjaphenix_container_library_forge",
+            "Implementation-Title" to "ellemes_container_library_forge",
             "Implementation-Version" to "${project.version}",
-            "Implementation-Vendor" to "ninjaphenix",
+            "Implementation-Vendor" to "ellemes",
             "Implementation-Timestamp" to DateFormat.getDateTimeInstance().format(Date()),
-            "Automatic-Module-Name" to "ninjaphenix.container_library",
-            "MixinConfigs" to "ninjaphenix_container_lib.mixins.json"
+            "Automatic-Module-Name" to "ellemes.container_library",
+            "MixinConfigs" to "ellemes_container_lib.mixins.json"
     ))
 }

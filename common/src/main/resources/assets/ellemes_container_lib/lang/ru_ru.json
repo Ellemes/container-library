@@ -1,0 +1,16 @@
+{
+	"screen.ellemes_container_lib.change_screen_button": "Изменить вид интерфейса",
+	"screen.ellemes_container_lib.screen_picker_title": "Выберите вид интерфейса",
+	"screen.ellemes_container_lib.page_screen": "Интерфейс с разбивкой на страницы",
+	"screen.ellemes_container_lib.scroll_screen": "Прокручиваемый интерфейс",
+	"screen.ellemes_container_lib.single_screen": "Одностраничный интерфейс",
+	"screen.ellemes_container_lib.next_page": "Следующая страница",
+	"screen.ellemes_container_lib.prev_page": "Предыдущая страница",
+	"screen.ellemes_container_lib.page_x_y": "%d/%d",
+	"screen.ellemes_container_lib.off_screen_warning_1": "Часть экрана может быть не видна",
+	"screen.ellemes_container_lib.off_screen_warning_2": " если выбрать этот вариант.",
+	"screen.ellemes_container_lib.current_option_notice": "Это ваш текущий выбор.",
+	"key.ellemes_container_lib.config": "[NCL] Открыть экран выбора",
+	"chat.ellemes_container_lib.cannot_display_screen": "Невозможно открыть инвентарь с типом \"%s\", попробуйте другой.",
+	"generic.ellemes_container_lib.label": "[NCL] "
+}

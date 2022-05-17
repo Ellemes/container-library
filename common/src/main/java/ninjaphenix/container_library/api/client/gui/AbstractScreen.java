@@ -1,14 +1,13 @@
 package ninjaphenix.container_library.api.client.gui;
 
-import ninjaphenix.container_library.CommonMain;
-import ninjaphenix.container_library.Utils;
+import ellemes.container_library.CommonMain;
+import ellemes.container_library.Utils;
 import ninjaphenix.container_library.api.client.ScreenConstructor;
 import ninjaphenix.container_library.api.client.function.ScreenSize;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.wrappers.ConfigWrapper;
-import ninjaphenix.container_library.wrappers.PlatformUtils;
+import ellemes.container_library.client.gui.PickScreen;
+import ellemes.container_library.wrappers.PlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,9 +39,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
         inventoryHeight = screenSize.getHeight();
     }
 
-    @Deprecated
     @ApiStatus.Internal
-    @SuppressWarnings("DeprecatedIsStillUsed")
     public static AbstractScreen createScreen(AbstractHandler handler, Inventory playerInventory, Component title) {
         ResourceLocation forcedScreenType = handler.getForcedScreenType();
         ResourceLocation preference = forcedScreenType != null ? forcedScreenType : CommonMain.getConfigWrapper().getPreferredScreenType();
@@ -94,23 +91,17 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
         return false;
     }
 
-    @Deprecated
     @ApiStatus.Internal
-    @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
         AbstractScreen.SCREEN_CONSTRUCTORS.putIfAbsent(type, screenConstructor);
     }
 
-    @Deprecated
     @ApiStatus.Internal
-    @SuppressWarnings("DeprecatedIsStillUsed")
     public static void declareScreenSizeRetriever(ResourceLocation type, ScreenSizeRetriever retriever) {
         AbstractScreen.SIZE_RETRIEVERS.putIfAbsent(type, retriever);
     }
 
-    @Deprecated
     @ApiStatus.Internal
-    @SuppressWarnings("DeprecatedIsStillUsed")
     public static boolean isScreenTypeDeclared(ResourceLocation type) {
         return AbstractScreen.SCREEN_CONSTRUCTORS.containsKey(type);
     }
@@ -156,5 +147,6 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     }
 
     @NotNull
+    @ApiStatus.Internal
     public abstract List<Rect2i> getExclusionZones();
 }

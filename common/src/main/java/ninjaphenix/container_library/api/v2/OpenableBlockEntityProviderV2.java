@@ -10,10 +10,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import ninjaphenix.container_library.CommonMain;
+import ellemes.container_library.CommonMain;
 import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
 import ninjaphenix.container_library.api.v2.helpers.OpenableBlockEntitiesV2;
-import ninjaphenix.container_library.wrappers.NetworkWrapper;
+import ellemes.container_library.wrappers.NetworkWrapper;
 
 /**
  * Should be implemented on blocks.

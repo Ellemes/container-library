@@ -31,17 +31,18 @@ repositories {
     }
 }
 
-fun excludeFabric(it : ModuleDependency) {
+fun excludeFabric(it: ModuleDependency) {
     it.exclude(group = "net.fabricmc")
     it.exclude(group = "net.fabricmc.fabric-api")
 }
 
 mod {
     fabricApi(
-            "fabric-registry-sync-v0", // Required to delay registry freezing
-            "fabric-networking-api-v1",
-            "fabric-screen-handler-api-v1",
-            "fabric-key-binding-api-v1"
+        "fabric-resource-loader-v0", // Required for resources like keybind text
+        "fabric-registry-sync-v0", // Required to delay registry freezing
+        "fabric-networking-api-v1",
+        "fabric-screen-handler-api-v1",
+        "fabric-key-binding-api-v1"
     )
 }
 
@@ -60,14 +61,15 @@ dependencies {
     modCompileOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}") {
         excludeFabric(this)
     }
-    //modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
+
+    //modRuntimeOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}")
 
     modCompileOnly("de.siphalor:amecsapi-1.18:${project.properties["amecs_version"]}") {
         excludeFabric(this)
         exclude(group = "com.github.astei")
     }
 
-    modCompileOnly("io.github.flemmli97:flan:1.18.2-${project.properties["flan_version"]}:fabric-api")  {
+    modCompileOnly("io.github.flemmli97:flan:1.18.2-${project.properties["flan_version"]}:fabric-api") {
         excludeFabric(this)
         exclude(group = "curse.maven")
     }

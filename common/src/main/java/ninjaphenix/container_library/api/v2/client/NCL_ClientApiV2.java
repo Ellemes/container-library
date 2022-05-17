@@ -1,12 +1,11 @@
 package ninjaphenix.container_library.api.v2.client;
 
-import ninjaphenix.container_library.CommonMain;
+import ellemes.container_library.CommonMain;
 import ninjaphenix.container_library.api.client.ScreenConstructor;
 import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 import ninjaphenix.container_library.api.client.function.ScreenSizeRetriever;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.client.gui.PickScreen;
-import ninjaphenix.container_library.wrappers.ConfigWrapper;
+import ellemes.container_library.client.gui.PickScreen;
 
 import java.util.List;
 import java.util.Objects;
@@ -86,7 +85,6 @@ public final class NCL_ClientApiV2 {
     public static void registerScreenType(ResourceLocation type, ScreenConstructor<?> screenConstructor) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(screenConstructor, "screenConstructor must not be null");
-        //noinspection deprecation
         AbstractScreen.declareScreenType(type, screenConstructor);
     }
 
@@ -96,7 +94,6 @@ public final class NCL_ClientApiV2 {
     public static void registerDefaultScreenSize(ResourceLocation type, ScreenSizeRetriever retriever) {
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(retriever, "retriever must not be null");
-        //noinspection deprecation
         AbstractScreen.declareScreenSizeRetriever(type, retriever);
     }
 

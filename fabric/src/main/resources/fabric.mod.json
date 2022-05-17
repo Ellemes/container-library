@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "depends": {
+    "fabric-resource-loader-v0": ">=0.4.16",
     "fabric-registry-sync-v0": ">=0.9.5",
     "fabric-key-binding-api-v1": ">=1.0.8",
     "fabric-networking-api-v1": ">=1.0.18",
@@ -10,30 +11,33 @@
   },
   "entrypoints": {
     "main": [
-      "ninjaphenix.container_library.fabric.Main"
+      "ellemes.container_library.fabric.Main"
     ],
     "rei": [
-      "ninjaphenix.container_library.fabric.client.ReiCompat"
+      "ellemes.container_library.fabric.client.ReiCompat"
     ],
     "modmenu": [
-      "ninjaphenix.container_library.fabric.client.ModMenuCompat"
+      "ellemes.container_library.fabric.client.ModMenuCompat"
     ]
   },
   "environment": "*",
   "mixins": [
-    "ninjaphenix-container-library.mixins.json"
+    "ellemes-container-library.mixins.json"
   ],
   "authors": [
-    "NinjaPhenix"
+    "Ellemes"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/ninjaphenixs-container-library/",
-    "sources": "https://github.com/NinjaPhenix/container-library/",
-    "issues": "https://github.com/NinjaPhenix/container-library/issues/"
+    "sources": "https://github.com/Ellemes/container-library/",
+    "issues": "https://github.com/Ellemes/container-library/issues/"
   },
   "icon": "icon.png",
-  "id": "ninjaphenix_container_lib",
+  "id": "ellemes_container_lib",
+  "provides": [
+    "ninjaphenix_container_lib"
+  ],
   "license": "0BSD",
-  "name": "NinjaPhenix's Container Library",
+  "name": "Ellemes' Container Library",
   "version": "${version}"
 }
