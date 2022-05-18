@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.api.v2;
+package ellemes.container_library.api.v2;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

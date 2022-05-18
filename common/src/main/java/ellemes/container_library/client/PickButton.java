@@ -1,8 +1,8 @@
 package ellemes.container_library.client;
 
+import ellemes.container_library.api.client.function.ScreenSizePredicate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import ninjaphenix.container_library.api.client.function.ScreenSizePredicate;
 
 import java.util.List;
 

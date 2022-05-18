@@ -1,6 +1,8 @@
-package ninjaphenix.container_library.api.v2;
+package ellemes.container_library.api.v2;
 
 import ellemes.container_library.CommonMain;
+import ellemes.container_library.api.v2.client.NCL_ClientApiV2;
+import ellemes.container_library.api.v2.helpers.OpenableBlockEntitiesV2;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,8 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import ninjaphenix.container_library.api.v2.client.NCL_ClientApiV2;
-import ninjaphenix.container_library.api.v2.helpers.OpenableBlockEntitiesV2;
 
 /**
  * Should be implemented on blocks.

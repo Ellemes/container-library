@@ -1,16 +1,15 @@
 package ellemes.container_library.wrappers;
 
+import ellemes.container_library.api.inventory.AbstractHandler;
+import ellemes.container_library.api.v2.OpenableBlockEntityV2;
 import ellemes.container_library.inventory.ServerScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
-import ninjaphenix.container_library.api.inventory.AbstractHandler;
-import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
 
 import java.util.function.Consumer;
 
@@ -21,7 +20,7 @@ public abstract class NetworkWrapper {
         if (this.canOpenInventory(player, pos)) {
             Component title = inventory.getInventoryTitle();
             if (!inventory.canBeUsedBy(player)) {
-                player.displayClientMessage(new TranslatableComponent("container.isLocked", title), true);
+                player.displayClientMessage(Component.translatable("container.isLocked", title), true);
                 player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
                 return;
             }

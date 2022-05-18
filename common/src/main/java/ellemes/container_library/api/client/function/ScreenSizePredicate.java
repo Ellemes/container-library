@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.api.client.function;
+package ellemes.container_library.api.client.function;
 
 public interface ScreenSizePredicate {
     @SuppressWarnings("unused")

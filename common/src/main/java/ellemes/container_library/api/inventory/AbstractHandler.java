@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.api.inventory;
+package ellemes.container_library.api.inventory;
 
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;

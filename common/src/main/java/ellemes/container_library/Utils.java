@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import ellemes.container_library.config.IdentifierTypeAdapter;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 
@@ -47,7 +47,8 @@ public class Utils {
         return new ResourceLocation(Utils.MOD_ID, path);
     }
 
+    // todo: remove?
     public static MutableComponent translation(String key, Object... values) {
-        return new TranslatableComponent(key, values);
+        return Component.translatable(key, values);
     }
 }

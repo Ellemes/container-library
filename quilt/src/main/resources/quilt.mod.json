@@ -20,7 +20,7 @@
       },
       {
         "id": "minecraft",
-        "versions": "~1.18.2"
+        "versions": "~1.19-beta.1"
       },
       "fabric-networking-api-v1",
       "fabric-screen-handler-api-v1",

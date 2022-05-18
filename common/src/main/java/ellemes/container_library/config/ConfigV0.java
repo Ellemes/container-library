@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigV0 implements Config {
-    private ResourceLocation screenType;
     private final boolean restrictiveScrolling;
     private final boolean preferSmallerScreens;
+    private ResourceLocation screenType;
 
     public ConfigV0() {
         this(Utils.UNSET_SCREEN_TYPE, false, true);

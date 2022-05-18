@@ -1,10 +1,10 @@
-package ninjaphenix.container_library.api.v2.helpers;
+package ellemes.container_library.api.v2.helpers;
 
+import ellemes.container_library.api.helpers.VariableInventory;
+import ellemes.container_library.api.v2.OpenableBlockEntityV2;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import ninjaphenix.container_library.api.helpers.VariableInventory;
-import ninjaphenix.container_library.api.v2.OpenableBlockEntityV2;
 
 import java.util.Arrays;
 

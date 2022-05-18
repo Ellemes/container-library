@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.api.helpers;
+package ellemes.container_library.api.helpers;
 
 import ellemes.container_library.inventory.InventorySlotFunction;
 import net.minecraft.world.Container;

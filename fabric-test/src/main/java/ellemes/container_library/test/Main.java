@@ -35,24 +35,6 @@ public class Main implements ModInitializer {
         return blockEntityType;
     }
 
-    // todo: print out warning if dependency version in fabric.mod.json is outdated.
-    @SuppressWarnings("unused")
-    @Override
-    public void onInitialize() {
-        group = FabricItemGroupBuilder.create(new ResourceLocation(MOD_ID, "tab")).build();
-        JLang lang = JLang.lang().itemGroup(new ResourceLocation(MOD_ID, "test"), "Test Inventory Blocks");
-        InventoryTestBlock[] blocks = new ListBuilder<>(i -> Main.register(i, lang)).range(27, 540, 27)
-                                                                                    .range(24, 540, 27)
-                                                                                    .range(30, 540, 27)
-                                                                                    .build()
-                                                                                    .toArray(InventoryTestBlock[]::new);
-        RESOURCE_PACK.addLang(new ResourceLocation(MOD_ID, "en_us"), lang);
-        blockEntityType = FabricBlockEntityTypeBuilder.create((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state), blocks).build();
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(MOD_ID, "block_entity_type"), blockEntityType);
-
-        RRPCallback.AFTER_VANILLA.register(resources -> resources.add(RESOURCE_PACK));
-    }
-
     private static InventoryTestBlock register(int inventorySize, JLang lang) {
         ResourceLocation id = new ResourceLocation(MOD_ID, "block" + inventorySize);
         InventoryTestBlock block = new InventoryTestBlock(BlockBehaviour.Properties.of(Material.BAMBOO), inventorySize);
@@ -62,9 +44,9 @@ public class Main implements ModInitializer {
         RESOURCE_PACK.addBlockState(JState.state(JState.variant(JState.model(new ResourceLocation(id.getNamespace(), "block/" + id.getPath())))), id);
         RESOURCE_PACK.addModel(JModel.model("minecraft:block/orientable")
                                      .textures(JModel.textures()
-                                                     .var("top", MOD_ID+":block/blockn")
-                                                     .var("front", MOD_ID+":block/block" + inventorySize)
-                                                     .var("side", MOD_ID+":block/block" + inventorySize)),
+                                                     .var("top", MOD_ID + ":block/blockn")
+                                                     .var("front", MOD_ID + ":block/block" + inventorySize)
+                                                     .var("side", MOD_ID + ":block/block" + inventorySize)),
                 new ResourceLocation(id.getNamespace(), "block/" + id.getPath()));
 
         RESOURCE_PACK.addModel(JModel.model(id.getNamespace() + ":block/" + id.getPath()), new ResourceLocation(id.getNamespace(), "item/" + id.getPath()));
@@ -78,7 +60,7 @@ public class Main implements ModInitializer {
     private static BufferedImage generateTexture(int inventorySize) {
         try {
             //noinspection OptionalGetWithoutIsPresent
-            BufferedImage numbers = ImageIO.read(Files.newInputStream(FabricLoader.getInstance().getModContainer(MOD_ID).get().getPath("assets/"+MOD_ID+"/textures/gen/numbers.png")));
+            BufferedImage numbers = ImageIO.read(Files.newInputStream(FabricLoader.getInstance().getModContainer(MOD_ID).get().getPath("assets/" + MOD_ID + "/textures/gen/numbers.png")));
             BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_BYTE_GRAY);
             Graphics graphics = image.createGraphics();
             graphics.setColor(Color.WHITE);
@@ -118,5 +100,23 @@ public class Main implements ModInitializer {
             return 55;
         }
         throw new IllegalArgumentException("character must be a single number");
+    }
+
+    // todo: print out warning if dependency version in fabric.mod.json is outdated.
+    @SuppressWarnings("unused")
+    @Override
+    public void onInitialize() {
+        group = FabricItemGroupBuilder.create(new ResourceLocation(MOD_ID, "tab")).build();
+        JLang lang = JLang.lang().itemGroup(new ResourceLocation(MOD_ID, "test"), "Test Inventory Blocks");
+        InventoryTestBlock[] blocks = new ListBuilder<>(i -> Main.register(i, lang)).range(27, 540, 27)
+                                                                                    .range(24, 540, 27)
+                                                                                    .range(30, 540, 27)
+                                                                                    .build()
+                                                                                    .toArray(InventoryTestBlock[]::new);
+        RESOURCE_PACK.addLang(new ResourceLocation(MOD_ID, "en_us"), lang);
+        blockEntityType = FabricBlockEntityTypeBuilder.create((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state), blocks).build();
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(MOD_ID, "block_entity_type"), blockEntityType);
+
+        RRPCallback.AFTER_VANILLA.register(resources -> resources.add(RESOURCE_PACK));
     }
 }

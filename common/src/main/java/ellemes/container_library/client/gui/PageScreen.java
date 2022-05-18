@@ -5,6 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
+import ellemes.container_library.api.client.function.ScreenSize;
+import ellemes.container_library.api.client.gui.AbstractScreen;
+import ellemes.container_library.api.client.gui.TexturedRect;
+import ellemes.container_library.api.inventory.AbstractHandler;
 import ellemes.container_library.client.gui.widget.PageButton;
 import ellemes.container_library.wrappers.PlatformUtils;
 import net.minecraft.client.Minecraft;
@@ -14,15 +18,11 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import ninjaphenix.container_library.api.client.function.ScreenSize;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
-import ninjaphenix.container_library.api.client.gui.TexturedRect;
-import ninjaphenix.container_library.api.inventory.AbstractHandler;
 import org.anti_ad.mc.ipn.api.IPNButton;
 import org.anti_ad.mc.ipn.api.IPNGuiHint;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public final class PageScreen extends AbstractScreen {
     private final int blankSlots, pages;
     private PageButton leftPageButton, rightPageButton;
     private int page;
-    private TranslatableComponent currentPageText;
+    private MutableComponent currentPageText;
     private float pageTextX;
 
     public PageScreen(AbstractHandler handler, Inventory playerInventory, Component title, ScreenSize screenSize) {
@@ -195,7 +195,7 @@ public final class PageScreen extends AbstractScreen {
     }
 
     private void setPageText() {
-        currentPageText = new TranslatableComponent("screen.ellemes_container_lib.page_x_y", page, pages);
+        currentPageText = Component.translatable("screen.ellemes_container_lib.page_x_y", page, pages);
         pageTextX = (leftPageButton.x + leftPageButton.getWidth() + rightPageButton.x) / 2 - font.width(currentPageText) / 2 + 0.5f;
     }
 
@@ -268,12 +268,12 @@ public final class PageScreen extends AbstractScreen {
             x -= 14;
         }
         leftPageButton = new PageButton(x, y, 0,
-                new TranslatableComponent("screen.ellemes_container_lib.prev_page"), button -> this.setPage(page, page - 1),
+                Component.translatable("screen.ellemes_container_lib.prev_page"), button -> this.setPage(page, page - 1),
                 this::renderButtonTooltip);
         leftPageButton.active = false;
         this.addRenderableWidget(leftPageButton);
         rightPageButton = new PageButton(x + 42, y, 1,
-                new TranslatableComponent("screen.ellemes_container_lib.next_page"), button -> this.setPage(page, page + 1),
+                Component.translatable("screen.ellemes_container_lib.next_page"), button -> this.setPage(page, page + 1),
                 this::renderButtonTooltip);
         this.addRenderableWidget(rightPageButton);
         this.setPageText();

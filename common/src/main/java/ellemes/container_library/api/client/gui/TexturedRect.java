@@ -1,9 +1,8 @@
-package ninjaphenix.container_library.api.client.gui;
+package ellemes.container_library.api.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class TexturedRect {
     private final int x, y, width, height, textureX, textureY, textureWidth, textureHeight;
 

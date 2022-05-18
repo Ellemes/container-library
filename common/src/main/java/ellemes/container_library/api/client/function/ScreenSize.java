@@ -1,6 +1,5 @@
-package ninjaphenix.container_library.api.client.function;
+package ellemes.container_library.api.client.function;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class ScreenSize {
     private final int width, height;
 

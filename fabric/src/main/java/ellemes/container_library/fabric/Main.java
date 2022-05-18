@@ -2,6 +2,7 @@ package ellemes.container_library.fabric;
 
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
+import ellemes.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.fabric.client.AmecsKeyHandler;
 import ellemes.container_library.fabric.client.FabricKeyHandler;
 import ellemes.container_library.fabric.wrappers.ConfigWrapperImpl;
@@ -12,7 +13,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 
 public final class Main implements ModInitializer {
     @Override
