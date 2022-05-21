@@ -1,5 +1,3 @@
-import com.modrinth.minotaur.dependencies.DependencyType
-import com.modrinth.minotaur.dependencies.ModDependency
 import org.gradle.configurationcache.extensions.capitalized
 
 plugins {
@@ -134,11 +132,11 @@ modrinth {
     versionNumber.set(modVersion  + "+" + project.name)
     versionName.set(project.name.capitalized() + " " + modVersion)
     uploadFile.set(tasks.getByName("minJar"))
-    dependencies.set(listOf(
-        ModDependency("P7dR8mSH", DependencyType.REQUIRED), // fabric-api
-        // ModDependency("roughly-enough-items", DependencyType.OPTIONAL), // roughly-enough-items ( not on modrinth )
-        ModDependency("O7RBXm3n", DependencyType.OPTIONAL) // inventory-profiles-next
-    ))
+    dependencies {
+        required.project("P7dR8mSH") // fabric-api
+        // optional.project("roughly-enough-items") // roughly-enough-items ( not on modrinth )
+        optional.project("O7RBXm3n") // inventory-profiles-next
+    }
     changelog.set(modChangelog)
     gameVersions.set(modTargetVersions)
     loaders.set(listOf(project.name))
