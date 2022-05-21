@@ -1,5 +1,3 @@
-import com.modrinth.minotaur.dependencies.DependencyType
-import com.modrinth.minotaur.dependencies.ModDependency
 import ellemes.gradle.mod.api.task.MinifyJsonTask
 import org.gradle.configurationcache.extensions.capitalized
 import java.text.DateFormat
@@ -99,10 +97,10 @@ modrinth {
     versionNumber.set(modVersion  + "+" + project.name)
     versionName.set(project.name.capitalized() + " " + modVersion)
     uploadFile.set(tasks.getByName("minJar"))
-    dependencies.set(listOf(
-        // ModDependency("jei", DependencyType.OPTIONAL), // jei ( not on modrinth )
-        ModDependency("O7RBXm3n", DependencyType.OPTIONAL) // inventory-profiles-next
-    ))
+    dependencies {
+        // optional.project("jei"), // jei ( not on modrinth )
+        optional.project("O7RBXm3n") // inventory-profiles-next
+    }
     changelog.set(modChangelog)
     gameVersions.set(modTargetVersions)
     loaders.set(listOf(project.name))
