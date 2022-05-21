@@ -9,5 +9,5 @@
 - Scroll bar click positions aren't really intuitive.
 - config ids and internal ids are linked
 # 1.18
-- Revert to `ninjaphenix-container-library.json` config name.
+- Revert to `ellemes-container-library.json` config name.
 - Introduce config v2 with at least one of: user configurable screen sizes, [screen specific config objects], different screen types per inventory size.

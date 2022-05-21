@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.test;
+package ellemes.container_library.test;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.resources.ResourceLocation;
@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-@Mod("ninjaphenix_container_lib_test")
+@Mod("ellemes_container_lib_test")
 public final class Main {
     private static BlockEntityType<InventoryTestBlockEntity> blockEntityType;
 
     public Main() {
-        CreativeModeTab group = new CreativeModeTab("ninjaphenix_container_lib_test.tab") {
+        CreativeModeTab group = new CreativeModeTab("ellemes_container_lib_test.tab") {
             @Override
             public ItemStack makeIcon() {
                 return new ItemStack(Blocks.SOUL_CAMPFIRE);
@@ -44,7 +44,7 @@ public final class Main {
         }
 
         for (int j : list) {
-            ResourceLocation id = new ResourceLocation("ninjaphenix_container_lib_test", "inventory_" + j);
+            ResourceLocation id = new ResourceLocation("ellemes_container_lib_test", "inventory_" + j);
             Supplier<InventoryTestBlock> block = () -> {
                 var b = new InventoryTestBlock(BlockBehaviour.Properties.of(Material.BAMBOO), j);
                 b.setRegistryName(id);
@@ -61,7 +61,7 @@ public final class Main {
 
         Supplier<BlockEntityType<InventoryTestBlockEntity>> bets = () -> {
             var be = new BlockEntityType<>(((pos, state) -> new InventoryTestBlockEntity(Main.getBlockEntityType(), pos, state)), blocks.stream().map(Supplier::get).collect(Collectors.toSet()), null);
-            be.setRegistryName(new ResourceLocation("ninjaphenix_container_lib_test", "block_entity_type"));
+            be.setRegistryName(new ResourceLocation("ellemes_container_lib_test", "block_entity_type"));
             return be;
         };
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();

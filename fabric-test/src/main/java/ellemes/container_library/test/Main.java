@@ -1,4 +1,4 @@
-package ninjaphenix.container_library.test;
+package ellemes.container_library.test;
 
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RuntimeResourcePack;
@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class Main implements ModInitializer {
-    private static final String MOD_ID = "ninjaphenix_container_lib_test";
+    private static final String MOD_ID = "ellemes_container_lib_test";
     private static final RuntimeResourcePack RESOURCE_PACK = RuntimeResourcePack.create(MOD_ID + ":test");
     private static BlockEntityType<InventoryTestBlockEntity> blockEntityType;
     private static CreativeModeTab group;

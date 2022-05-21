@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "accessWidener": "ninjaphenix_container_lib_test.accessWidener",
+  "accessWidener": "ellemes_container_lib_test.accessWidener",
   "entrypoints": {
     "main": [
-      "ninjaphenix.container_library.test.Main"
+      "ellemes.container_library.test.Main"
     ]
   },
   "environment": "*",
   "authors": [
-    "NinjaPhenix"
+    "Ellemes"
   ],
-  "id": "ninjaphenix_container_lib_test",
+  "id": "ellemes_container_lib_test",
   "license": "0BSD",
-  "name": "NinjaPhenix's Container Library Tests",
+  "name": "Ellemes' Container Library Tests",
   "version": "0.0.0"
 }

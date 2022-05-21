@@ -1,11 +1,11 @@
-# NinjaPhenix's Container Library
+# Ellemes' Container Library
 ## Synopsis
 In short this contains all the code from Expanded Storage used to open inventories including the different screen options.
 
 ## Consuming the library
 If you are to consume this library please jar in jar it or have users download it from Curseforge or Modrinth:
-- Curseforge: https://www.curseforge.com/minecraft/mc-mods/ninjaphenixs-container-library
-- Modrinth: https://modrinth.com/mod/ninjaphenix-container-library
+- Curseforge: https://www.curseforge.com/minecraft/mc-mods/ellemes-container-library
+- Modrinth: https://modrinth.com/mod/ellemes-container-library
 
 Whilst you may fork and shade this project and add your own features I would prefer to avoid multiple versions of the library as it would worsen the user experience.
 
