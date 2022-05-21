@@ -31,10 +31,10 @@
       "name": "Ellemes' Container Library",
       "description": "A library mod which provides an easy way for modders to display simple inventories to the user.",
       "contributors": {
-        "NinjaPhenix": "Owner"
+        "Ellemes": "Owner"
       },
       "contact": {
-        "homepage": "https://modrinth.com/mod/ninjaphenix-container-library/",
+        "homepage": "https://modrinth.com/mod/ellemes-container-library/",
         "sources": "https://github.com/Ellemes/container-library/",
         "issues": "https://github.com/Ellemes/container-library/issues/"
       },
