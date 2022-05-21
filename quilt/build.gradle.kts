@@ -1,3 +1,7 @@
+import com.modrinth.minotaur.dependencies.DependencyType
+import com.modrinth.minotaur.dependencies.ModDependency
+import org.gradle.configurationcache.extensions.capitalized
+
 plugins {
     id("ellemes.gradle.mod").apply(false)
 }
@@ -80,4 +84,40 @@ dependencies {
     }
 
     //modRuntimeOnly("maven.modrinth:modmenu:3.2.1")
+}
+
+val releaseModTask = tasks.getByName("releaseMod")
+val modVersion = properties["mod_version"] as String
+val modReleaseType = if ("alpha" in modVersion) "alpha" else if ("beta" in modVersion) "beta" else "release"
+val modChangelog = rootDir.resolve("changelog.md").readText(Charsets.UTF_8)
+val modTargetVersions = mutableListOf(properties["minecraft_version"] as String)
+val modUploadDebug = System.getProperty("MOD_UPLOAD_DEBUG", "false") == "true" // -DMOD_UPLOAD_DEBUG=true
+
+(properties["extra_game_versions"] as String).split(",").forEach {
+    if (it != "") {
+        modTargetVersions.add(it)
+    }
+}
+
+modrinth {
+    debugMode.set(modUploadDebug)
+    detectLoaders.set(false)
+
+    projectId.set(properties["modrinth_project_id"] as String)
+    versionType.set(modReleaseType)
+    versionNumber.set(modVersion  + "+" + project.name)
+    versionName.set(project.name.capitalized() + " " + modVersion)
+    uploadFile.set(tasks.getByName("minJar"))
+    dependencies.set(listOf(
+        ModDependency("qvIfYCYJ", DependencyType.REQUIRED), // quilt standard libraries
+        // ModDependency("roughly-enough-items", DependencyType.OPTIONAL), // roughly-enough-items ( not on modrinth )
+        ModDependency("O7RBXm3n", DependencyType.OPTIONAL) // inventory-profiles-next
+    ))
+    changelog.set(modChangelog)
+    gameVersions.set(modTargetVersions)
+    loaders.set(listOf(project.name))
+}
+
+afterEvaluate {
+    releaseModTask.dependsOn(tasks.getByName("modrinth"))
 }
