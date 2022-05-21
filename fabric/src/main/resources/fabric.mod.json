@@ -13,7 +13,7 @@
     "main": [
       "ellemes.container_library.fabric.Main"
     ],
-    "rei": [
+    "rei_client": [
       "ellemes.container_library.fabric.client.ReiCompat"
     ],
     "modmenu": [
