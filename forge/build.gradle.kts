@@ -36,7 +36,7 @@ tasks.getByName<MinifyJsonTask>("minJar") {
     manifest.attributes(mapOf(
             "Specification-Title" to "Ellemes' Container Library",
             "Specification-Vendor" to "ellemes",
-            "Specification-Version" to "1.3",
+            "Specification-Version" to "1.4",
             "Implementation-Title" to "ellemes_container_library_forge",
             "Implementation-Version" to "${project.version}",
             "Implementation-Vendor" to "ellemes",
