@@ -49,13 +49,6 @@ mod {
 }
 
 dependencies {
-    "common"(project(path = ":common", configuration = "namedElements")) {
-        isTransitive = false
-    }
-    "shadowCommon"(project(path = ":common", configuration = "transformProductionFabric")) {
-        isTransitive = false
-    }
-
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.properties["rei_version"]}") {
         excludeFabric(this)
     }
@@ -143,6 +136,5 @@ modrinth {
 }
 
 afterEvaluate {
-    releaseModTask.dependsOn(tasks.getByName("curseforge" + properties["curseforge_project_id"]))
-    releaseModTask.dependsOn(tasks.getByName("modrinth"))
+    releaseModTask.finalizedBy(listOf("modrinth", "curseforge" + properties["curseforge_project_id"]))
 }

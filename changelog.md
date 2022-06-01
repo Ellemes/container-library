@@ -1,1 +1,1 @@
-- Fix qmj having the wrong name as owner and wrong homepage url
+- Fix some name references not being Ellemes

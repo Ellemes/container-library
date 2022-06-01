@@ -107,6 +107,5 @@ modrinth {
 }
 
 afterEvaluate {
-    releaseModTask.dependsOn(tasks.getByName("curseforge" + properties["curseforge_project_id"]))
-    releaseModTask.dependsOn(tasks.getByName("modrinth"))
+    releaseModTask.finalizedBy(listOf("modrinth", "curseforge" + properties["curseforge_project_id"]))
 }

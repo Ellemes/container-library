@@ -97,6 +97,35 @@ val modUploadDebug = System.getProperty("MOD_UPLOAD_DEBUG", "false") == "true" /
     }
 }
 
+curseforge {
+    options(closureOf<me.hypherionmc.cursegradle.Options> {
+        debug = modUploadDebug
+        javaVersionAutoDetect = false
+        javaIntegration = false
+        forgeGradleIntegration = false
+        fabricIntegration = false
+        detectFabricApi = false
+    })
+
+    project(closureOf<me.hypherionmc.cursegradle.CurseProject> {
+        apiKey = System.getenv("CURSEFORGE_TOKEN")
+        id = properties["curseforge_project_id"]
+        releaseType = modReleaseType
+        mainArtifact(tasks.getByName("minJar"), closureOf<me.hypherionmc.cursegradle.CurseArtifact> {
+            displayName = project.name.capitalized() + " " + modVersion
+            artifact = tasks.getByName("minJar")
+        })
+        relations(closureOf<me.hypherionmc.cursegradle.CurseRelation> {
+            //requiredDependency("fabric-api")
+            optionalDependency("roughly-enough-items")
+            optionalDependency("inventory-profiles-next")
+        })
+        changelogType = "markdown"
+        changelog = modChangelog
+        gameVersionStrings = listOf(project.name.capitalized(), "Java " + java.targetCompatibility.majorVersion) + modTargetVersions
+    })
+}
+
 modrinth {
     debugMode.set(modUploadDebug)
     detectLoaders.set(false)
@@ -117,5 +146,5 @@ modrinth {
 }
 
 afterEvaluate {
-    releaseModTask.dependsOn(tasks.getByName("modrinth"))
+    releaseModTask.finalizedBy(listOf("modrinth", "curseforge" + properties["curseforge_project_id"]))
 }
