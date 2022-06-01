@@ -50,9 +50,14 @@ tasks.getByName<MinifyJsonTask>("minJar") {
 val releaseModTask = tasks.getByName("releaseMod")
 val modVersion = properties["mod_version"] as String
 val modReleaseType = if ("alpha" in modVersion) "alpha" else if ("beta" in modVersion) "beta" else "release"
-val modChangelog = rootDir.resolve("changelog.md").readText(Charsets.UTF_8)
+var modChangelog = rootDir.resolve("changelog.md").readText(Charsets.UTF_8)
 val modTargetVersions = mutableListOf(properties["minecraft_version"] as String)
 val modUploadDebug = System.getProperty("MOD_UPLOAD_DEBUG", "false") == "true" // -DMOD_UPLOAD_DEBUG=true
+
+fun String.execute() = org.codehaus.groovy.runtime.ProcessGroovyMethods.execute(this)
+val Process.text: String? get() = org.codehaus.groovy.runtime.ProcessGroovyMethods.getText(this)
+val commit = "git rev-parse HEAD".execute().text
+modChangelog += "\nCommit: https://github.com/Ellemes/container-library/commit/$commit"
 
 (properties["extra_game_versions"] as String).split(",").forEach {
     if (it != "") {
