@@ -1,1 +1,1 @@
-- Fix some name references not being Ellemes
+- Fix quilt loader version constraint being too strict.
