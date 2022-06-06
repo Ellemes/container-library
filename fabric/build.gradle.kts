@@ -46,7 +46,7 @@ mod {
         "fabric-screen-handler-api-v1",
         "fabric-key-binding-api-v1",
         "fabric-transitive-access-wideners-v1",
-        "fabric-screen-api-v1" // Mod menu
+        //"fabric-screen-api-v1" // Mod menu
     )
 }
 
@@ -55,9 +55,9 @@ dependencies {
         excludeFabric(this)
     }
 
-    modRuntimeOnly(modCompileOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}") {
+    modCompileOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}") {
         excludeFabric(this)
-    })
+    }
 
     modCompileOnly("de.siphalor:amecsapi-1.19:${project.properties["amecs_version"]}") {
         excludeFabric(this)
