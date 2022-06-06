@@ -1,25 +1,25 @@
 modLoader = "javafml"
-loaderVersion = "[38,)"
+loaderVersion = "[41,)"
 issueTrackerURL = "https://github.com/Ellemes/container-library/issues/"
 license = "0BSD"
 
 [[mods]]
-modId = "ninjaphenix_container_lib"
+modId = "ellemes_container_lib"
 version = "${version}"
 displayName = "Ellemes' Container Library"
 authors = "Ellemes"
 logoFile = "icon.png"
 
-[[dependencies.ninjaphenix_container_lib]]
+[[dependencies.ellemes_container_lib]]
 modId = "forge"
 mandatory = true
-versionRange = "[38.0.14,)"
+versionRange = "[41.0.0,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.ninjaphenix_container_lib]]
+[[dependencies.ellemes_container_lib]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18,)"
+versionRange = "[1.19,)"
 ordering = "NONE"
 side = "BOTH"

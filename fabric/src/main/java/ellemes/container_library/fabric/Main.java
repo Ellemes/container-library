@@ -10,9 +10,12 @@ import ellemes.container_library.fabric.wrappers.NetworkWrapperImpl;
 import ellemes.container_library.wrappers.PlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.Registry;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 
 public final class Main implements ModInitializer {
     @Override
@@ -21,13 +24,16 @@ public final class Main implements ModInitializer {
                 ? FabricLoader.getInstance().isModLoaded("amecs") ? new AmecsKeyHandler() : new FabricKeyHandler()
                 : null, FabricLoader.getInstance()::isModLoaded);
 
-        CommonMain.initialize((handlerType, factory) -> ScreenHandlerRegistry.registerExtended(handlerType, factory::create),
+        CommonMain.initialize((handlerType, factory) -> {
+                    MenuType<AbstractContainerMenu> type = new ExtendedScreenHandlerType<>(factory::create);
+                    return Registry.register(Registry.MENU, handlerType, type);
+                },
                 FabricLoader.getInstance().getConfigDir().resolve(Utils.CONFIG_PATH),
                 FabricLoader.getInstance().getConfigDir().resolve(Utils.FABRIC_LEGACY_CONFIG_PATH),
                 ConfigWrapperImpl::new, new NetworkWrapperImpl());
 
         if (PlatformUtils.isClient()) {
-            ScreenRegistry.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen);
+            MenuScreens.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen);
         }
     }
 }

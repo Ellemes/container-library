@@ -2,15 +2,18 @@ package ellemes.container_library.quilt;
 
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.Utils;
+import ellemes.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.quilt.client.AmecsKeyHandler;
 import ellemes.container_library.quilt.client.QuiltKeyHandler;
 import ellemes.container_library.quilt.wrappers.ConfigWrapperImpl;
 import ellemes.container_library.quilt.wrappers.NetworkWrapperImpl;
 import ellemes.container_library.wrappers.PlatformUtils;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.Registry;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
@@ -23,14 +26,16 @@ public final class Main implements ModInitializer {
                 ? QuiltLoader.isModLoaded("amecs") ? new AmecsKeyHandler() : new QuiltKeyHandler()
                 : null, QuiltLoader::isModLoaded);
 
-        CommonMain.initialize((handlerType, factory) -> ScreenHandlerRegistry.registerExtended(handlerType, factory::create),
+        CommonMain.initialize((handlerType, factory) -> {
+                    MenuType<AbstractContainerMenu> type = new ExtendedScreenHandlerType<>(factory::create);
+                    return Registry.register(Registry.MENU, handlerType, type);
+                },
                 QuiltLoader.getConfigDir().resolve(Utils.CONFIG_PATH),
                 QuiltLoader.getConfigDir().resolve(Utils.FABRIC_LEGACY_CONFIG_PATH),
                 ConfigWrapperImpl::new, new NetworkWrapperImpl());
 
         if (PlatformUtils.isClient()) {
-            //noinspection deprecation
-            ScreenRegistry.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen);
+            MenuScreens.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen);
         }
     }
 }

@@ -33,5 +33,5 @@ rootProject.name = "container-library"
 
 include("common")
 include("fabric")
-//include("quilt")
+include("quilt")
 //include("forge")

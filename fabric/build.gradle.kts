@@ -44,29 +44,22 @@ mod {
         "fabric-registry-sync-v0", // Required to delay registry freezing
         "fabric-networking-api-v1",
         "fabric-screen-handler-api-v1",
-        "fabric-key-binding-api-v1"
+        "fabric-key-binding-api-v1",
+        "fabric-transitive-access-wideners-v1",
+        "fabric-screen-api-v1" // Mod menu
     )
 }
 
 dependencies {
-    "common"(project(path = ":common", configuration = "namedElements")) {
-        isTransitive = false
-    }
-    "shadowCommon"(project(path = ":common", configuration = "transformProductionFabric")) {
-        isTransitive = false
-    }
-
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.properties["rei_version"]}") {
         excludeFabric(this)
     }
 
-    modCompileOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}") {
+    modRuntimeOnly(modCompileOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}") {
         excludeFabric(this)
-    }
+    })
 
-    //modRuntimeOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}")
-
-    modCompileOnly("de.siphalor:amecsapi-1.18:${project.properties["amecs_version"]}") {
+    modCompileOnly("de.siphalor:amecsapi-1.19:${project.properties["amecs_version"]}") {
         excludeFabric(this)
         exclude(group = "com.github.astei")
     }
@@ -84,9 +77,14 @@ dependencies {
 val releaseModTask = tasks.getByName("releaseMod")
 val modVersion = properties["mod_version"] as String
 val modReleaseType = if ("alpha" in modVersion) "alpha" else if ("beta" in modVersion) "beta" else "release"
-val modChangelog = rootDir.resolve("changelog.md").readText(Charsets.UTF_8)
+var modChangelog = rootDir.resolve("changelog.md").readText(Charsets.UTF_8)
 val modTargetVersions = mutableListOf(properties["minecraft_version"] as String)
 val modUploadDebug = System.getProperty("MOD_UPLOAD_DEBUG", "false") == "true" // -DMOD_UPLOAD_DEBUG=true
+
+fun String.execute() = org.codehaus.groovy.runtime.ProcessGroovyMethods.execute(this)
+val Process.text: String? get() = org.codehaus.groovy.runtime.ProcessGroovyMethods.getText(this)
+val commit = "git rev-parse HEAD".execute().text
+modChangelog += "\nCommit: https://github.com/Ellemes/container-library/commit/$commit"
 
 (properties["extra_game_versions"] as String).split(",").forEach {
     if (it != "") {
@@ -143,6 +141,5 @@ modrinth {
 }
 
 afterEvaluate {
-    releaseModTask.dependsOn(tasks.getByName("curseforge" + properties["curseforge_project_id"]))
-    releaseModTask.dependsOn(tasks.getByName("modrinth"))
+    releaseModTask.finalizedBy(listOf("modrinth", "curseforge" + properties["curseforge_project_id"]))
 }

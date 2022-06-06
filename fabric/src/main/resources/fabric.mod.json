@@ -1,13 +1,19 @@
 {
   "schemaVersion": 1,
   "depends": {
-    "fabric-resource-loader-v0": ">=0.4.26",
-    "fabric-registry-sync-v0": ">=0.9.12",
-    "fabric-key-binding-api-v1": ">=1.0.15",
-    "fabric-networking-api-v1": ">=1.0.24",
-    "fabric-screen-handler-api-v1": ">=1.2.3",
-    "fabricloader": ">=0.13.2",
-    "minecraft": "~1.19-beta.1"
+    "fabric-resource-loader-v0": ">=0.5.2",
+    "fabric-registry-sync-v0": ">=0.9.15",
+    "fabric-key-binding-api-v1": ">=1.0.17",
+    "fabric-networking-api-v1": ">=1.0.26",
+    "fabric-screen-handler-api-v1": ">=1.2.5",
+    "fabric-transitive-access-wideners-v1": ">=1.1.0",
+    "fabricloader": ">=0.14.6",
+    "minecraft": "~1.19-rc.2"
+  },
+  "suggests": {
+    "modmenu": ">=4.0.0-beta.4",
+    "rei": ">=9.0.466",
+    "amecs": ">=1.3.6"
   },
   "entrypoints": {
     "main": [
@@ -28,7 +34,7 @@
     "Ellemes"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/ellemes-container-library/",
+    "homepage": "https://modrinth.com/mod/ellemes-container-library/",
     "sources": "https://github.com/Ellemes/container-library/",
     "issues": "https://github.com/Ellemes/container-library/issues/"
   },

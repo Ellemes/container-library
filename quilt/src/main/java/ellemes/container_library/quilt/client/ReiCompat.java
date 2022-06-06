@@ -1,11 +1,11 @@
 package ellemes.container_library.quilt.client;
 
+import ellemes.container_library.api.client.gui.AbstractScreen;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.common.util.CollectionUtils;
 import net.minecraft.client.renderer.Rect2i;
-import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 
 public final class ReiCompat implements REIClientPlugin {
     private static Rectangle asReiRectangle(Rect2i rect) {

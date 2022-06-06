@@ -16,15 +16,16 @@
     "depends": [
       {
         "id": "org.quiltmc:quilt_loader",
-        "versions": "~0.16.0-beta.12"
+        "versions": ">=0.17.0-beta.2"
       },
       {
         "id": "minecraft",
-        "versions": "~1.19-beta.1"
+        "versions": "~1.19-rc.2"
       },
       "fabric-networking-api-v1",
       "fabric-screen-handler-api-v1",
       "fabric-key-binding-api-v1",
+      "fabric-transitive-access-wideners-v1",
       "quilt_base"
     ],
     "metadata": {

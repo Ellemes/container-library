@@ -33,7 +33,7 @@ repositories {
     }
 }
 
-fun excludeFabric(it : ModuleDependency) {
+fun excludeFabric(it: ModuleDependency) {
     it.exclude(group = "net.fabricmc")
     it.exclude(group = "net.fabricmc.fabric-api")
 }
@@ -44,6 +44,7 @@ mod {
             //"fabric-networking-api-v1",
             "fabric-screen-handler-api-v1",
             "fabric-key-binding-api-v1",
+            "fabric-transitive-access-wideners-v1"
             // Mod menu
             //"fabric-screen-api-v1",
             //"fabric-resource-loader-v0"
@@ -65,14 +66,13 @@ dependencies {
     modCompileOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}") {
         excludeFabric(this)
     }
-    //modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modCompileOnly("de.siphalor:amecsapi-1.18:${project.properties["amecs_version"]}") {
+    modCompileOnly("de.siphalor:amecsapi-1.19:${project.properties["amecs_version"]}") {
         excludeFabric(this)
         exclude(group = "com.github.astei")
     }
 
-    modCompileOnly("io.github.flemmli97:flan:1.18.2-${project.properties["flan_version"]}:fabric-api")  {
+    modCompileOnly("io.github.flemmli97:flan:1.18.2-${project.properties["flan_version"]}:fabric-api") {
         excludeFabric(this)
         exclude(group = "curse.maven")
     }
@@ -80,21 +80,53 @@ dependencies {
     modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${rootProject.properties["ipn_minecraft_version"]}-${rootProject.properties["ipn_version"]}") {
         excludeFabric(this)
     }
-
-    //modRuntimeOnly("maven.modrinth:modmenu:3.2.1")
 }
 
 val releaseModTask = tasks.getByName("releaseMod")
 val modVersion = properties["mod_version"] as String
 val modReleaseType = if ("alpha" in modVersion) "alpha" else if ("beta" in modVersion) "beta" else "release"
-val modChangelog = rootDir.resolve("changelog.md").readText(Charsets.UTF_8)
+var modChangelog = rootDir.resolve("changelog.md").readText(Charsets.UTF_8)
 val modTargetVersions = mutableListOf(properties["minecraft_version"] as String)
 val modUploadDebug = System.getProperty("MOD_UPLOAD_DEBUG", "false") == "true" // -DMOD_UPLOAD_DEBUG=true
+
+fun String.execute() = org.codehaus.groovy.runtime.ProcessGroovyMethods.execute(this)
+val Process.text: String? get() = org.codehaus.groovy.runtime.ProcessGroovyMethods.getText(this)
+val commit = "git rev-parse HEAD".execute().text
+modChangelog += "\nCommit: https://github.com/Ellemes/container-library/commit/$commit"
 
 (properties["extra_game_versions"] as String).split(",").forEach {
     if (it != "") {
         modTargetVersions.add(it)
     }
+}
+
+curseforge {
+    options(closureOf<me.hypherionmc.cursegradle.Options> {
+        debug = modUploadDebug
+        javaVersionAutoDetect = false
+        javaIntegration = false
+        forgeGradleIntegration = false
+        fabricIntegration = false
+        detectFabricApi = false
+    })
+
+    project(closureOf<me.hypherionmc.cursegradle.CurseProject> {
+        apiKey = System.getenv("CURSEFORGE_TOKEN")
+        id = properties["curseforge_project_id"]
+        releaseType = modReleaseType
+        mainArtifact(tasks.getByName("minJar"), closureOf<me.hypherionmc.cursegradle.CurseArtifact> {
+            displayName = project.name.capitalized() + " " + modVersion
+            artifact = tasks.getByName("minJar")
+        })
+        relations(closureOf<me.hypherionmc.cursegradle.CurseRelation> {
+            //requiredDependency("fabric-api")
+            optionalDependency("roughly-enough-items")
+            optionalDependency("inventory-profiles-next")
+        })
+        changelogType = "markdown"
+        changelog = modChangelog
+        gameVersionStrings = listOf(project.name.capitalized(), "Java " + java.targetCompatibility.majorVersion) + mutableListOf("1.19-Snapshot") // todo: remove hack
+    })
 }
 
 modrinth {
@@ -117,5 +149,5 @@ modrinth {
 }
 
 afterEvaluate {
-    releaseModTask.dependsOn(tasks.getByName("modrinth"))
+    releaseModTask.finalizedBy(listOf("modrinth", "curseforge" + properties["curseforge_project_id"]))
 }

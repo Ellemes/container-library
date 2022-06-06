@@ -29,8 +29,7 @@ import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.IForgeRegistry;
 import ninjaphenix.container_library.api.client.gui.AbstractScreen;
 
-// todo: change to ellemes in 1.19
-@Mod("ninjaphenix_container_lib")
+@Mod("ellemes_container_lib")
 public final class Main {
     public Main() {
         PlatformUtils.initialize(FMLLoader.getDist() == Dist.CLIENT ? new ForgeKeyHandler() : null, ModList.get()::isLoaded);

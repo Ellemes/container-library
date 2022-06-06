@@ -3,7 +3,6 @@ package ellemes.container_library.quilt.mixin;
 import ellemes.container_library.api.v2.OpenableBlockEntityProviderV2;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,10 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(MultiPlayerGameMode.class)
 public abstract class ClientPlayerInteractionManagerMixin {
-    @Shadow
-    @Final
-    private ClientPacketListener connection;
-
     @Shadow
     @Final
     private Minecraft minecraft;
