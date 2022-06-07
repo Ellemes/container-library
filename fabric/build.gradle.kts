@@ -51,25 +51,25 @@ mod {
 }
 
 dependencies {
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.properties["rei_version"]}") {
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${properties["rei_version"]}") {
         excludeFabric(this)
     }
 
-    modCompileOnly("com.terraformersmc:modmenu:${project.properties["modmenu_version"]}") {
+    modCompileOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}") {
         excludeFabric(this)
     }
 
-    modCompileOnly("de.siphalor:amecsapi-1.19:${project.properties["amecs_version"]}") {
+    modCompileOnly("de.siphalor:amecsapi-1.19:${properties["amecs_version"]}") {
         excludeFabric(this)
         exclude(group = "com.github.astei")
     }
 
-    modCompileOnly("io.github.flemmli97:flan:1.18.2-${project.properties["flan_version"]}:fabric-api") {
+    modCompileOnly("io.github.flemmli97:flan:1.18.2-${properties["flan_version"]}:fabric-api") {
         excludeFabric(this)
         exclude(group = "curse.maven")
     }
 
-    modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${rootProject.properties["ipn_minecraft_version"]}-${rootProject.properties["ipn_version"]}") {
+    modCompileOnly("maven.modrinth:inventory-profiles-next:fabric-${properties["ipn_minecraft_version"]}-${properties["ipn_version"]}") {
         excludeFabric(this)
     }
 }
@@ -117,7 +117,7 @@ curseforge {
         })
         changelogType = "markdown"
         changelog = modChangelog
-        gameVersionStrings = listOf(project.name.capitalized(), "Java " + java.targetCompatibility.majorVersion) + mutableListOf("1.19-Snapshot") // todo: remove hack
+        gameVersionStrings = listOf(project.name.capitalized(), "Java " + java.targetCompatibility.majorVersion) + modTargetVersions
     })
 }
 
