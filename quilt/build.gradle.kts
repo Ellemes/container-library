@@ -53,6 +53,7 @@ mod {
     qsl (
             "core/qsl_base",
             "core/networking",
+            "block/block_extensions", // Needed for transitive access wideners module...
             // Mod menu
             //"core/resource_loader"
     )
