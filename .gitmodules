@@ -1,0 +1,3 @@
+[submodule "plugins/mod"]
+	path = plugins/mod
+	url = git@github.com:Ellemes/mod-gradle-plugin.git

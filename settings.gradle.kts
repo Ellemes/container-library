@@ -27,6 +27,7 @@ pluginManagement {
         gradlePluginPortal()
         mavenLocal()
     }
+    includeBuild("/plugins/mod")
 }
 
 rootProject.name = "container-library"
