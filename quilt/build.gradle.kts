@@ -38,8 +38,8 @@ fun excludeFabric(it: ModuleDependency) {
     it.exclude(group = "net.fabricmc.fabric-api")
 }
 
-mod {
-    fabricApi(
+dependencies {
+    listOf (
             //"fabric-registry-sync-v0", // Required to delay registry freezing
             //"fabric-networking-api-v1",
             "fabric-screen-handler-api-v1",
@@ -48,18 +48,16 @@ mod {
             // Mod menu
             //"fabric-screen-api-v1",
             //"fabric-resource-loader-v0"
+    ).forEach {
+        modImplementation(mod.fabricApi().module(it))
+    }
 
-    )
-    qsl (
-            "core/qsl_base",
-            "core/networking",
-            "block/block_extensions", // Needed for transitive access wideners module...
-            // Mod menu
-            //"core/resource_loader"
-    )
-}
+    modImplementation(mod.qsl().module("core", "qsl_base"))
+    modImplementation(mod.qsl().module("core", "networking"))
+    modImplementation(mod.qsl().module("block", "block_extensions"))
+    // Mod menu
+    //"core/resource_loader"
 
-dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.properties["rei_version"]}") {
         excludeFabric(this)
     }

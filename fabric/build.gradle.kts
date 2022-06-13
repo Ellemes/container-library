@@ -38,19 +38,20 @@ fun excludeFabric(it: ModuleDependency) {
     it.exclude(group = "net.fabricmc.fabric-api")
 }
 
-mod {
-    fabricApi(
-        "fabric-resource-loader-v0", // Required for resources like keybind text
-        "fabric-registry-sync-v0", // Required to delay registry freezing
-        "fabric-networking-api-v1",
-        "fabric-screen-handler-api-v1",
-        "fabric-key-binding-api-v1",
-        "fabric-transitive-access-wideners-v1",
-        //"fabric-screen-api-v1" // Mod menu
-    )
-}
 
 dependencies {
+    listOf (
+            "fabric-resource-loader-v0", // Required for resources like keybind text
+            "fabric-registry-sync-v0", // Required to delay registry freezing
+            "fabric-networking-api-v1",
+            "fabric-screen-handler-api-v1",
+            "fabric-key-binding-api-v1",
+            "fabric-transitive-access-wideners-v1",
+            //"fabric-screen-api-v1" // Mod menu
+    ).forEach {
+        modImplementation(mod.fabricApi().module(it))
+    }
+
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${properties["rei_version"]}") {
         excludeFabric(this)
     }
