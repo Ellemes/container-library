@@ -1,4 +1,4 @@
-package ellemes.container_library.fabric.config;
+package ellemes.container_library.thread.config;
 
 import ellemes.container_library.Utils;
 import ellemes.container_library.config.ConfigV0;

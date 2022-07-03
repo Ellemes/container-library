@@ -1,4 +1,4 @@
-package ellemes.container_library.fabric.mixin;
+package ellemes.container_library.thread.mixin;
 
 import ellemes.container_library.client.gui.PageScreen;
 import net.minecraft.client.gui.screens.Screen;

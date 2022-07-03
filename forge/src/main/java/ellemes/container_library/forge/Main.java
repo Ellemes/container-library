@@ -32,10 +32,11 @@ import net.minecraftforge.registries.RegisterEvent;
 @Mod("ellemes_container_lib")
 public final class Main {
     public Main() {
-        PlatformUtils.initialize(FMLLoader.getDist() == Dist.CLIENT ? new ForgeKeyHandler() : null, ModList.get()::isLoaded);
+        boolean isClient = FMLLoader.getDist() == Dist.CLIENT;
+        PlatformUtils.initialize(isClient ? new ForgeKeyHandler() : null, ModList.get()::isLoaded);
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        CommonMain.initialize((handlerType, factory) -> {
+        CommonMain.initialize(isClient, (handlerType, factory) -> {
             MenuType<?> menuType = new MenuType<>((IContainerFactory<?>) factory::create);
 
             modEventBus.addListener((RegisterEvent event) -> {
@@ -50,7 +51,7 @@ public final class Main {
                 FMLPaths.CONFIGDIR.get().resolve(Utils.FORGE_LEGACY_CONFIG_PATH),
                 ConfigWrapperImpl::new, new NetworkWrapperImpl());
         modEventBus.addListener((FMLClientSetupEvent event) -> MenuScreens.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen));
-        if (PlatformUtils.isClient()) {
+        if (isClient) {
             this.registerConfigGuiHandler();
             MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (ScreenEvent.InitScreenEvent.Post event) -> {
                 if (event.getScreen() instanceof PageScreen screen) {

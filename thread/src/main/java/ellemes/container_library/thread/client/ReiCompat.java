@@ -1,4 +1,4 @@
-package ellemes.container_library.fabric.client;
+package ellemes.container_library.thread.client;
 
 import ellemes.container_library.api.client.gui.AbstractScreen;
 import me.shedaniel.math.Rectangle;

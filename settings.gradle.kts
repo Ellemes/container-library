@@ -32,7 +32,10 @@ pluginManagement {
 
 rootProject.name = "container-library"
 
-include("common")
-include("fabric")
-include("quilt")
-include("forge")
+include(
+    "common",
+    "thread",
+        "fabric",
+        "quilt",
+    "forge"
+)

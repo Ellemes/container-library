@@ -1,4 +1,4 @@
-package ellemes.container_library.fabric.mixin;
+package ellemes.container_library.thread.mixin;
 
 import ellemes.container_library.api.v2.OpenableBlockEntityProviderV2;
 import net.minecraft.client.Minecraft;

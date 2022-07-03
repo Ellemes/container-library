@@ -20,10 +20,10 @@
       "ellemes.container_library.fabric.Main"
     ],
     "rei_client": [
-      "ellemes.container_library.fabric.client.ReiCompat"
+      "ellemes.container_library.thread.client.ReiCompat"
     ],
     "modmenu": [
-      "ellemes.container_library.fabric.client.ModMenuCompat"
+      "ellemes.container_library.thread.client.ModMenuCompat"
     ]
   },
   "environment": "*",

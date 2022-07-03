@@ -1,4 +1,4 @@
-package ellemes.container_library.fabric.client;
+package ellemes.container_library.thread.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

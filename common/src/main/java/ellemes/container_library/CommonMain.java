@@ -8,7 +8,6 @@ import ellemes.container_library.client.gui.SingleScreen;
 import ellemes.container_library.inventory.ClientScreenHandlerFactory;
 import ellemes.container_library.wrappers.ConfigWrapper;
 import ellemes.container_library.wrappers.NetworkWrapper;
-import ellemes.container_library.wrappers.PlatformUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -27,11 +26,11 @@ public final class CommonMain {
     private static NetworkWrapper networkWrapper;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void initialize(BiFunction<ResourceLocation, ClientScreenHandlerFactory, MenuType> handlerTypeFunction, Path configPath, Path oldConfigPath,
+    public static void initialize(boolean isClient, BiFunction<ResourceLocation, ClientScreenHandlerFactory, MenuType> handlerTypeFunction, Path configPath, Path oldConfigPath,
                                   BiFunction<Path, Path, ConfigWrapper> configWrapperMaker, NetworkWrapper networkWrapper) {
         screenHandlerType = handlerTypeFunction.apply(Utils.HANDLER_TYPE_ID, AbstractHandler::createClientMenu);
         CommonMain.networkWrapper = networkWrapper;
-        if (PlatformUtils.isClient()) {
+        if (isClient) {
             configWrapper = configWrapperMaker.apply(configPath, oldConfigPath);
             NCL_ClientApiV2.registerScreenButton(Utils.PAGE_SCREEN_TYPE,
                     Utils.id("textures/gui/page_button.png"),

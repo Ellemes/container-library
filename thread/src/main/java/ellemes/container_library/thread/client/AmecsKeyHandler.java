@@ -1,4 +1,4 @@
-package ellemes.container_library.fabric.client;
+package ellemes.container_library.thread.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import de.siphalor.amecs.api.AmecsKeyBinding;

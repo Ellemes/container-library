@@ -1,4 +1,4 @@
-package ellemes.container_library.fabric;
+package ellemes.container_library.thread;
 
 import ellemes.container_library.inventory.ServerScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
