@@ -1,7 +1,7 @@
 package ellemes.container_library;
 
 import ellemes.container_library.api.inventory.AbstractHandler;
-import ellemes.container_library.api.v2.client.NCL_ClientApiV2;
+import ellemes.container_library.api.v3.client.ScreenTypeApi;
 import ellemes.container_library.client.gui.PageScreen;
 import ellemes.container_library.client.gui.ScrollScreen;
 import ellemes.container_library.client.gui.SingleScreen;
@@ -32,13 +32,13 @@ public final class CommonMain {
         CommonMain.networkWrapper = networkWrapper;
         if (isClient) {
             configWrapper = configWrapperMaker.apply(configPath, oldConfigPath);
-            NCL_ClientApiV2.registerScreenButton(Utils.PAGE_SCREEN_TYPE,
+            ScreenTypeApi.registerScreenButton(Utils.PAGE_SCREEN_TYPE,
                     Utils.id("textures/gui/page_button.png"),
                     Utils.translation("screen.ellemes_container_lib.page_screen"));
-            NCL_ClientApiV2.registerScreenButton(Utils.SCROLL_SCREEN_TYPE,
+            ScreenTypeApi.registerScreenButton(Utils.SCROLL_SCREEN_TYPE,
                     Utils.id("textures/gui/scroll_button.png"),
                     Utils.translation("screen.ellemes_container_lib.scroll_screen"));
-            NCL_ClientApiV2.registerScreenButton(Utils.SINGLE_SCREEN_TYPE,
+            ScreenTypeApi.registerScreenButton(Utils.SINGLE_SCREEN_TYPE,
                     Utils.id("textures/gui/single_button.png"),
                     Utils.translation("screen.ellemes_container_lib.single_screen"),
                     (scaledWidth, scaledHeight) -> scaledWidth < 370 || scaledHeight < 386, // Smallest possible resolution a double netherite chest fits on.
@@ -47,17 +47,17 @@ public final class CommonMain {
                             Utils.translation("screen.ellemes_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY)
                     ));
 
-            NCL_ClientApiV2.registerScreenType(Utils.PAGE_SCREEN_TYPE, PageScreen::new);
-            NCL_ClientApiV2.registerScreenType(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::new);
-            NCL_ClientApiV2.registerScreenType(Utils.SINGLE_SCREEN_TYPE, SingleScreen::new);
+            ScreenTypeApi.registerScreenType(Utils.PAGE_SCREEN_TYPE, PageScreen::new);
+            ScreenTypeApi.registerScreenType(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::new);
+            ScreenTypeApi.registerScreenType(Utils.SINGLE_SCREEN_TYPE, SingleScreen::new);
 
             // todo: these settings leave no room for rei/jei should we take those into consideration for minimum screen width
-            NCL_ClientApiV2.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, PageScreen::retrieveScreenSize);
-            NCL_ClientApiV2.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::retrieveScreenSize);
-            NCL_ClientApiV2.registerDefaultScreenSize(Utils.SINGLE_SCREEN_TYPE, SingleScreen::retrieveScreenSize);
+            ScreenTypeApi.registerDefaultScreenSize(Utils.PAGE_SCREEN_TYPE, PageScreen::retrieveScreenSize);
+            ScreenTypeApi.registerDefaultScreenSize(Utils.SCROLL_SCREEN_TYPE, ScrollScreen::retrieveScreenSize);
+            ScreenTypeApi.registerDefaultScreenSize(Utils.SINGLE_SCREEN_TYPE, SingleScreen::retrieveScreenSize);
 
-            NCL_ClientApiV2.setPrefersSingleScreen(Utils.PAGE_SCREEN_TYPE);
-            NCL_ClientApiV2.setPrefersSingleScreen(Utils.SCROLL_SCREEN_TYPE);
+            ScreenTypeApi.setPrefersSingleScreen(Utils.PAGE_SCREEN_TYPE);
+            ScreenTypeApi.setPrefersSingleScreen(Utils.SCROLL_SCREEN_TYPE);
         }
     }
 

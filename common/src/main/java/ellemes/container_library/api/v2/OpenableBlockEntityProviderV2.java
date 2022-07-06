@@ -3,6 +3,7 @@ package ellemes.container_library.api.v2;
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.api.v2.client.NCL_ClientApiV2;
 import ellemes.container_library.api.v2.helpers.OpenableBlockEntitiesV2;
+import ellemes.container_library.api.v3.OpenableInventoryProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +17,10 @@ import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * Should be implemented on blocks.
+ *
+ * @deprecated Will be removed in 1.20, please migrate to {@link OpenableInventoryProvider}.
  */
+@Deprecated
 public interface OpenableBlockEntityProviderV2 {
     /**
      * Return the openable block entity, {@link OpenableBlockEntitiesV2} can be used to supply more than one inventory.

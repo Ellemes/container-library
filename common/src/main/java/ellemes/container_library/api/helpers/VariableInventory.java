@@ -11,6 +11,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.ObjIntConsumer;
 
+/**
+ * @apiNote This should not be used with fabric or forge's transfer api.
+ */
 public final class VariableInventory implements Container {
     private final Container[] parts;
     private final int size;

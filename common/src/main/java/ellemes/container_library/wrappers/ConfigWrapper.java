@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// todo: remove old config code in 1.18, rather repurpose it for expandedstorage.json -> ninjaphenix-container-library.json
+// todo: move to ellemes-container-library.json (or explore toml?)
 public abstract class ConfigWrapper {
     private final ConfigV0 config;
     private final Path oldConfigPath;

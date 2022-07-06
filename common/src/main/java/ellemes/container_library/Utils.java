@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Objects;
 
 public class Utils {
     public static final String MOD_ID = "ellemes_container_lib";
@@ -50,5 +51,9 @@ public class Utils {
     // todo: remove?
     public static MutableComponent translation(String key, Object... values) {
         return Component.translatable(key, values);
+    }
+
+    public static void requiresNonNull(Object value, String parameterName) {
+        Objects.requireNonNull(value, parameterName + " must not be null");
     }
 }
