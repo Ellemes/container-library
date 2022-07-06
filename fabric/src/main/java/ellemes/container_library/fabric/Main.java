@@ -8,7 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 public final class Main implements ModInitializer {
     @Override
     public void onInitialize() {
-        FabricLoader fabricLoader = FabricLoader.getInstance();
-        Thread.initialize(fabricLoader.getEnvironmentType() == EnvType.CLIENT, fabricLoader::isModLoaded, fabricLoader.getConfigDir());
+        FabricLoader loader = FabricLoader.getInstance();
+        Thread.initialize(loader.getEnvironmentType() == EnvType.CLIENT, loader::isModLoaded, loader.getConfigDir());
     }
 }
