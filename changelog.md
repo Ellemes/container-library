@@ -1,2 +1,1 @@
-- Fix quilt mod compat entry points.
-- Update to forge 41.0.94
+- Update api to provide a mechanism to open inventories inside entities and items.
