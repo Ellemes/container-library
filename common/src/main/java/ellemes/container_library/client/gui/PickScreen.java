@@ -3,7 +3,6 @@ package ellemes.container_library.client.gui;
 import com.google.common.collect.ImmutableSortedSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import ellemes.container_library.CommonMain;
-import ellemes.container_library.Utils;
 import ellemes.container_library.api.client.function.ScreenSizePredicate;
 import ellemes.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.api.inventory.AbstractHandler;
@@ -67,7 +66,7 @@ public final class PickScreen extends Screen {
             ResourceLocation preference = CommonMain.getConfigWrapper().getPreferredScreenType();
             int invSize = handler.getInventory().getContainerSize();
             if (AbstractScreen.getScreenSize(preference, invSize, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight()) == null) {
-                minecraft.player.displayClientMessage(Utils.translation("generic.ellemes_container_lib.label").withStyle(ChatFormatting.GOLD).append(Utils.translation("chat.ellemes_container_lib.cannot_display_screen", Utils.translation("screen." + preference.getNamespace() + "." + preference.getPath() + "_screen")).withStyle(ChatFormatting.WHITE)), false);
+                minecraft.player.displayClientMessage(Component.translatable("generic.ellemes_container_lib.label").withStyle(ChatFormatting.GOLD).append(Component.translatable("chat.ellemes_container_lib.cannot_display_screen", Component.translatable("screen." + preference.getNamespace() + "." + preference.getPath() + "_screen")).withStyle(ChatFormatting.WHITE)), false);
                 minecraft.player.closeContainer();
                 return;
             }
@@ -99,7 +98,7 @@ public final class PickScreen extends Screen {
             boolean isWarn = settings.getWarningTest().test(width, height);
             boolean isCurrent = option.equals(preference);
             Button.OnTooltip tooltip = new Button.OnTooltip() {
-                private static final Component CURRENT_OPTION_TEXT = Utils.translation("screen.ellemes_container_lib.current_option_notice").withStyle(ChatFormatting.GOLD);
+                private static final Component CURRENT_OPTION_TEXT = Component.translatable("screen.ellemes_container_lib.current_option_notice").withStyle(ChatFormatting.GOLD);
 
                 @Override
                 public void onTooltip(Button button, PoseStack stack, int x, int y) {

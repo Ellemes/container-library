@@ -9,6 +9,7 @@ import ellemes.container_library.inventory.ClientScreenHandlerFactory;
 import ellemes.container_library.wrappers.ConfigWrapper;
 import ellemes.container_library.wrappers.NetworkWrapper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import org.apache.logging.log4j.LogManager;
@@ -34,17 +35,17 @@ public final class CommonMain {
             configWrapper = configWrapperMaker.apply(configPath, oldConfigPath);
             ScreenTypeApi.registerScreenButton(Utils.PAGE_SCREEN_TYPE,
                     Utils.id("textures/gui/page_button.png"),
-                    Utils.translation("screen.ellemes_container_lib.page_screen"));
+                    Component.translatable("screen.ellemes_container_lib.page_screen"));
             ScreenTypeApi.registerScreenButton(Utils.SCROLL_SCREEN_TYPE,
                     Utils.id("textures/gui/scroll_button.png"),
-                    Utils.translation("screen.ellemes_container_lib.scroll_screen"));
+                    Component.translatable("screen.ellemes_container_lib.scroll_screen"));
             ScreenTypeApi.registerScreenButton(Utils.SINGLE_SCREEN_TYPE,
                     Utils.id("textures/gui/single_button.png"),
-                    Utils.translation("screen.ellemes_container_lib.single_screen"),
+                    Component.translatable("screen.ellemes_container_lib.single_screen"),
                     (scaledWidth, scaledHeight) -> scaledWidth < 370 || scaledHeight < 386, // Smallest possible resolution a double netherite chest fits on.
                     List.of(
-                            Utils.translation("screen.ellemes_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY),
-                            Utils.translation("screen.ellemes_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY)
+                            Component.translatable("screen.ellemes_container_lib.off_screen_warning_1").withStyle(ChatFormatting.GRAY),
+                            Component.translatable("screen.ellemes_container_lib.off_screen_warning_2").withStyle(ChatFormatting.GRAY)
                     ));
 
             ScreenTypeApi.registerScreenType(Utils.PAGE_SCREEN_TYPE, PageScreen::new);

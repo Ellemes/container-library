@@ -51,7 +51,7 @@ public final class PageScreen extends AbstractScreen {
 
         this.initializeSlots(playerInventory);
 
-        textureLocation = new ResourceLocation("ellemes_container_lib", "textures/gui/container/shared_" + inventoryWidth + "_" + inventoryHeight + ".png");
+        textureLocation = Utils.id("textures/gui/container/shared_" + inventoryWidth + "_" + inventoryHeight + ".png");
         textureWidth = switch (inventoryWidth) {
             case 9 -> inventoryHeight == 3 ? 176 : 208;
             case 12 -> 256;
@@ -196,7 +196,7 @@ public final class PageScreen extends AbstractScreen {
 
     private void setPageText() {
         currentPageText = Component.translatable("screen.ellemes_container_lib.page_x_y", page, pages);
-        pageTextX = (leftPageButton.x + leftPageButton.getWidth() + rightPageButton.x) / 2 - font.width(currentPageText) / 2 + 0.5f;
+        pageTextX = (leftPageButton.x + leftPageButton.getWidth() + rightPageButton.x) / 2.0f - font.width(currentPageText) / 2.0f + 0.5f;
     }
 
     @Override
