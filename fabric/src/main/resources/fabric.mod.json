@@ -28,7 +28,7 @@
   },
   "environment": "*",
   "mixins": [
-    "ellemes-container-library.mixins.json"
+    "ellemes-container-library-thread.mixins.json"
   ],
   "authors": [
     "Ellemes"

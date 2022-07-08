@@ -45,5 +45,5 @@
       "icon": "icon.png"
     }
   },
-  "mixin": "ellemes-container-library.mixins.json"
+  "mixin": "ellemes-container-library-thread.mixins.json"
 }

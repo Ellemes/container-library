@@ -42,7 +42,7 @@ tasks.getByName<MinifyJsonTask>("minJar") {
             "Implementation-Vendor" to "ellemes",
             "Implementation-Timestamp" to DateFormat.getDateTimeInstance().format(Date()),
             "Automatic-Module-Name" to "ellemes.container_library",
-            "MixinConfigs" to "ellemes_container_lib.mixins.json"
+            "MixinConfigs" to "ellemes-container-library-forge.mixins.json"
     ))
 }
 
