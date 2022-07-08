@@ -82,11 +82,3 @@ u.configureCurseForge {
         optionalDependency("inventory-profiles-next")
     })
 }
-
-u.configureModrinth {
-    dependencies {
-        required.project("fabric-api") // P7dR8mSH
-        // optional.project("roughly-enough-items") // roughly-enough-items ( not on Modrinth )
-        optional.project("inventory-profiles-next") // O7RBXm3n
-    }
-}

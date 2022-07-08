@@ -54,10 +54,3 @@ u.configureCurseForge {
         optionalDependency("inventory-profiles-next")
     })
 }
-
-u.configureModrinth {
-    dependencies {
-        // optional.project("jei"), // jei ( not on Modrinth )
-        optional.project("inventory-profiles-next") // O7RBXm3n
-    }
-}
