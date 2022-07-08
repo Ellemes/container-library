@@ -2,13 +2,11 @@ package ellemes.container_library.api.v3;
 
 import ellemes.container_library.api.v3.context.Context;
 import ellemes.container_library.api.v3.helpers.OpenableInventories;
-import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 
 /**
- * Can be implemented on blocks, items, or entities.
+ * Can be implemented on blocks, entities, or <strike>items</strike>.
  */
 public interface OpenableInventoryProvider<T extends Context> {
     /**
@@ -24,15 +22,10 @@ public interface OpenableInventoryProvider<T extends Context> {
 
     }
 
-    default void openBlockInventory(Level world, BlockPos pos) {
-
-    }
-
-    default void openEntityInventory(Level world, Entity entity) {
-
-    }
-
-    default void openItemInventory(Level world, int slotId) {
-
+    /**
+     * @return The screen type that should be used, null if the player can decide.
+     */
+    default ResourceLocation getForcedScreenType() {
+        return null;
     }
 }

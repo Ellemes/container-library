@@ -1,7 +1,6 @@
 package ellemes.container_library.api.v3;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 
@@ -21,11 +20,4 @@ public interface OpenableInventory {
      * @return The text to display on top of the inventory.
      */
     Component getInventoryTitle();
-
-    /**
-     * @return The screen type that should be used, null if the player can decide.
-     */
-    default ResourceLocation getForcedScreenType() {
-        return null;
-    }
 }
