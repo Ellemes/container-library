@@ -1,1 +1,2 @@
-- Fix quilt loader version constraint being too strict.
+- Fix up some metadata in files.
+- Update forge to 41.0.64 ( breaking changes ).

@@ -53,7 +53,7 @@ public final class Main {
         modEventBus.addListener((FMLClientSetupEvent event) -> MenuScreens.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen));
         if (isClient) {
             this.registerConfigGuiHandler();
-            MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (ScreenEvent.InitScreenEvent.Post event) -> {
+            MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (ScreenEvent.Init.Post event) -> {
                 if (event.getScreen() instanceof PageScreen screen) {
                     screen.addPageButtons();
                 }
