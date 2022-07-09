@@ -1,1 +1,1 @@
-- Fix typo in mixin file name.
+- Fix another typo causing issues with mixins on forge.

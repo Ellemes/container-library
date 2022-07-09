@@ -10,7 +10,7 @@ loom {
     forge {
         convertAccessWideners.set(true)
         extraAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
-        mixinConfig("ellemes_container_lib.mixins.json")
+        mixinConfig("ellemes-container-library-forge.mixins.json")
     }
 }
 
