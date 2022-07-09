@@ -1,6 +1,6 @@
 package ellemes.container_library.api.v3;
 
-import ellemes.container_library.api.v3.context.Context;
+import ellemes.container_library.api.v3.context.BaseContext;
 import ellemes.container_library.api.v3.helpers.OpenableInventories;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * Can be implemented on blocks, entities, or <strike>items</strike>.
  */
-public interface OpenableInventoryProvider<T extends Context> {
+public interface OpenableInventoryProvider<T extends BaseContext> {
     /**
      * Return the openable inventory, {@link OpenableInventories} can be used to supply more than one inventory.
      */

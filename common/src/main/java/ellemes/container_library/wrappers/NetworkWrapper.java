@@ -6,8 +6,7 @@ import ellemes.container_library.api.v2.OpenableBlockEntityV2;
 import ellemes.container_library.api.v3.OpenableInventory;
 import ellemes.container_library.api.v3.OpenableInventoryProvider;
 import ellemes.container_library.api.v3.context.BlockContext;
-import ellemes.container_library.api.v3.context.Context;
-import ellemes.container_library.api.v3.context.EntityContext;
+import ellemes.container_library.api.v3.context.BaseContext;
 import ellemes.container_library.api.v3.context.ItemContext;
 import ellemes.container_library.inventory.ServerScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
@@ -50,7 +49,7 @@ public abstract class NetworkWrapper {
     public void s_handleOpenInventory(ServerPlayer sender, FriendlyByteBuf buffer) {
         ResourceLocation context = buffer.readResourceLocation();
         ServerLevel level = sender.getLevel();
-        Context inventoryContext = null;
+        BaseContext inventoryContext = null;
         OpenableInventoryProvider<?> inventoryProvider = null;
         switch (context.getPath()) {
             case "block" -> {
@@ -64,7 +63,7 @@ public abstract class NetworkWrapper {
             case "entity" -> {
                 Entity entity = level.getEntity(buffer.readUUID());
                 if (entity instanceof OpenableInventoryProvider<?> provider) {
-                    inventoryContext = new EntityContext(level, sender, entity);
+                    inventoryContext = new BaseContext(level, sender);
                     inventoryProvider = provider;
                 }
             }
@@ -80,7 +79,7 @@ public abstract class NetworkWrapper {
         }
         if (inventoryProvider != null) {
             //noinspection unchecked
-            OpenableInventory inventory = ((OpenableInventoryProvider<Context>) inventoryProvider).getOpenableInventory(inventoryContext);
+            OpenableInventory inventory = ((OpenableInventoryProvider<BaseContext>) inventoryProvider).getOpenableInventory(inventoryContext);
             this.s_openInventory(sender, inventory, inventoryProvider::onInitialOpen, inventoryProvider.getForcedScreenType());
         }
 
