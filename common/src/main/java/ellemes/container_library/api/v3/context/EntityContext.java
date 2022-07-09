@@ -15,7 +15,7 @@ public class EntityContext implements Context {
         this.entity = entity;
     }
 
-    Entity getEntity() {
+    public Entity getEntity() {
         return entity;
     }
 

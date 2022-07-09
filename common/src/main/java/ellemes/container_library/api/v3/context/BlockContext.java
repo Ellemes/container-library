@@ -15,7 +15,7 @@ public class BlockContext implements Context {
         this.pos = pos;
     }
 
-    BlockPos getBlockPos() {
+    public BlockPos getBlockPos() {
         return pos;
     }
 
