@@ -9,6 +9,11 @@ public final class Main implements ModInitializer {
     @Override
     public void onInitialize() {
         FabricLoader loader = FabricLoader.getInstance();
-        Thread.initialize(loader.getEnvironmentType() == EnvType.CLIENT, loader::isModLoaded, loader.getConfigDir());
+        Thread.initialize(
+                loader.getEnvironmentType() == EnvType.CLIENT,
+                loader::isModLoaded,
+                loader.getConfigDir(),
+                FabricNetworkWrapper::new
+        );
     }
 }

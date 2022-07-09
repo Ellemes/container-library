@@ -1,10 +1,10 @@
 package ellemes.container_library.api.v3.context;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 
 public interface Context {
-    Level getWorld();
+    ServerLevel getWorld();
 
-    Player getPlayer();
+    ServerPlayer getPlayer();
 }

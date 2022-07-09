@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public final class PickScreen extends Screen {
     private final AbstractHandler handler;
     private int topPadding;
 
-    public PickScreen(Supplier<Screen> returnToScreen, AbstractHandler handler) {
+    public PickScreen(Supplier<Screen> returnToScreen, @Nullable AbstractHandler handler) {
         super(Component.translatable("screen.ellemes_container_lib.screen_picker_title"));
         this.returnToScreen = returnToScreen;
         this.handler = handler;

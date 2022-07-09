@@ -10,6 +10,11 @@ import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 public final class Main implements ModInitializer {
     @Override
     public void onInitialize(ModContainer mod) {
-        Thread.initialize(MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT, QuiltLoader::isModLoaded, QuiltLoader.getConfigDir());
+        Thread.initialize(
+                MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT,
+                QuiltLoader::isModLoaded,
+                QuiltLoader.getConfigDir(),
+                QuiltNetworkWrapper::new
+        );
     }
 }

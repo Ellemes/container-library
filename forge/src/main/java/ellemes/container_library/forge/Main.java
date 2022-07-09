@@ -7,7 +7,7 @@ import ellemes.container_library.client.gui.PageScreen;
 import ellemes.container_library.client.gui.PickScreen;
 import ellemes.container_library.forge.client.ForgeKeyHandler;
 import ellemes.container_library.forge.wrappers.ConfigWrapperImpl;
-import ellemes.container_library.forge.wrappers.NetworkWrapperImpl;
+import ellemes.container_library.forge.wrappers.ForgeNetworkWrapper;
 import ellemes.container_library.wrappers.PlatformUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.Registry;
@@ -49,7 +49,7 @@ public final class Main {
             },
                 FMLPaths.CONFIGDIR.get().resolve(Utils.CONFIG_PATH),
                 FMLPaths.CONFIGDIR.get().resolve(Utils.FORGE_LEGACY_CONFIG_PATH),
-                ConfigWrapperImpl::new, new NetworkWrapperImpl());
+                ConfigWrapperImpl::new, new ForgeNetworkWrapper());
         modEventBus.addListener((FMLClientSetupEvent event) -> MenuScreens.register(CommonMain.getScreenHandlerType(), AbstractScreen::createScreen));
         if (isClient) {
             this.registerConfigGuiHandler();
