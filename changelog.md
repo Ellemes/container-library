@@ -1,1 +1,1 @@
-- Fix mixin issues.
+- Fix typo in mixin file name.
