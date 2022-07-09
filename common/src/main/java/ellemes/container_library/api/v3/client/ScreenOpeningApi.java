@@ -23,6 +23,7 @@ public class ScreenOpeningApi {
             BlockState state = world.getBlockState(pos);
             if (state.getBlock() instanceof OpenableInventoryProvider<?> provider) {
                 commonCode(provider, () -> CommonMain.getNetworkWrapper().c_openBlockInventory(pos));
+                return;
             }
             throw new IllegalArgumentException("Block must be an OpenableInventoryProvider.");
         }
@@ -32,6 +33,7 @@ public class ScreenOpeningApi {
     public static void openEntityInventory(Entity entity) {
         if (entity instanceof OpenableInventoryProvider<?> provider) {
             commonCode(provider, () -> CommonMain.getNetworkWrapper().c_openEntityInventory(entity));
+            return;
         }
         throw new IllegalArgumentException("Entity must be an OpenableInventoryProvider.");
     }
@@ -42,6 +44,7 @@ public class ScreenOpeningApi {
 //            ItemStack stack = player.getInventory().getItem(slotId);
 //            if (stack != ItemStack.EMPTY && stack.getItem() instanceof OpenableInventoryProvider<?> inventory) {
 //                commonCode(inventory, () -> CommonMain.getNetworkWrapper().c_openItemInventory(slotId));
+//                return;
 //            }
 //            throw new IllegalArgumentException("Item must be an OpenableInventoryProvider.");
 //        }
