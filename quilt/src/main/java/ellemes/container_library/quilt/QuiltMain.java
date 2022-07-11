@@ -1,19 +1,15 @@
 package ellemes.container_library.quilt;
 
-import ellemes.container_library.thread.Thread;
-import net.fabricmc.api.EnvType;
+import ellemes.container_library.thread.ThreadMain;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
-import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
-public final class Main implements ModInitializer {
+public final class QuiltMain implements ModInitializer {
     @Override
     public void onInitialize(ModContainer mod) {
-        Thread.initialize(
-                MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT,
+        ThreadMain.initialize(
                 QuiltLoader::isModLoaded,
-                QuiltLoader.getConfigDir(),
                 QuiltNetworkWrapper::new
         );
     }

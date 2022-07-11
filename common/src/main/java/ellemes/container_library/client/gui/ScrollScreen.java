@@ -2,7 +2,7 @@ package ellemes.container_library.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import ellemes.container_library.CommonMain;
+import ellemes.container_library.CommonClient;
 import ellemes.container_library.Utils;
 import ellemes.container_library.api.client.function.ScreenSize;
 import ellemes.container_library.api.client.gui.AbstractScreen;
@@ -59,7 +59,7 @@ public final class ScrollScreen extends AbstractScreen {
         totalRows = Mth.ceil(((double) totalSlots) / inventoryWidth);
         imageWidth = Utils.CONTAINER_PADDING_LDR + Utils.SLOT_SIZE * inventoryWidth + Utils.CONTAINER_PADDING_LDR; // 22 - 4 is scrollbar width - overlap
         imageHeight = Utils.CONTAINER_HEADER_HEIGHT + Utils.SLOT_SIZE * inventoryHeight + 14 + Utils.SLOT_SIZE * 3 + 4 + Utils.SLOT_SIZE + Utils.CONTAINER_PADDING_LDR;
-        scrollingUnrestricted = CommonMain.getConfigWrapper().isScrollingUnrestricted();
+        scrollingUnrestricted = CommonClient.getConfigWrapper().isScrollingUnrestricted();
     }
 
     public static ScreenSize retrieveScreenSize(int slots, int scaledWidth, int scaledHeight) {

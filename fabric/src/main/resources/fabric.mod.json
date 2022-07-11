@@ -17,7 +17,10 @@
   },
   "entrypoints": {
     "main": [
-      "ellemes.container_library.fabric.Main"
+      "ellemes.container_library.fabric.FabricMain"
+    ],
+    "client": [
+      "ellemes.container_library.fabric.FabricClient"
     ],
     "rei_client": [
       "ellemes.container_library.thread.client.ReiCompat"

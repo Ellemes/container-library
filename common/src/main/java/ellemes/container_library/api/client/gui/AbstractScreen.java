@@ -1,14 +1,13 @@
 package ellemes.container_library.api.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import ellemes.container_library.CommonMain;
+import ellemes.container_library.CommonClient;
 import ellemes.container_library.Utils;
 import ellemes.container_library.api.client.ScreenConstructor;
 import ellemes.container_library.api.client.function.ScreenSize;
 import ellemes.container_library.api.client.function.ScreenSizeRetriever;
 import ellemes.container_library.api.inventory.AbstractHandler;
 import ellemes.container_library.client.gui.PickScreen;
-import ellemes.container_library.wrappers.PlatformUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
@@ -43,7 +42,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     @ApiStatus.Internal
     public static AbstractScreen createScreen(AbstractHandler handler, Inventory playerInventory, Component title) {
         ResourceLocation forcedScreenType = handler.getForcedScreenType();
-        ResourceLocation preference = forcedScreenType != null ? forcedScreenType : CommonMain.getConfigWrapper().getPreferredScreenType();
+        ResourceLocation preference = forcedScreenType != null ? forcedScreenType : CommonClient.getConfigWrapper().getPreferredScreenType();
         int scaledWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int scaledHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         int slots = handler.getInventory().getContainerSize();
@@ -128,7 +127,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     public final boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (this.handleKeyPress(keyCode, scanCode, modifiers)) {
             return true;
-        } else if (PlatformUtils.isConfigKeyPressed(keyCode, scanCode, modifiers)) {
+        } else if (CommonClient.isConfigKeyPressed(keyCode, scanCode, modifiers)) {
             minecraft.setScreen(new PickScreen(() -> AbstractScreen.createScreen(menu, minecraft.player.getInventory(), title), menu));
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE || minecraft.options.keyInventory.matches(keyCode, scanCode)) {

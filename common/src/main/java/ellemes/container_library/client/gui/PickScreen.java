@@ -2,7 +2,7 @@ package ellemes.container_library.client.gui;
 
 import com.google.common.collect.ImmutableSortedSet;
 import com.mojang.blaze3d.vertex.PoseStack;
-import ellemes.container_library.CommonMain;
+import ellemes.container_library.CommonClient;
 import ellemes.container_library.api.client.function.ScreenSizePredicate;
 import ellemes.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.api.inventory.AbstractHandler;
@@ -64,7 +64,7 @@ public final class PickScreen extends Screen {
     @SuppressWarnings("ConstantConditions")
     public void onClose() {
         if (handler != null) {
-            ResourceLocation preference = CommonMain.getConfigWrapper().getPreferredScreenType();
+            ResourceLocation preference = CommonClient.getConfigWrapper().getPreferredScreenType();
             int invSize = handler.getInventory().getContainerSize();
             if (AbstractScreen.getScreenSize(preference, invSize, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight()) == null) {
                 minecraft.player.displayClientMessage(Component.translatable("generic.ellemes_container_lib.label").withStyle(ChatFormatting.GOLD).append(Component.translatable("chat.ellemes_container_lib.cannot_display_screen", Component.translatable("screen." + preference.getNamespace() + "." + preference.getPath() + "_screen")).withStyle(ChatFormatting.WHITE)), false);
@@ -85,7 +85,7 @@ public final class PickScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        ResourceLocation preference = CommonMain.getConfigWrapper().getPreferredScreenType();
+        ResourceLocation preference = CommonClient.getConfigWrapper().getPreferredScreenType();
         int choices = options.size();
         int columns = Math.min(Mth.intFloorDiv(width, 96), choices);
         int innerPadding = Math.min((width - columns * 96) / (columns + 1), 20); // 20 is smallest gap for any screen.
@@ -135,7 +135,7 @@ public final class PickScreen extends Screen {
     }
 
     private void updatePlayerPreference(ResourceLocation selection) {
-        CommonMain.getConfigWrapper().setPreferredScreenType(selection);
+        CommonClient.getConfigWrapper().setPreferredScreenType(selection);
         onOptionPicked.run();
         this.onClose();
     }

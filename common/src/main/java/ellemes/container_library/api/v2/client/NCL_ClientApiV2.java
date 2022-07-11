@@ -1,6 +1,6 @@
 package ellemes.container_library.api.v2.client;
 
-import ellemes.container_library.CommonMain;
+import ellemes.container_library.CommonClient;
 import ellemes.container_library.api.client.ScreenConstructor;
 import ellemes.container_library.api.client.function.ScreenSizePredicate;
 import ellemes.container_library.api.client.function.ScreenSizeRetriever;
@@ -53,7 +53,7 @@ public final class NCL_ClientApiV2 {
     @Deprecated
     public static boolean openInventoryAt(BlockPos pos, InteractionHand hand, BlockHitResult hit, boolean skipOptionCheck) {
         Objects.requireNonNull(pos, "pos must not be null");
-        if (!skipOptionCheck && !AbstractScreen.isScreenTypeDeclared(CommonMain.getConfigWrapper().getPreferredScreenType())) {
+        if (!skipOptionCheck && !AbstractScreen.isScreenTypeDeclared(CommonClient.getConfigWrapper().getPreferredScreenType())) {
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.setScreen(new PickScreen(() -> {
                 minecraft.gameMode.startPrediction(minecraft.level, i -> {

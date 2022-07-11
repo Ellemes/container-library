@@ -3,14 +3,13 @@ package ellemes.container_library.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import ellemes.container_library.CommonMain;
+import ellemes.container_library.CommonClient;
 import ellemes.container_library.Utils;
 import ellemes.container_library.api.client.function.ScreenSize;
 import ellemes.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.api.client.gui.TexturedRect;
 import ellemes.container_library.api.inventory.AbstractHandler;
 import ellemes.container_library.client.gui.widget.PageButton;
-import ellemes.container_library.wrappers.PlatformUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -96,7 +95,7 @@ public final class PageScreen extends AbstractScreen {
                 ScreenSize iterDim = option.getFirst();
                 if (pickedMeta.getHeight() == iterMeta.getHeight() && iterMeta.getWidth() < pickedMeta.getWidth()) {
                     picked = option;
-                } else if (CommonMain.getConfigWrapper().preferSmallerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
+                } else if (CommonClient.getConfigWrapper().preferSmallerScreens() && pickedMeta.getWidth() == iterMeta.getWidth() + 1 && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
 
                 } else if (iterMeta.getWidth() < pickedMeta.getWidth() && iterMeta.getHeight() <= iterDim.getWidth() * iterDim.getHeight() / 2.0) {
                     picked = option;
@@ -264,7 +263,7 @@ public final class PageScreen extends AbstractScreen {
         }
         page = 1;
         // Honestly this is dumb.
-        if (x == originalX && PlatformUtils.isModLoaded("inventoryprofiles")) {
+        if (x == originalX && CommonClient.isModLoaded("inventoryprofiles")) {
             x -= 14;
         }
         leftPageButton = new PageButton(x, y, 0,

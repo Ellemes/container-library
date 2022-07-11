@@ -1,5 +1,6 @@
 package ellemes.container_library.api.v3.client;
 
+import ellemes.container_library.CommonClient;
 import ellemes.container_library.CommonMain;
 import ellemes.container_library.api.client.gui.AbstractScreen;
 import ellemes.container_library.api.v3.OpenableInventoryProvider;
@@ -52,7 +53,7 @@ public class ScreenOpeningApi {
 //    }
 
     private static void commonCode(OpenableInventoryProvider<?> provider, Runnable runnable) {
-        if (provider.getForcedScreenType() == null && !AbstractScreen.isScreenTypeDeclared(CommonMain.getConfigWrapper().getPreferredScreenType())) {
+        if (provider.getForcedScreenType() == null && !AbstractScreen.isScreenTypeDeclared(CommonClient.getConfigWrapper().getPreferredScreenType())) {
             Minecraft client = Minecraft.getInstance();
             client.setScreen(new PickScreen(runnable));
             return;

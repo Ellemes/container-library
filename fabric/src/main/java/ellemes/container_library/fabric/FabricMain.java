@@ -1,18 +1,15 @@
 package ellemes.container_library.fabric;
 
-import ellemes.container_library.thread.Thread;
-import net.fabricmc.api.EnvType;
+import ellemes.container_library.thread.ThreadMain;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
-public final class Main implements ModInitializer {
+public final class FabricMain implements ModInitializer {
     @Override
     public void onInitialize() {
         FabricLoader loader = FabricLoader.getInstance();
-        Thread.initialize(
-                loader.getEnvironmentType() == EnvType.CLIENT,
+        ThreadMain.initialize(
                 loader::isModLoaded,
-                loader.getConfigDir(),
                 FabricNetworkWrapper::new
         );
     }
