@@ -9,7 +9,7 @@ import ellemes.container_library.client.gui.PickScreen;
 import ellemes.container_library.forge.client.ForgeKeyHandler;
 import ellemes.container_library.forge.wrappers.ConfigWrapperImpl;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -29,8 +29,8 @@ public class ForgeClient {
         CommonClient.initialize(ConfigWrapperImpl::new, configDir.resolve(Utils.CONFIG_PATH), configDir.resolve(Utils.FORGE_LEGACY_CONFIG_PATH),
                 new ForgeKeyHandler(), ModList.get()::isLoaded);
 
-        ModLoadingContext.get().getActiveContainer().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-                () -> new ConfigGuiHandler.ConfigGuiFactory((client, screen1) -> new PickScreen(() -> screen1, null))
+        ModLoadingContext.get().getActiveContainer().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+                () -> new ConfigScreenHandler.ConfigScreenFactory((client, screen) -> new PickScreen(() -> screen, null))
         );
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (ScreenEvent.Init.Post event) -> {
