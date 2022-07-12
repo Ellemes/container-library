@@ -7,7 +7,6 @@ import ellemes.container_library.api.v3.OpenableInventory;
 import ellemes.container_library.api.v3.OpenableInventoryProvider;
 import ellemes.container_library.api.v3.context.BlockContext;
 import ellemes.container_library.api.v3.context.BaseContext;
-import ellemes.container_library.api.v3.context.ItemContext;
 import ellemes.container_library.inventory.ServerScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -19,7 +18,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
 
@@ -68,14 +66,14 @@ public abstract class NetworkWrapper {
                 }
             }
 
-            case "item" -> {
-                int slotId = buffer.readInt();
-                ItemStack stack = sender.getInventory().getItem(slotId);
-                if (stack.getItem() instanceof OpenableInventoryProvider<?> provider) {
-                    inventoryContext = new ItemContext(level, sender, stack);
-                    inventoryProvider = provider;
-                }
-            }
+//            case "item" -> {
+//                int slotId = buffer.readInt();
+//                ItemStack stack = sender.getInventory().getItem(slotId);
+//                if (stack.getItem() instanceof OpenableInventoryProvider<?> provider) {
+//                    inventoryContext = new ItemContext(level, sender, stack);
+//                    inventoryProvider = provider;
+//                }
+//            }
         }
         if (inventoryProvider != null) {
             //noinspection unchecked
