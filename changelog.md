@@ -1,1 +1,2 @@
-- Fix another typo causing issues with mixins on forge.
+- Fix quilt mod compat entry points.
+- Update to forge 41.0.94

@@ -10,8 +10,8 @@
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
       "init": "ellemes.container_library.quilt.Main",
-      "rei_client": "ellemes.container_library.quilt.client.ReiCompat",
-      "modmenu": "ellemes.container_library.quilt.client.ModMenuCompat"
+      "rei_client": "ellemes.container_library.thread.client.ReiCompat",
+      "modmenu": "ellemes.container_library.thread.client.ModMenuCompat"
     },
     "depends": [
       {
