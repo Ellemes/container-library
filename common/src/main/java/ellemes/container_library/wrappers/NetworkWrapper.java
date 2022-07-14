@@ -103,7 +103,9 @@ public abstract class NetworkWrapper {
                 player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
                 return;
             }
-            onInitialOpen.accept(player);
+            if (!player.isSpectator()) {
+                onInitialOpen.accept(player);
+            }
             this.openScreenHandler(player, inventory.getInventory(), (syncId, inv, playerInv) -> new AbstractHandler(syncId, inv, playerInv, null), title, forcedScreenType);
         }
     }

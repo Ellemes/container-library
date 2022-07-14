@@ -1,5 +1,9 @@
 package ellemes.container_library;
 
+import ellemes.container_library.api.v2.OpenableBlockEntityProviderV2;
+import ellemes.container_library.api.v2.client.NCL_ClientApiV2;
+import ellemes.container_library.api.v3.OpenableInventoryProvider;
+import ellemes.container_library.api.v3.client.ScreenOpeningApi;
 import ellemes.container_library.api.v3.client.ScreenTypeApi;
 import ellemes.container_library.client.KeyHandler;
 import ellemes.container_library.client.gui.PageScreen;
@@ -7,7 +11,19 @@ import ellemes.container_library.client.gui.ScrollScreen;
 import ellemes.container_library.client.gui.SingleScreen;
 import ellemes.container_library.wrappers.ConfigWrapper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -62,5 +78,34 @@ public class CommonClient {
 
     public static boolean isModLoaded(String modId) {
         return CommonClient.modLoadedFunction.apply(modId);
+    }
+
+    public static boolean tryOpenSpectatorInventory(ClientLevel world, Player player, HitResult hit, InteractionHand hand) {
+        if (player.isSpectator()) {
+            switch (hit.getType()) {
+                case BLOCK -> {
+                    BlockHitResult blockHit = (BlockHitResult) hit;
+                    BlockState state = world.getBlockState(blockHit.getBlockPos());
+                    Block block = state.getBlock();
+                    if (block instanceof OpenableBlockEntityProviderV2) {
+                        if (state.use(world, player, hand, blockHit) == InteractionResult.SUCCESS) {
+                            Minecraft.getInstance().gameMode.startPrediction(world, i -> {
+                                return new ServerboundUseItemOnPacket(hand, blockHit, i);
+                            });
+                        }
+                        NCL_ClientApiV2.openInventoryAt(blockHit.getBlockPos(), hand, blockHit, true);
+                    } else if (block instanceof OpenableInventoryProvider<?>) {
+                        ScreenOpeningApi.openBlockInventory(blockHit.getBlockPos());
+                    }
+                }
+                case ENTITY -> {
+                    Entity entity = ((EntityHitResult) hit).getEntity();
+                    if (entity instanceof OpenableInventoryProvider<?>) {
+                        ScreenOpeningApi.openEntityInventory(entity);
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

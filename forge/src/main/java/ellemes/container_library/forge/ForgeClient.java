@@ -8,8 +8,13 @@ import ellemes.container_library.client.gui.PageScreen;
 import ellemes.container_library.client.gui.PickScreen;
 import ellemes.container_library.forge.client.ForgeKeyHandler;
 import ellemes.container_library.forge.wrappers.ConfigWrapperImpl;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -36,6 +41,17 @@ public class ForgeClient {
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (ScreenEvent.Init.Post event) -> {
             if (event.getScreen() instanceof PageScreen screen) {
                 screen.addPageButtons();
+            }
+        });
+
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, (InputEvent.InteractionKeyMappingTriggered event) -> {
+            if (event.isUseItem() && event.getHand() == InteractionHand.MAIN_HAND) {
+                Minecraft client = Minecraft.getInstance();
+                Player player = client.player;
+                ClientLevel world = client.level;
+                if (CommonClient.tryOpenSpectatorInventory(world, player, client.hitResult, event.getHand())) {
+                    event.setCanceled(true);
+                }
             }
         });
 
