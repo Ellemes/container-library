@@ -1,9 +1,12 @@
 {
   "required": true,
+  "plugin": "ellemes.container_library.forge.ForgeMixinPlugin",
   "package": "ellemes.container_library.forge.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "ClientPlayerInteractionManagerMixin"
+    "ClientPlayerInteractionManagerMixin",
+    "QuarkButtonAllowedMixin",
+    "QuarkButtonRepositioningMixin"
   ],
   "injectors": {
     "defaultRequire": 1

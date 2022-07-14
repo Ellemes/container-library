@@ -25,11 +25,16 @@ repositories {
         name = "ModMaven"
         url = uri("https://modmaven.k-4u.nl")
     }
+    maven {
+        name = "Jared"
+        url = uri("https://maven.blamejared.com/")
+    }
 }
 
 dependencies {
-    compileOnly("mezz.jei:jei-${properties["jei_minecraft_version"]}:${properties["jei_version"]}:api")
-    compileOnly("maven.modrinth:inventory-profiles-next:forge-${properties["ipn_minecraft_version"]}-${properties["ipn_version"]}")
+    modCompileOnly("mezz.jei:jei-${properties["jei_minecraft_version"]}:${properties["jei_version"]}:api")
+    modCompileOnly("maven.modrinth:inventory-profiles-next:forge-${properties["ipn_minecraft_version"]}-${properties["ipn_version"]}")
+    modCompileOnly("vazkii.quark:Quark:3.3-test-367.2454")
 }
 
 tasks.getByName<MinifyJsonTask>("minJar") {

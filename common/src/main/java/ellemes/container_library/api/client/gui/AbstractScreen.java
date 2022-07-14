@@ -147,4 +147,9 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     @NotNull
     @ApiStatus.Internal
     public abstract List<Rect2i> getExclusionZones();
+
+    @ApiStatus.Internal
+    public int getInventoryWidth() {
+        return inventoryWidth;
+    }
 }
