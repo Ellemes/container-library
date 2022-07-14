@@ -1,7 +1,6 @@
 package ellemes.container_library;
 
 import ellemes.container_library.api.v2.OpenableBlockEntityProviderV2;
-import ellemes.container_library.api.v2.client.NCL_ClientApiV2;
 import ellemes.container_library.api.v3.OpenableInventoryProvider;
 import ellemes.container_library.api.v3.client.ScreenOpeningApi;
 import ellemes.container_library.api.v3.client.ScreenTypeApi;
@@ -93,15 +92,17 @@ public class CommonClient {
                                 return new ServerboundUseItemOnPacket(hand, blockHit, i);
                             });
                         }
-                        NCL_ClientApiV2.openInventoryAt(blockHit.getBlockPos(), hand, blockHit, true);
+                        return true;
                     } else if (block instanceof OpenableInventoryProvider<?>) {
                         ScreenOpeningApi.openBlockInventory(blockHit.getBlockPos());
+                        return true;
                     }
                 }
                 case ENTITY -> {
                     Entity entity = ((EntityHitResult) hit).getEntity();
                     if (entity instanceof OpenableInventoryProvider<?>) {
                         ScreenOpeningApi.openEntityInventory(entity);
+                        return true;
                     }
                 }
             }
