@@ -1,1 +1,4 @@
-- Update api to provide a mechanism to open inventories inside entities and items.
+- Introduce V3 api which is marked as experimental, I would like input from api consumers to see if anything needs adjusting.
+  - Eventually I want to allow opening up the networking to allow for mods to introduce their own screen opening mechanism.
+- Allow inventories to be opened by spectators. (Minor breaking change but seems like no downstream projects will be affected.)
+- Add quark support on forge.
