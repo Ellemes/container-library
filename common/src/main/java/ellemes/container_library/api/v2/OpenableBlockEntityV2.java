@@ -8,10 +8,10 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * @deprecated Replaced by {@link OpenableInventory}
- */
-@Deprecated
+///**
+// * @deprecated Replaced by {@link OpenableInventory}
+// */
+//@Deprecated
 public interface OpenableBlockEntityV2 {
     default boolean canBeUsedBy(ServerPlayer player) {
         BaseContainerBlockEntity self = (BaseContainerBlockEntity) this;

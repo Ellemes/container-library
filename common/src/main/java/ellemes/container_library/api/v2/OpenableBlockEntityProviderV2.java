@@ -18,9 +18,9 @@ import net.minecraft.world.phys.BlockHitResult;
 /**
  * Should be implemented on blocks.
  *
- * @deprecated Will be removed in 1.20, please migrate to {@link OpenableInventoryProvider}.
+// * @deprecated Will be removed in 1.20, please migrate to {@link OpenableInventoryProvider}.
  */
-@Deprecated
+//@Deprecated
 public interface OpenableBlockEntityProviderV2 {
     /**
      * Return the openable block entity, {@link OpenableBlockEntitiesV2} can be used to supply more than one inventory.

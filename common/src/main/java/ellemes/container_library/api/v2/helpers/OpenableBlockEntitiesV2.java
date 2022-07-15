@@ -12,9 +12,9 @@ import java.util.Arrays;
 /**
  * Helper to wrap blocks which consist of multiple inventories into one e.g. chests.
  *
- * @deprecated Replaced by {@link OpenableInventories}.
+// * @deprecated Replaced by {@link OpenableInventories}.
  */
-@Deprecated
+//@Deprecated
 public final class OpenableBlockEntitiesV2 implements OpenableBlockEntityV2 {
     private final OpenableBlockEntityV2[] parts;
     private final Container inventory;

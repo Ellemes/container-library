@@ -20,10 +20,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * @deprecated Replaced by {@link ScreenOpeningApi} and {@link ScreenTypeApi}.
- */
-@Deprecated
+///**
+// * @deprecated Replaced by {@link ScreenOpeningApi} and {@link ScreenTypeApi}.
+// */
+//@Deprecated
 public final class NCL_ClientApiV2 {
     private NCL_ClientApiV2() {
         throw new IllegalStateException("NCL_ClientApiV2 cannot be instantiated.");
@@ -34,9 +34,9 @@ public final class NCL_ClientApiV2 {
      * {@link OpenableBlockEntityProviderV2}.
      *
      * @return true if a valid screen type is already selected.
-     * @deprecated Use {@link } instead. With boolean flag set to false.
+//     * @deprecated Use {@link } instead. With boolean flag set to false.
      */
-    @Deprecated
+//    @Deprecated
     public static boolean openInventoryAt(BlockPos pos, InteractionHand hand, BlockHitResult hit) {
         return NCL_ClientApiV2.openInventoryAt(pos, hand, hit, false);
     }
@@ -48,9 +48,9 @@ public final class NCL_ClientApiV2 {
      * If {@code skipOptionCheck} is true then the user's screen preference is not checked.
      *
      * @return true if a valid screen type is already selected.
-     * @deprecated Use {@link } instead.
+//     * @deprecated Use {@link } instead.
      */
-    @Deprecated
+//    @Deprecated
     public static boolean openInventoryAt(BlockPos pos, InteractionHand hand, BlockHitResult hit, boolean skipOptionCheck) {
         Objects.requireNonNull(pos, "pos must not be null");
         if (!skipOptionCheck && !AbstractScreen.isScreenTypeDeclared(CommonClient.getConfigWrapper().getPreferredScreenType())) {

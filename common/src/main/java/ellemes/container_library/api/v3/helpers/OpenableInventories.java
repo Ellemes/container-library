@@ -5,9 +5,14 @@ import ellemes.container_library.api.v3.OpenableInventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Arrays;
 
+/**
+ * @apiNote Please use v2 api for now, not yet stable.
+ */
+@ApiStatus.Experimental
 public class OpenableInventories implements OpenableInventory {
     private final OpenableInventory[] parts;
     private final Container inventory;
