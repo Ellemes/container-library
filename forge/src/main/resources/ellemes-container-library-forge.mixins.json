@@ -6,7 +6,7 @@
   "client": [
     "ClientPlayerInteractionManagerMixin",
     "QuarkButtonAllowedMixin",
-    "QuarkButtonRepositioningMixin"
+    "QuarkRepositionButtonsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,6 +1,6 @@
 package ellemes.container_library.forge;
 
-import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -13,10 +13,10 @@ public class ForgeMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        ModList mods = ModList.get();
+        boolean isQuarkPresent = FMLLoader.getLoadingModList().getModFileById("quark") != null;
         String className = mixinClassName.substring(MIXIN_PACKAGE_LENGTH);
         return switch (className) {
-            case "QuarkButtonAllowedMixin", "QuarkButtonRepositioningMixin" -> mods.isLoaded("quark");
+            case "QuarkButtonAllowedMixin", "QuarkRepositionButtonsMixin" -> isQuarkPresent;
             default -> true;
         };
     }
