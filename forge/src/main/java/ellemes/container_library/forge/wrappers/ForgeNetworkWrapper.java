@@ -23,7 +23,6 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public final class ForgeNetworkWrapper extends NetworkWrapper {
@@ -32,17 +31,23 @@ public final class ForgeNetworkWrapper extends NetworkWrapper {
     public ForgeNetworkWrapper() {
         String channelVersion = "1.0";
         this.channel = NetworkRegistry.ChannelBuilder.named(Utils.id("channel"))
-                .networkProtocolVersion(() -> channelVersion)
-                .clientAcceptedVersions(channelVersion::equals)
-                .serverAcceptedVersions(channelVersion::equals)
-                .simpleChannel();
-        channel.registerMessage(0, OpenInventoryMessage.class, OpenInventoryMessage::encode, OpenInventoryMessage::decode, this::handleForgeMessage, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+                                                     .networkProtocolVersion(() -> channelVersion)
+                                                     .clientAcceptedVersions(channelVersion::equals)
+                                                     .serverAcceptedVersions(channelVersion::equals)
+                                                     .simpleChannel();
+        channel.messageBuilder(OpenInventoryMessage.class, 0, NetworkDirection.PLAY_TO_SERVER)
+               .encoder(OpenInventoryMessage::encode)
+               .decoder(OpenInventoryMessage::decode)
+               .consumerNetworkThread(this::handleForgeMessage)
+               .add();
     }
 
     private void handleForgeMessage(OpenInventoryMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         ServerPlayer sender = contextSupplier.get().getSender();
         FriendlyByteBuf buffer = message.getData();
-        this.s_handleOpenInventory(sender, buffer);
+        contextSupplier.get().enqueueWork(() -> {
+            this.s_handleOpenInventory(sender, buffer);
+        });
         contextSupplier.get().setPacketHandled(true);
     }
 
