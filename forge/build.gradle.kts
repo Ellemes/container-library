@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    modCompileOnly("mezz.jei:jei-${properties["jei_minecraft_version"]}:${properties["jei_version"]}:api")
+    compileOnly("mezz.jei:jei-${properties["jei_minecraft_version"]}:${properties["jei_version"]}:api")
     modCompileOnly("maven.modrinth:inventory-profiles-next:forge-${properties["ipn_minecraft_version"]}-${properties["ipn_version"]}")
     modCompileOnly("vazkii.quark:Quark:3.3-test-367.2454")
 }
