@@ -78,7 +78,10 @@ public abstract class NetworkWrapper {
         if (inventoryProvider != null) {
             //noinspection unchecked
             OpenableInventory inventory = ((OpenableInventoryProvider<BaseContext>) inventoryProvider).getOpenableInventory(inventoryContext);
-            this.s_openInventory(sender, inventory, inventoryProvider::onInitialOpen, inventoryProvider.getForcedScreenType());
+            // inventory can be null in some rare cases.
+            if (inventory != null) {
+                this.s_openInventory(sender, inventory, inventoryProvider::onInitialOpen, inventoryProvider.getForcedScreenType());
+            }
         }
 
         buffer.release();
@@ -98,6 +101,10 @@ public abstract class NetworkWrapper {
     }
 
     public final void s_openInventory(ServerPlayer player, OpenableBlockEntityV2 inventory, Consumer<ServerPlayer> onInitialOpen, BlockPos pos, ResourceLocation forcedScreenType) {
+        if (inventory == null) {
+            // This shouldn't be null, but it can in rare cases.
+            return;
+        }
         if (this.canOpenInventory(player, pos)) {
             Component title = inventory.getInventoryTitle();
             if (!inventory.canBeUsedBy(player)) {

@@ -1,4 +1,3 @@
-- Introduce V3 api which is marked as experimental, I would like input from api consumers to see if anything needs adjusting.
-  - Eventually I want to allow opening up the networking to allow for mods to introduce their own screen opening mechanism.
-- Allow inventories to be opened by spectators. (Minor breaking change but seems like no downstream projects will be affected.)
-- Add quark support on forge.
+- Add an api to create a config screen.
+- Prevent changing screen types when it has been forced by the inventory.
+- Prevent opening of null inventories.
