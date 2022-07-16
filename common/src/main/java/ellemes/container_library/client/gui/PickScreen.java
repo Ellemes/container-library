@@ -9,6 +9,7 @@ import ellemes.container_library.api.inventory.AbstractHandler;
 import ellemes.container_library.client.PickButton;
 import ellemes.container_library.client.gui.widget.ScreenPickButton;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -38,18 +39,24 @@ public final class PickScreen extends Screen {
     private final AbstractHandler handler;
     private int topPadding;
 
-    public PickScreen(Supplier<Screen> returnToScreen, @Nullable AbstractHandler handler) {
-        super(Component.translatable("screen.ellemes_container_lib.screen_picker_title"));
-        this.returnToScreen = returnToScreen;
-        this.handler = handler;
-        this.onOptionPicked = () -> {
-        };
+    public PickScreen(AbstractScreen currentScreen) {
+        this(currentScreen.getMenu(), () -> {
+            return AbstractScreen.createScreen(currentScreen.getMenu(), Minecraft.getInstance().player.getInventory(), currentScreen.getTitle());
+        }, () -> {});
+    }
+
+    public PickScreen(Supplier<Screen> returnToScreen) {
+        this(null, returnToScreen, () -> {});
     }
 
     public PickScreen(@NotNull Runnable onOptionPicked) {
+        this(null, () -> null, onOptionPicked);
+    }
+
+    private PickScreen(@Nullable AbstractHandler handler, Supplier<Screen> returnToScreen, Runnable onOptionPicked) {
         super(Component.translatable("screen.ellemes_container_lib.screen_picker_title"));
-        this.returnToScreen = () -> null;
-        this.handler = null;
+        this.handler = handler;
+        this.returnToScreen = returnToScreen;
         this.onOptionPicked = onOptionPicked;
     }
 

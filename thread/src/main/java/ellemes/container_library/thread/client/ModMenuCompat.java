@@ -7,6 +7,6 @@ import ellemes.container_library.client.gui.PickScreen;
 public final class ModMenuCompat implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return returnToScreen -> new PickScreen(() -> returnToScreen, null);
+        return returnToScreen -> new PickScreen(() -> returnToScreen);
     }
 }

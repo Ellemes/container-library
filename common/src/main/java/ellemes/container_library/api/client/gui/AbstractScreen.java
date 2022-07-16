@@ -128,7 +128,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
         if (this.handleKeyPress(keyCode, scanCode, modifiers)) {
             return true;
         } else if (CommonClient.isConfigKeyPressed(keyCode, scanCode, modifiers) && menu.getForcedScreenType() == null) {
-            minecraft.setScreen(new PickScreen(() -> AbstractScreen.createScreen(menu, minecraft.player.getInventory(), title), menu));
+            minecraft.setScreen(new PickScreen(this));
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE || minecraft.options.keyInventory.matches(keyCode, scanCode)) {
             minecraft.player.closeContainer();
