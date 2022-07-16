@@ -145,7 +145,7 @@ public abstract class AbstractScreen extends AbstractContainerScreen<AbstractHan
     }
 
     @NotNull
-    @ApiStatus.Internal
+    @ApiStatus.OverrideOnly
     public abstract List<Rect2i> getExclusionZones();
 
     @ApiStatus.Internal
