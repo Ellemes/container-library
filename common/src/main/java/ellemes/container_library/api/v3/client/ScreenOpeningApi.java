@@ -28,11 +28,11 @@ public class ScreenOpeningApi {
     }
 
     /**
-     * Open the config screen returning to the screen supplied.
+     * Creates the config screen returning to the screen supplied.
      */
-    public static void openTypeSelectScreen(@NotNull Supplier<Screen> returnToScreen) {
+    public static Screen createTypeSelectScreen(@NotNull Supplier<Screen> returnToScreen) {
         Objects.requireNonNull(returnToScreen, "returnToScreen must not be null, pass () -> null instead.");
-        Minecraft.getInstance().setScreen(new PickScreen(returnToScreen));
+        return new PickScreen(returnToScreen);
     }
 
     public static void openBlockInventory(@NotNull BlockPos pos) {
