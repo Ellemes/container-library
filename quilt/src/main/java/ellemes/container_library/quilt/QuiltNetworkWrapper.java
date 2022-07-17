@@ -13,8 +13,9 @@ public class QuiltNetworkWrapper extends ThreadNetworkWrapper {
     public QuiltNetworkWrapper(boolean flanPresent) {
         super(flanPresent);
         ServerPlayConnectionEvents.INIT.register((handler, __) -> {
-            ServerPlayNetworking.registerReceiver(handler, ThreadNetworkWrapper.CHANNEL_NAME, (___, player, ____, buffer, _____) -> {
-                this.s_handleOpenInventory(player, buffer);
+            ServerPlayNetworking.registerReceiver(handler, ThreadNetworkWrapper.CHANNEL_NAME, (server, player, ____, buffer, _____) -> {
+                buffer.retain();
+                server.execute(() -> this.s_handleOpenInventory(player, buffer));
             });
         });
     }
